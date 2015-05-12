@@ -79,13 +79,9 @@ alexa.app = function(name,endpoint) {
 		this.sessionEnded = func;
 	};
 	this.request = function(req,res) {
-		//console.log('request');
 		try {
 			var response = new alexa.response();
 			var request = new alexa.request(req.body);
-			
-			// debug
-			//response.card("Debug",JSON.stringify(request.data.session));
 			
 			var requestType = request.type();
 			if ("IntentRequest"==requestType) {

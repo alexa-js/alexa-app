@@ -1,22 +1,12 @@
 {
   "name": "alexa-app",
-  "version": "1.0.0",
-  "description": "A framework for Alexa (Amazon Echo) apps using Node.js",
+  "version": "1.0.1",
+  "description": "A module to simplify creation of Alexa (Amazon Echo) apps using Node.js",
   "main": "index.js",
-  "scripts": {
-    "test": "echo "Error: no test specified" && exit 1"
-  },  
   "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
   "keywords": ["amazon","echo","alexa"],
   "license": "MIT",
   "dependencies": {
-    "body-parser": "~1.0.1",
-    "ejs": "~0.7.1",
-    "express": "~4.0.0",
-    "node-stringify": "0.0.18",
-    "require-dir": "^0.3.0"
-  },
-  "devDependencies": {
-    "supervisor": "^0.6.0"
+
   }
 }

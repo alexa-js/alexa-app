@@ -5,7 +5,7 @@ A Node module to simplify development of Alexa apps using Node.js
 
 ## Installation
 
-  npm install alexa-app --save
+	npm install alexa-app --save
 
 ## Usage
 
