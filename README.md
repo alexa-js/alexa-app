@@ -9,11 +9,10 @@ A Node module to simplify development of Alexa apps using Node.js
 
 ## Usage
 
-  var alexa = require('alexa-app');
-  var app = new alexa.app('sample');
-  app.intent('sample',function(request,response) {
-    var number = request.slot('number');
-    response.say("You asked for the number "+number);
-    response.shouldEndSession(true);
-  }
-
+	var alexa = require('alexa-app');
+	var app = new alexa.app('sample');
+	app.intent('sample',function(request,response) {
+		var number = request.slot('number');
+		response.say("You asked for the number "+number);
+		response.shouldEndSession(true);
+	});
