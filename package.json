@@ -1,10 +1,17 @@
 {
   "name": "alexa-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps using Node.js",
   "main": "index.js",
   "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
   "keywords": ["amazon","echo","alexa"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matt-kruse/alexa-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matt-kruse/alexa-app/issues"
+  },
   "license": "MIT",
   "dependencies": {
 
