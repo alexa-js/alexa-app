@@ -16,8 +16,8 @@ alexa.response = function() {
 			this.response.response.outputSpeech.text+=str;
 		}
 	};
-	this.card = function(title,content) {
-		this.response.response.card = {"type":"Simple","content":content,"title":title};
+	this.card = function(title,content,subtitle) {
+		this.response.response.card = {"type":"Simple","content":content,"title":title,"subtitle":subtitle};
 	};
 	this.shouldEndSession = function(bool) {
 		this.response.response.shouldEndSession = bool;
