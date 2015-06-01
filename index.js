@@ -1,6 +1,8 @@
 var alexa={};
 
 alexa.response = function() {
+	var done = null;
+	var onDoneCallbacks = [];
 	this.response = {
 		"version": "1.0",
 		"sessionAttributes":{},
@@ -24,6 +26,22 @@ alexa.response = function() {
 	};
 	this.session = function(key,val) {
 		this.response.sessionAttributes[key] = val;
+	};
+	this.waitUntil = function () {
+		if(!done) {
+			done = function () {
+				onDoneCallbacks.forEach(function (cb) {
+					cb.call(this);
+				}.bind(this));
+			}.bind(this);
+		}
+		return done;
+	};
+	this.isWaiting = function () {
+		return !!done;
+	};
+	this._onDone = function (cb) {
+		onDoneCallbacks.push(cb);
 	};
 };
 
@@ -84,6 +102,7 @@ alexa.app = function(name,endpoint) {
 		this.sessionEndedFunc = func;
 	};
 	this.request = function(req,res) {
+		var isWaiting = false;
 		try {
 			var key;
 			var response = new alexa.response();
@@ -124,10 +143,20 @@ alexa.app = function(name,endpoint) {
 				response.say("Error: not a valid request");
 			}
 			
+			isWaiting = response.isWaiting();
+			if(isWaiting) {
+				response._onDone(function () {
+					res.json( response.response );
+				});
+			}
 		} catch(e) {
+			console.log(e.stack);
 			response.say("Sorry, the application encountered an error");
 		}
-		res.json( response.response );
+
+		if(!isWaiting) {
+			res.json( response.response );
+		}
 	};
 	this.test = function(req,res) {
 		res.render('test',{"json":self});
