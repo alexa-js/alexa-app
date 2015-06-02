@@ -1,6 +1,16 @@
 var alexa={};
 
 alexa.response = function() {
+	var isWaiting = false;
+	var resolve, reject;
+	var prom = new Promise(function (_resolve, _reject) {
+		resolve = _resolve;
+		reject = _reject;
+	});
+	prom.then(function () {
+		isWaiting = false;
+	});
+	
 	this.response = {
 		"version": "1.0",
 		"sessionAttributes":{},
@@ -24,6 +34,20 @@ alexa.response = function() {
 	};
 	this.session = function(key,val) {
 		this.response.sessionAttributes[key] = val;
+	};
+	this.waitUntil = function () {
+		isWaiting = true;
+		return resolve;
+	}
+	this.isWaiting = function () {
+		return isWaiting;
+	};
+	this.cancel = function (reason) {
+		isWaiting = false;
+		reject(reason);
+	};
+	this.done = function () {
+		return prom;
 	};
 };
 
@@ -84,9 +108,9 @@ alexa.app = function(name,endpoint) {
 		this.sessionEndedFunc = func;
 	};
 	this.request = function(req,res) {
+		var key;
+		var response = new alexa.response();
 		try {
-			var key;
-			var response = new alexa.response();
 			var request = new alexa.request(req.body);
 			// Copy all the session attributes from the request into the response so they persist.
 			// This should happen by default, but it seems to be a bug in the Alexa API (?)
@@ -125,9 +149,15 @@ alexa.app = function(name,endpoint) {
 			}
 			
 		} catch(e) {
-			response.say("Sorry, the application encountered an error");
+			response.cancel();
 		}
-		res.json( response.response );
+
+		response.done().then(function () {
+			res.json( response.response );
+		}).catch(function () {
+			response.say("Sorry, the application encountered an error");
+			res.json( response.response );
+		});
 	};
 	this.test = function(req,res) {
 		res.render('test',{"json":self});
