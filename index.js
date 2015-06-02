@@ -1,7 +1,16 @@
 var alexa={};
 
 alexa.response = function() {
-	var prom = null, resolve, reject;
+	var isWaiting = false;
+	var resolve, reject;
+	var prom = new Promise(function (_resolve, _reject) {
+		resolve = _resolve;
+		reject = _reject;
+	});
+	prom.then(function () {
+		isWaiting = false;
+	});
+	
 	this.response = {
 		"version": "1.0",
 		"sessionAttributes":{},
@@ -27,18 +36,14 @@ alexa.response = function() {
 		this.response.sessionAttributes[key] = val;
 	};
 	this.waitUntil = function () {
-		if(!prom) {
-			prom = new Promise(function (_resolve, _reject) {
-				resolve = _resolve;
-				reject = _reject;
-			});
-		}
+		isWaiting = true;
 		return resolve;
 	}
 	this.isWaiting = function () {
-		return !!prom;
+		return isWaiting;
 	};
 	this.cancel = function (reason) {
+		isWaiting = false;
 		reject(reason);
 	};
 	this.done = function () {
