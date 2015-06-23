@@ -16,6 +16,14 @@ alexa.response = function() {
 			this.response.response.outputSpeech.text+=str;
 		}
 	};
+	this.reprompt = function(str) {
+		if (typeof this.response.reprompt=="undefined") {
+			this.response.reprompt = {"outputSpeech" : {"type":"PlainText","text":str}};
+		}
+		else {
+			this.response.reprompt.outputSpeech.text+=str;
+		}
+	};
 	this.card = function(title,content,subtitle) {
 		this.response.response.card = {"type":"Simple","content":content,"title":title,"subtitle":subtitle};
 	};
