@@ -31,14 +31,30 @@ console.log( "\n\nSCHEMA:\n\n"+app.schema()+"\n\n" );
 // Output sample utterances
 console.log( "\n\nUTTERANCES:\n\n"+app.utterances()+"\n\n" );
 
-// synchronous example
-app.request(template.launch)
+// Test pre() and post() functions
+app.pre = function(request,response,type) {
+	response.say("This part of the output is from pre(). ");
+};
+app.post = function(request,response,type,exception) {
+	if (exception) {
+		response.clear().say("An error occured: "+exception).send();
+	}
+};
+
+// error example
+app.request(template.errorIntent)
 	.then(function(response) {
 		console.log(JSON.stringify(response,null,3));
 	});
-  
+
 // async example
 app.request(template.intent)
+	.then(function(response) {
+		console.log(JSON.stringify(response,null,3));
+	});
+
+// synchronous example
+app.request(template.launch)
 	.then(function(response) {
 		console.log(JSON.stringify(response,null,3));
 	});
@@ -58,5 +74,3 @@ app.request(template.errorIntent)
 	.then(function(response) {
 		console.log(JSON.stringify(response,null,3));
 	});
-
-

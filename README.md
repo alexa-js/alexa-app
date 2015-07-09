@@ -92,6 +92,9 @@ The response JSON object is automatically built for you. All you need to do is t
 // Tell Alexa to say something. Multiple calls to say() will be appended to each other
 response.say(String phrase)
 
+// Empty the response text
+response.clear()
+
 // Tell Alexa to re-prompt the user for a response, if it didn't hear anything valid
 response.reprompt(String phrase)
 
@@ -104,7 +107,7 @@ response.shouldEndSession(boolean end [, String reprompt] )
 
 // Set a session variable
 // By defailt, Alexa only persists session variables to the next request. The alexa-app module 
-// makes session variables persist across multiple requests
+// makes session variables persist across multiple requests.
 response.session(String attributeName, String attributeValue)
 
 // Send the response as success
@@ -157,6 +160,36 @@ app.sessionEnded(function(request,response) {
 	logout( request.userId );
 	// No response necessary
 });
+```
+
+# Execute Code On Every Request
+
+In addition to specific event handlers, you can define functions that will run on every request. 
+
+## pre()
+
+Executed before any event handlers. This is useful to setup new sessions, validate the applicationId, or do any other kind of validations.
+
+```javascript
+app.pre = function(request,response,type) {
+	if (request.session.application.applicationId!="amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
+		// Fail ungracefully
+		response.fail("Invalid applicationId");
+	}
+};
+```
+
+Note: The post() method still gets called, even if the pre() function calls send() or fail(). The post method can always override anything done before it.
+
+## post()
+
+The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The post() function can change anything about the response. It can even turn a response.fail() into a respond.send() with entirely new content. If post() is called after an exception is thrown, the exception itself will be the last argument.
+
+```javascript
+app.post = function(request,response,type,exception) {
+	// Always turn an exception into a successful response
+	response.clear().say("An error occured: "+exception).send();
+};
 ```
 
 # Schema and Utterances
@@ -292,11 +325,20 @@ WhatsMyColorIntent tell me what my favorite color is
 
 # Error Handling
 
-Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. Any uncaught exceptions can be handled by a generic error handler. Error handlers cannot be asynchronous.
+Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
 
 ```javascript
 app.error = function(exception, request, response) {
     response.say("Sorry, something bad happened");
+};
+```
+
+If you do want exceptions to bubble out to the caller (and potentially cause Express to crash, for example), you can throw the exception.
+
+```javascript
+app.error = function(exception, request, response) {
+    console.log(exception);
+	throw exception;
 };
 ```
 
@@ -356,7 +398,7 @@ app.express( express_app, "/echo/", false );
 
 ```
 
-## Customizing Default Messages
+## Customizing Default Error Messages
 
 ```javascript
 app.messages.NO_INTENT_FOUND = "Why you called dat intent? I don't know bout dat";
@@ -374,7 +416,21 @@ app.launch(function(request,response) {
 });
 app.intent('tellme', function(request,response) {
 	response.say("The number is "+request.session('number'));
+	// Clear only the 'number' attribute from the session
+	response.clearSesssion('number');
 });
+// The session variables can be entirely cleared, or cleared by key
+app.intent('clear', function(request,response) {
+	response.clearSession(); // or: response.clearSession('key') to clear a single value
+	response.say("Session cleared!");
+});
+```
+
+By default, alexa-app will persist every request session attribute into the response. This way, any session attributes you set will be sent on every subsequent request, as is typical in most web programming environments. If you wish to disable this feature, you can do so.
+
+```javascript
+var app = new alexa.app('test');
+app.persistentSession = false;
 ```
 
 ## Define a custom endpoint name for an app
