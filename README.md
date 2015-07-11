@@ -172,7 +172,7 @@ Executed before any event handlers. This is useful to setup new sessions, valida
 
 ```javascript
 app.pre = function(request,response,type) {
-	if (request.session.application.applicationId!="amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
+	if (request.sessionDetails.application.applicationId!="amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
 		// Fail ungracefully
 		response.fail("Invalid applicationId");
 	}
