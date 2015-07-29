@@ -8,11 +8,9 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js
 	npm install alexa-app --save
 ```
 
-# Example Web App
+# alexa-app-server Container
 
-The *[alexa-app-server](https://github.com/matt-kruse/alexa-app-server/)* project is a fully working example of using alexa-app to build an Alexa application using Node.js and Express.
-
-*(alexa-app-server need to be updated to be compatible with alexa-app 2.0)*
+The *[alexa-app-server](https://github.com/matt-kruse/alexa-app-server/)* module is a fully-working container for multiple alexa-app skills using Node.js and Express. It lets you run and debug your apps locally, and can also be used as a full production server for your apps.
 
 # Summary
 
@@ -363,7 +361,11 @@ app.intent('checkStatus', function(request,response) {
 
 ## Connect to AWS Lambda
 
-Amazon has documentation on how to setup your Alexa app to run in AWS Lambda. To expose your alexa-app to Lambda, use the lambda() function. See example/lambda.js.
+Amazon has documentation on how to setup your Alexa app to run in AWS Lambda. 
+
+Apps built using alexa-app have a built-in "handler" method to handle calls from AWS Lambda. You don't need to do anything different to make them work within Lambda, other than to setup the Lambda Function correctly and make sure that the Handler is set to "index.handler", which is the default value.
+
+For backwards compatibility, or if you wish to change the Handler mapping to something other than index.handler, you can use the lambda() function. See example/lambda.js.
 
 ```javascript
 var app = new alexa.app('sample');

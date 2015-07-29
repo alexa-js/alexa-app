@@ -272,13 +272,15 @@ alexa.app = function(name,endpoint) {
 		return out;
 	};
 
-	// A utility method to map an alexa app to an AWS lambda function
+	// A built-in handler for AWS Lambda
+	this.handler = function(event, context) {
+		self.request(event).then(function(response) {
+			context.succeed(response);
+		});
+	};
+	// For backwards compatibility
 	this.lambda = function() {
-		return function(event, context) {
-			self.request(event).then(function(response) {
-				context.succeed(response);
-			});
-		};
+		return self.handler;
 	};
 
 	// A utility method to bootstrap alexa endpoints into express automatically
