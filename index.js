@@ -357,19 +357,24 @@ function generateUtterances(str,slots,dictionary) {
     return "{"+(slot || placeholders.length-1)+"}";
   });
   // Generate all possible combinations using the cartesian product
-  var variations = Combinatorics.cartesianProduct.apply(Combinatorics,placeholders).toArray();
-  // Substitute each combination back into the original string
-  variations.forEach(function(values) {
-    // Replace numeric placeholders
-    var utterance = str.replace(/\{(\d+)\}/g,function(match,p1){ 
-      return values[p1]; 
+  if (placeholders.length>0) {
+    var variations = Combinatorics.cartesianProduct.apply(Combinatorics,placeholders).toArray();
+    // Substitute each combination back into the original string
+    variations.forEach(function(values) {
+      // Replace numeric placeholders
+      var utterance = str.replace(/\{(\d+)\}/g,function(match,p1){ 
+        return values[p1]; 
+      });
+      // Replace slot placeholders
+      utterance = utterance.replace(/\{(.*?)\}/g,function(match,p1){ 
+        return "{"+values[slotmap[p1]]+"|"+p1+"}";
+      });
+      utterances.push( utterance );
     });
-    // Replace slot placeholders
-    utterance = utterance.replace(/\{(.*?)\}/g,function(match,p1){ 
-      return "{"+values[slotmap[p1]]+"|"+p1+"}";
-    });
-    utterances.push( utterance );
-  });
+  }
+  else {
+    return [str];
+  }
   return utterances;
 }
 
