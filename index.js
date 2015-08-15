@@ -27,11 +27,11 @@ alexa.response = function() {
 		return this;
 	};
 	this.reprompt = function(str) {
-		if (typeof this.response.reprompt=="undefined") {
-			this.response.reprompt = {"outputSpeech" : {"type":"PlainText","text":str}};
+		if (typeof this.response.response.reprompt=="undefined") {
+			this.response.response.reprompt = {"outputSpeech" : {"type":"PlainText","text":str}};
 		}
 		else {
-			this.response.reprompt.outputSpeech.text+=str;
+			this.response.response.reprompt.outputSpeech.text+=str;
 		}
 		return this;
 	};
