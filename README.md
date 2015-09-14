@@ -447,3 +447,9 @@ var app = new alexa.app('hello','myEndpointName');
 
 All named apps can be found in the alexa.apps object, keyed by name. The value is the app itself.
 
+## History
+
+- 2.1.4 - Sep 14, 2015
+  - Remove hyphen from generated numbers in utterances (Issue #17)
+  - Collapse multiple whitespaces to one space in utterances (Issue #18)
+

@@ -264,7 +264,7 @@ alexa.app = function(name,endpoint) {
 				intent.schema.utterances.forEach(function(sample) {
 					var list = generateUtterances(sample,intent.schema.slots,self.dictionary);
 					list.forEach(function(utterance) {
-						out+=intent.name+"\t"+utterance+"\n";
+						out+=intent.name+"\t"+(utterance.replace(/\s+/g,' '))+"\n";
 					});
 				});
 			}
@@ -318,7 +318,7 @@ function expandNumberRange(start,end,by) {
   by = by || 1; //incrementing by 0 is a bad idea
   var converted = [];
   for (var i=start; i<=end; i+=by) {
-    converted.push( Numbered.stringify(i) );
+    converted.push( Numbered.stringify(i).replace(/-/g,' ') );
   }
   return converted;
 }
