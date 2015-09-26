@@ -265,7 +265,7 @@ alexa.app = function(name,endpoint) {
 			intent = self.intents[intentName];
 			if (intent.schema && intent.schema.utterances) {
 				intent.schema.utterances.forEach(function(sample) {
-					var list = generateUtterances(sample,intent.schema.slots,self.dictionary);
+					var list = generateUtterances(sample,intent.schema.slots,self.dictionary,self.exhaustiveUtterances);
 					list.forEach(function(utterance) {
 						out+=intent.name+"\t"+(utterance.replace(/\s+/g,' '))+"\n";
 					});
