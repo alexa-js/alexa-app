@@ -15,23 +15,23 @@ alexa.response = function() {
 	};
 	this.say = function(str) {
 		if (typeof this.response.response.outputSpeech=="undefined") {
-			this.response.response.outputSpeech = {"type":"SSMS","ssms": "<speak>" + str + "</speak>" };
+			this.response.response.outputSpeech = {"type":"SSML","ssml": "<speak>" + str + "</speak>" };
 		}
 		else {
-			this.response.response.outputSpeech.ssms = this.response.response.outputSpeech.ssms.replace("</speak>", str + "</speak>");
+			this.response.response.outputSpeech.ssml = this.response.response.outputSpeech.ssml.replace("</speak>", str + "</speak>");
 		}
 		return this;
 	};
 	this.clear = function(str) {
-		this.response.response.outputSpeech = {"type":"SSMS","ssms":""};
+		this.response.response.outputSpeech = {"type":"SSML","ssml":""};
 		return this;
 	};
 	this.reprompt = function(str) {
 		if (typeof this.response.response.reprompt=="undefined") {
-			this.response.response.reprompt = {"outputSpeech" : {"type":"SSMS","ssms": "<speak>" + str + "</speak>" }};
+			this.response.response.reprompt = {"outputSpeech" : {"type":"SSML","ssml": "<speak>" + str + "</speak>" }};
 		}
 		else {
-			this.response.response.reprompt.ssms = this.response.response.reprompt.ssms.replace("</speak>", str + "</speak>");
+			this.response.response.reprompt.ssml = this.response.response.reprompt.ssml.replace("</speak>", str + "</speak>");
 		}
 		return this;
 	};
