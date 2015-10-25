@@ -1,6 +1,6 @@
 {
   "name": "alexa-app",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps (Skills) using Node.js",
   "main": "index.js",
   "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
@@ -19,8 +19,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^2.9.30",
-    "js-combinatorics": "^0.5.0",
-    "numbered": "^1.0.0"
+    "alexa-utterances": "0.0.1",
+    "bluebird": "^2.9.30"
   }
 }
