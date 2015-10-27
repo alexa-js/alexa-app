@@ -449,6 +449,11 @@ All named apps can be found in the alexa.apps object, keyed by name. The value i
 
 ## History
 
+- 2.2.0 - Oct 26, 2015
+  - Bumped alexa-utterances to version 0.1.0
+  - Added support for the "exhaustiveUtterances" option in alexa-utterances (Issue #27)
+  - By default, alexa-app utterances now avoid the cartesian product of all slot values
+
 - 2.1.5 - Oct 25, 2015
   - Externalized the generation of utterances to the new alexa-utterances module (Issue #26)
   
