@@ -118,6 +118,9 @@ alexa.app = function(name,endpoint) {
 	
 	// Persist session variables from every request into every response?
 	this.persistentSession = true;
+
+    // use a minimal set of utterances or the full cartesian product?
+    this.exhaustiveUtterances = false;
 	
 	// A catch-all error handler - do nothing by default
 	this.error = null;
@@ -261,7 +264,7 @@ alexa.app = function(name,endpoint) {
 			intent = self.intents[intentName];
 			if (intent.schema && intent.schema.utterances) {
 				intent.schema.utterances.forEach(function(sample) {
-					var list = AlexaUtterances(sample,intent.schema.slots,self.dictionary);
+					var list = AlexaUtterances(sample,intent.schema.slots,self.dictionary,self.exhaustiveUtterances);
 					list.forEach(function(utterance) {
 						out+=intent.name+"\t"+(utterance.replace(/\s+/g,' '))+"\n";
 					});
