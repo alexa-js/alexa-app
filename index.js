@@ -83,11 +83,11 @@ alexa.request = function(json) {
 	this.sessionDetails = {
 		"new":this.data.session.new,
 		"sessionId":this.data.session.sessionId,
-		"userId":this.data.session.userId,
+		"userId":this.data.session.user.userId,
 		"attributes":this.data.session.attributes,
 		"application":this.data.session.application
 	};
-	this.userId = this.data.session.userId;
+	this.userId = this.data.session.user.userId;
 	this.applicationId = this.data.session.application.applicationId;
 	this.sessionId = this.data.session.sessionId;
 	this.sessionAttributes = this.data.session.attributes;
