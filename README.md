@@ -18,7 +18,7 @@ alexa-app does the dirty work of interpretting the JSON request from Amazon and 
 
 After defining your application's behavior, your caller (Express, Lambda, etc) should call the app.request() method, and pass the Alexa JSON request object. It will return a promise containing the response JSON. Your caller should then insert that into its response, whatever form it may take (see examples below).
 
-The intent schema definition and sample utterances can be included in your application's definition, making it very simple to generate hundreds (or thousands!) or sample utterances with a few lines.
+The intent schema definition and sample utterances can be included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
 
 NOTE: alexa-app makes no assumptions about what context it is running in. It will run in a stand-alone Node.js app, within an HTTPS server, within an AWS Lambda function, etc. It only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
 
