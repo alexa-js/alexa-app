@@ -1,5 +1,6 @@
 var Promise = require('bluebird');
 var AlexaUtterances = require('alexa-utterances');
+var SSML = require('./to-ssml');
 
 var alexa={};
 
@@ -14,10 +15,11 @@ alexa.response = function() {
 	};
 	this.say = function(str) {
 		if (typeof this.response.response.outputSpeech=="undefined") {
-			this.response.response.outputSpeech = {"type":"PlainText","text":str};
+			this.response.response.outputSpeech = {"type":"SSML","ssml":SSML.fromStr(str)};
 		}
 		else {
-			this.response.response.outputSpeech.text+=str;
+			// append str to the current outputSpeech, stripping the out speak tag
+			this.response.response.outputSpeech.ssml = SSML.fromStr(str, this.response.response.outputSpeech.ssml);
 		}
 		return this;
 	};
@@ -27,15 +29,17 @@ alexa.response = function() {
 	};
 	this.reprompt = function(str) {
 		if (typeof this.response.response.reprompt=="undefined") {
-			this.response.response.reprompt = {"outputSpeech" : {"type":"PlainText","text":str}};
+			this.response.response.reprompt = {"outputSpeech" : {"type":"SSML","ssml":SSML.fromStr(str)}};
 		}
 		else {
-			this.response.response.reprompt.outputSpeech.text+=str;
+			// append str to the current outputSpeech, stripping the out speak tag
+			this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.text);
 		}
 		return this;
 	};
 	this.card = function(title,content,subtitle) {
-		this.response.response.card = {"type":"Simple","content":content,"title":title,"subtitle":subtitle};
+		// remove all SSML to keep the card clean
+		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content),"subtitle":subtitle};
 		return this;
 	};
 	this.shouldEndSession = function(bool,reprompt) {
