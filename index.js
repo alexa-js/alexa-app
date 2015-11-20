@@ -34,8 +34,8 @@ alexa.response = function() {
 		}
 		return this;
 	};
-	this.card = function(title,content,subtitle) {
-		this.response.response.card = {"type":"Simple","content":content,"title":title,"subtitle":subtitle};
+	this.card = function(title,content) {
+		this.response.response.card = {"type":"Simple","content":content,"title":title};
 		return this;
 	};
 	this.shouldEndSession = function(bool,reprompt) {
