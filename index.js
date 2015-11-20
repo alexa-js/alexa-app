@@ -319,7 +319,7 @@ alexa.app = function(name,endpoint) {
 		}
 		if (enableDebug) {
 			express.get(endpoint,function(req,res) {
-				res.render('test',{"json":self,"schema":self.schema(),"utterances":self.utterances(),self.customSlotTypes()});
+				res.render('test',{"json":self,"schema":self.schema(),"utterances":self.utterances(),"slot_types":self.customSlotTypes()});
 			});
 		}
 	};
