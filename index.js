@@ -84,6 +84,7 @@ alexa.request = function(json) {
 		"new":this.data.session.new,
 		"sessionId":this.data.session.sessionId,
 		"userId":this.data.session.user.userId,
+		"user":this.data.session.user,
 		"attributes":this.data.session.attributes,
 		"application":this.data.session.application
 	};
@@ -91,6 +92,7 @@ alexa.request = function(json) {
 	this.applicationId = this.data.session.application.applicationId;
 	this.sessionId = this.data.session.sessionId;
 	this.sessionAttributes = this.data.session.attributes;
+	this.user = this.data.session.user;
 	this.isSessionNew = (true===this.data.session.new);
 	this.session = function(key) {
 		try {
