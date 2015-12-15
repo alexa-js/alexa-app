@@ -84,6 +84,7 @@ alexa.request = function(json) {
 		"new":this.data.session.new,
 		"sessionId":this.data.session.sessionId,
 		"userId":this.data.session.user.userId,
+    		"accessToken":this.data.session.user.accessToken || null,
 		"attributes":this.data.session.attributes,
 		"application":this.data.session.application
 	};
