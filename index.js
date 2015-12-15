@@ -38,6 +38,10 @@ alexa.response = function() {
 		this.response.response.card = {"type":"Simple","content":content,"title":title,"subtitle":subtitle};
 		return this;
 	};
+	this.linkAccount = function() {
+		this.response.response.card = {"type":"LinkAccount"};
+		return this;
+	};
 	this.shouldEndSession = function(bool,reprompt) {
 		this.response.response.shouldEndSession = bool;
 		if (reprompt) {
