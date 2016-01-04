@@ -42,6 +42,10 @@ alexa.response = function() {
 		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content),"subtitle":subtitle};
 		return this;
 	};
+	this.linkAccount = function() {
+		this.response.response.card = {"type":"LinkAccount"};
+		return this;
+	};
 	this.shouldEndSession = function(bool,reprompt) {
 		this.response.response.shouldEndSession = bool;
 		if (reprompt) {
