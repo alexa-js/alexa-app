@@ -2,6 +2,8 @@
 
 A Node module to simplify development of Alexa apps (Skills) using Node.js
 
+Generation of sample utterances from the schema definition in alexa-app has been pulled out to the separate *[alexa-utterances](https://github.com/mreinstein/alexa-utterances) module.
+
 # Installation
 
 ```bash
@@ -87,7 +89,8 @@ request.data
 The response JSON object is automatically built for you. All you need to do is tell it what you want to output.
 
 ```javascript
-// Tell Alexa to say something. Multiple calls to say() will be appended to each other
+// Tell Alexa to say something. Multiple calls to say() will be appended to each other.
+// All text output is treated as SSML
 response.say(String phrase)
 
 // Empty the response text
@@ -98,6 +101,10 @@ response.reprompt(String phrase)
 
 // Return a card to the user's Echo app
 response.card(String title, String content [, String subtitle] )
+
+// Return a card instructing the user how to link their account to the skill.
+// This internally sets the card response.
+response.linkAccount()
 
 // Tell Alexa whether the user's session is over. By default, sessions end.
 // You can optionally pass a reprompt message
@@ -448,6 +455,12 @@ var app = new alexa.app('hello','myEndpointName');
 All named apps can be found in the alexa.apps object, keyed by name. The value is the app itself.
 
 ## History
+
+- 2.3.0 - Jan 4, 2016
+  - Added support for SSML
+  - Added .linkAccount() method to return Link Account card
+  - Added request.sessionDetails.accessToken for skills using account linking
+  - Added MIT license file
 
 - 2.2.0 - Oct 26, 2015
   - Bumped alexa-utterances to version 0.1.0

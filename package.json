@@ -1,6 +1,6 @@
 {
   "name": "alexa-app",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps (Skills) using Node.js",
   "main": "index.js",
   "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
