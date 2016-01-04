@@ -2,7 +2,7 @@
 
 A Node module to simplify development of Alexa apps (Skills) using Node.js
 
-Generation of sample utterances from the schema definition in alexa-app has been pulled out to the separate *[alexa-utterances](https://github.com/mreinstein/alexa-utterances) module.
+Generation of sample utterances from the schema definition in alexa-app has been pulled out to the separate *[alexa-utterances](https://github.com/mreinstein/alexa-utterances)* module.
 
 # Installation
 
