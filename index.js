@@ -14,23 +14,23 @@ alexa.response = function() {
 	};
 	this.say = function(str) {
 		if (typeof this.response.response.outputSpeech=="undefined") {
-			this.response.response.outputSpeech = {"type":"PlainText","text":str};
+			this.response.response.outputSpeech = {"type":"SSML","ssml": "<speak>" + str + "</speak>" };
 		}
 		else {
-			this.response.response.outputSpeech.text+=str;
+			this.response.response.outputSpeech.ssml = this.response.response.outputSpeech.ssml.replace("</speak>", str + "</speak>");
 		}
 		return this;
 	};
 	this.clear = function(str) {
-		this.response.response.outputSpeech = {"type":"PlainText","text":""};
+		this.response.response.outputSpeech = {"type":"SSML","ssml":""};
 		return this;
 	};
 	this.reprompt = function(str) {
 		if (typeof this.response.response.reprompt=="undefined") {
-			this.response.response.reprompt = {"outputSpeech" : {"type":"PlainText","text":str}};
+			this.response.response.reprompt = {"outputSpeech" : {"type":"SSML","ssml": "<speak>" + str + "</speak>" }};
 		}
 		else {
-			this.response.response.reprompt.outputSpeech.text+=str;
+			this.response.response.reprompt.ssml = this.response.response.reprompt.ssml.replace("</speak>", str + "</speak>");
 		}
 		return this;
 	};
