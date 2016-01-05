@@ -1,6 +1,7 @@
 var Promise = require('bluebird');
 var AlexaUtterances = require('alexa-utterances');
-var SSML = require('./to-ssml');
+var ssml = require('ssml');
+var ssmlutil = require('./ssmlutil');
 
 var alexa={};
 
@@ -13,33 +14,63 @@ alexa.response = function() {
 			"shouldEndSession": true
 		}
 	};
-	this.say = function(str) {
-		if (typeof this.response.response.outputSpeech=="undefined") {
-			this.response.response.outputSpeech = {"type":"SSML","ssml":SSML.fromStr(str)};
+	this.say = function(message) {
+		if (message instanceof ssml) {
+			// coerce message to String
+			message = message.toString({minimal: true})
+				.replace("<speak>", "").replace("</speak>", "");
+		}
+		var previous = this.response.response.outputSpeech;
+		if (typeof previous=="undefined") {
+			// no existing output
+			this.response.response.outputSpeech = {
+				"type":"SSML",
+				"ssml": new ssml().say(message).toString({minimal: true})
+			};
 		}
 		else {
-			// append str to the current outputSpeech, stripping the out speak tag
-			this.response.response.outputSpeech.ssml = SSML.fromStr(str, this.response.response.outputSpeech.ssml);
-		}
+			// there is existing content
+			this.response.response.outputSpeech.ssml = new ssml()
+				.say(previous.ssml.replace("<speak>", "").replace("</speak>", "") + " ")
+				.say(message)
+				.toString({minimal: true});
+			}
 		return this;
 	};
 	this.clear = function(str) {
-		this.response.response.outputSpeech = {"type":"PlainText","text":""};
+		delete this.response.response['outputSpeech'];
+		delete this.response.response['reprompt'];
 		return this;
 	};
-	this.reprompt = function(str) {
-		if (typeof this.response.response.reprompt=="undefined") {
-			this.response.response.reprompt = {"outputSpeech" : {"type":"SSML","ssml":SSML.fromStr(str)}};
+	this.reprompt = function(message) {
+		if (message instanceof ssml) {
+			// coerce message to String
+			message = message.toString({minimal: true})
+				.replace("<speak>", "").replace("</speak>", "");
+		}
+		var previous = this.response.response.reprompt;
+		if (typeof previous=="undefined") {
+			// no existing reprompt
+			this.response.response.reprompt = {"outputSpeech" : {
+				"type":"SSML",
+				"ssml": new ssml().say(message).toString({minimal: true})}
+			};
 		}
 		else {
-			// append str to the current outputSpeech, stripping the out speak tag
-			this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.text);
+			// reprompt has existing content
+			this.response.response.reprompt.outputSpeech.ssml = new ssml()
+				.say(previous.outputSpeech.ssml.replace("<speak>", "").replace("</speak>", "") + " ")
+				.say(message)
+				.toString({minimal: true});
 		}
 		return this;
 	};
 	this.card = function(title,content,subtitle) {
-		// remove all SSML to keep the card clean
-		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content),"subtitle":subtitle};
+		if (content) {
+			// remove all SSML to keep the card clean
+			content = ssmlutil.cleanse(content);
+		}
+		this.response.response.card = {"type":"Simple","title":title,"content":content,"subtitle":subtitle};
 		return this;
 	};
 	this.linkAccount = function() {

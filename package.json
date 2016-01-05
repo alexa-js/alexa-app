@@ -10,6 +10,9 @@
     "alexa",
     "skills"
   ],
+  "scripts": {
+    "test": "tap test/tests.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/matt-kruse/alexa-app.git"
@@ -20,6 +23,10 @@
   "license": "MIT",
   "dependencies": {
     "alexa-utterances": "^0.1.0",
-    "bluebird": "^2.10.2"
+    "bluebird": "^2.10.2",
+    "ssml": "https://github.com/MaxwellPayne/node-ssml/tarball/master"
+  },
+  "devDependencies": {
+    "tap": "latest"
   }
 }
