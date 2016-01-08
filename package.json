@@ -22,5 +22,12 @@
     "alexa-utterances": "^0.1.0",
     "bluebird": "^2.10.2",
     "numbered": "^1.0.0"
+  },
+  "devDependencies": {
+    "tap": "^5.0.0"
+  }, 
+  "scripts": {
+    "prepublish": "npm test",
+    "test": "tap ./test"
   }
 }
