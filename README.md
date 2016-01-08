@@ -456,6 +456,9 @@ All named apps can be found in the alexa.apps object, keyed by name. The value i
 
 ## History
 
+- 2.3.0 - Jan 8, 2016
+  - Added "numbered" to the depencies list in package.json
+
 - 2.3.0 - Jan 4, 2016
   - Added support for SSML
   - Added .linkAccount() method to return Link Account card
