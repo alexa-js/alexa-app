@@ -1,16 +1,20 @@
 var alexa = require('../index.js'),
-    app = new alexa.app('foobar');
+    app = new alexa.app('foobar'),
+    tap = require('tap');
 
-app.intent('HelloWorld',
-    {
-        "utterances": [
-            "hello world"
-        ]
-    },
-    function(request, response) {
-        response.say("hello world");
-    }
-);
+tap.test('fromStr', function(t) {
 
-console.log(app.utterances());
-console.log(app.schema());
+  app.intent('HelloWorld',
+      {
+          "utterances": [
+              "hello world"
+          ]
+      },
+      function(request, response) {
+          response.say("hello world");
+      }
+  );
+  console.log(app.utterances());
+  console.log(app.schema());
+  t.end();
+});
