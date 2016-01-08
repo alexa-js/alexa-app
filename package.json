@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "alexa-utterances": "^0.1.0",
-    "bluebird": "^2.10.2"
+    "bluebird": "^2.10.2",
+    "numbered": "^1.0.0"
   }
 }
