@@ -24,7 +24,7 @@
   "dependencies": {
     "alexa-utterances": "^0.1.0",
     "bluebird": "^2.10.2",
-    "ssml": "https://github.com/MaxwellPayne/node-ssml/tarball/master"
+    "ssml": "0.0.4"
   },
   "devDependencies": {
     "tap": "latest"
