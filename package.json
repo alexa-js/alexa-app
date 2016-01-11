@@ -21,5 +21,10 @@
   "dependencies": {
     "alexa-utterances": "^0.1.0",
     "bluebird": "^2.10.2",
+    "numbered": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
   }
 }

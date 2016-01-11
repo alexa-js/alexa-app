@@ -456,6 +456,10 @@ All named apps can be found in the alexa.apps object, keyed by name. The value i
 
 ## History
 
+- 2.3.2 - Jan 11, 2016
+  - Fixed number output in SSML tags back to being digits
+  - Added automated tests for SSML
+
 - 2.3.0 - Jan 8, 2016
   - Added "numbered" to the depencies list in package.json
 
