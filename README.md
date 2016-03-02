@@ -24,7 +24,7 @@ The intent schema definition and sample utterances can be included in your appli
 
 NOTE: alexa-app makes no assumptions about what context it is running in. It will run in a stand-alone Node.js app, within an HTTPS server, within an AWS Lambda function, etc. It only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
 
-NOTE: If you don't use AWS Lambda and decide to host an Alexa skill on your own webserver, you will need to validate that requests come from alexa. This validation is *not* provided by this module. For more details on how to handle alexa request validation, look at https://github.com/mreinstein/alexa-verifier which provides the necessary code, along with an example showing how to integrate with express.
+NOTE: If you don't use AWS Lambda and decide to host an Alexa skill on your own webserver, you will need to validate that requests come from Alexa. This validation is *not* provided by this module. For more details on how to handle alexa request validation, look at https://github.com/mreinstein/alexa-verifier which provides the necessary code, along with an example showing how to integrate with express.
 
 # Features
 
