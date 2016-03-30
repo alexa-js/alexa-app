@@ -43,7 +43,7 @@ alexa.response = function() {
 		return this;
 	};
 	this.standardCard = function(title, content, smallImageUrl, largeImageUrl){
-		this.response.response.card = {"type": "Standard", "title": title, "content":SSML.cleanse(content), "image": {"smallImageUrl" smallImageUrl, "largeImageUrl": largeImageUrl} };
+		this.response.response.card = {"type": "Standard", "title": title, "content":SSML.cleanse(content), "image": {"smallImageUrl": smallImageUrl, "largeImageUrl": largeImageUrl} };
 	}
 	this.linkAccount = function() {
 		this.response.response.card = {"type":"LinkAccount"};
