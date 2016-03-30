@@ -42,6 +42,9 @@ alexa.response = function() {
 		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content),"subtitle":subtitle};
 		return this;
 	};
+	this.standardCard = function(title, content, smallImageUrl, largeImageUrl){
+		this.response.response.card = {"type": "Standard", "title": title, "content":SSML.cleanse(content), "image": {"smallImageUrl": smallImageUrl, "largeImageUrl": largeImageUrl} };
+	}
 	this.linkAccount = function() {
 		this.response.response.card = {"type":"LinkAccount"};
 		return this;
@@ -71,7 +74,7 @@ alexa.response = function() {
 		}
 		return this;
 	};
-	
+
 };
 
 alexa.request = function(json) {
@@ -124,26 +127,26 @@ alexa.app = function(name,endpoint) {
 		// If some other exception happens
 		,"GENERIC_ERROR":"Sorry, the application encountered an error"
 	};
-	
+
 	// Persist session variables from every request into every response?
 	this.persistentSession = true;
 
     // use a minimal set of utterances or the full cartesian product?
     this.exhaustiveUtterances = false;
-	
+
 	// A catch-all error handler - do nothing by default
 	this.error = null;
-	
+
 	// pre/post hooks to be run on every request
 	this.pre = function(request,response,type){};
 	this.post = function(request,response,type){};
-	
+
 	this.endpoint = endpoint;
 	// A mapping of keywords to arrays of possible values, for expansion of sample utterances
 	this.dictionary = {};
 	this.intents = {};
 	this.intent = function(intentName,schema,func) {
-		if (typeof schema=="function") { 
+		if (typeof schema=="function") {
 			func = schema;
 			schema = null;
 		}
@@ -189,7 +192,7 @@ alexa.app = function(name,endpoint) {
 			try {
 				var key;
 				// Copy all the session attributes from the request into the response so they persist.
-				// The Alexa API doesn't think session variables should persist for the entire 
+				// The Alexa API doesn't think session variables should persist for the entire
 				// duration of the session, but I do.
 				if (request.sessionAttributes && self.persistentSession) {
 					for (key in request.sessionAttributes) {
@@ -247,7 +250,7 @@ alexa.app = function(name,endpoint) {
 			}
 		});
 	};
-	
+
 	// Extract the schema and generate a schema JSON object
 	this.schema = function() {
 		var schema = {"intents":[]}, intentName, intent, key;
@@ -265,7 +268,7 @@ alexa.app = function(name,endpoint) {
 		};
 		return JSON.stringify(schema,null,3);
 	};
-	
+
 	// Generate a list of sample utterances
 	this.utterances = function() {
 		var intentName, utterances=[], intent, out="";
@@ -313,12 +316,12 @@ alexa.app = function(name,endpoint) {
 			});
 		}
 	};
-	
+
 	// Add the app to the global list of named apps
 	if (name) {
 		alexa.apps[name] = self;
 	}
-	
+
 	return this;
 }
 
