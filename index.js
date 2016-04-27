@@ -265,7 +265,26 @@ alexa.app = function(name,endpoint) {
 		};
 		return JSON.stringify(schema,null,3);
 	};
-	
+
+	// Generate the Custom Slot Types for the Interaction Model
+	this.customSlotTypes = function () {
+			var intentName, slotTypes = [], intent, out = "";
+			for (intentName in self.intents) {
+					intent = self.intents[intentName];
+					if (intent.schema && intent.schema.slot_types) {
+							intent.schema.slot_types.forEach(function (slot_type) {
+									out += slot_type.name + "\n";
+									out += slot_type.name.replace(/./g, '-') + "\n";
+									slot_type.values.forEach(function (value) {
+											out += value + "\n";
+									});
+									out += "\n";
+							});
+					}
+			};
+			return out;
+	};
+
 	// Generate a list of sample utterances
 	this.utterances = function() {
 		var intentName, utterances=[], intent, out="";
@@ -275,7 +294,7 @@ alexa.app = function(name,endpoint) {
 				intent.schema.utterances.forEach(function(sample) {
 					var list = AlexaUtterances(sample,intent.schema.slots,self.dictionary,self.exhaustiveUtterances);
 					list.forEach(function(utterance) {
-						out+=intent.name+"\t"+(utterance.replace(/\s+/g,' '))+"\n";
+						out+=intent.name+"\t"+(utterance.replace(/\s+/g,' ').trim())+"\n";
 					});
 				});
 			}
@@ -314,7 +333,7 @@ alexa.app = function(name,endpoint) {
 		}
 		if (enableDebug) {
 			express.get(endpoint,function(req,res) {
-				res.render('test',{"json":self,"schema":self.schema(),"utterances":self.utterances()});
+				res.render('test',{"json":self,"schema":self.schema(),"utterances":self.utterances(),"slot_types":self.customSlotTypes()});
 			});
 		}
 	};
