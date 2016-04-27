@@ -37,9 +37,9 @@ alexa.response = function() {
 		}
 		return this;
 	};
-	this.card = function(title,content,subtitle) {
+	this.card = function(title,content) {
 		// remove all SSML to keep the card clean
-		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content),"subtitle":subtitle};
+		this.response.response.card = {"type":"Simple","title":title,"content":SSML.cleanse(content)};
 		return this;
 	};
 	this.linkAccount = function() {
