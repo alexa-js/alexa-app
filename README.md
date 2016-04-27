@@ -100,7 +100,7 @@ response.clear()
 response.reprompt(String phrase)
 
 // Return a card to the user's Echo app
-response.card(String title, String content [, String subtitle] )
+response.card(String title, String content)
 
 // Return a card instructing the user how to link their account to the skill.
 // This internally sets the card response.
