@@ -203,6 +203,11 @@ alexa.app = function(name,endpoint) {
 				if (!response.resolved) {
 					if ("IntentRequest"===requestType) {
 						var intent = request_json.request.intent.name;
+						if (typeof self.intents[intent]==="undefined" && typeof self.intents["_default"]!=="undefined") {
+							// If this intent doesn't have a handler, but there is a _default handler defined,
+							// send it to the _default handler
+							intent = "_default";
+						}
 						if (typeof self.intents[intent]!="undefined" && typeof self.intents[intent]['function']=="function") {
 							if (false!==self.intents[intent]['function'](request,response)) {
 								response.send();
