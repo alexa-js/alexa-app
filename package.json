@@ -11,8 +11,9 @@
     "skills"
   ],
   "scripts": {
-    "lint": "eslint index.js; true"
-  }, 
+    "lint": "eslint index.js; true", 
+    "test": "mocha"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/matt-kruse/alexa-app.git"
