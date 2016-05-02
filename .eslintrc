@@ -10,3 +10,6 @@ globals:
 rules:
   semi: 2
   no-console: 0
+  key-spacing:
+    - 2
+    - afterColon: true
