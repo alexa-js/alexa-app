@@ -1,0 +1,15 @@
+---
+extends: eslint:recommended
+parser: esprima
+env:
+  browser: true
+  node: false
+globals:
+  require: false
+  module: false
+rules:
+  semi: 2
+  no-console: 0
+  key-spacing:
+    - 2
+    - afterColon: true
