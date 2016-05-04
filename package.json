@@ -11,7 +11,7 @@
     "skills"
   ],
   "scripts": {
-    "lint": "eslint index.js; true", 
+    "lint": "eslint index.js; true",
     "test": "mocha"
   },
   "repository": {
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "chai-as-promised": "^5.3.0",
     "eslint": "^2.9.0",
     "mocha": "^2.3.4"
   }
