@@ -29,10 +29,10 @@ describe("Alexa", function() {
               return response.response.outputSpeech;
             });
             it("responds with NO_INTENT_FOUND message", function() {
-                return expect(response).to.eventually.become({
-                  ssml: "<speak>" + app.messages.NO_INTENT_FOUND + '</speak>',
-                  type: "SSML"
-                })
+              return expect(response).to.eventually.become({
+                ssml: "<speak>" + app.messages.NO_INTENT_FOUND + "</speak>",
+                type: "SSML"
+              });
             });
           });
         });
