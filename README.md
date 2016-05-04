@@ -107,7 +107,7 @@ response.reprompt(String phrase)
 
 // Return a card to the user's Echo app
 // For Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object
-// Still supports card(String title, String content) for backwards compat of type "Simple"
+// Skill supports card(String title, String content) for backwards compat of type "Simple"
 response.card(Object card)
 
 // Return a card instructing the user how to link their account to the skill.
