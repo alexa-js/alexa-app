@@ -223,7 +223,6 @@ alexa.app = function(name, endpoint) {
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {
-            debugger;
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {

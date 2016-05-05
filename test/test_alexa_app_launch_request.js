@@ -33,54 +33,66 @@ describe("Alexa", function() {
           });
 
           context("with a matching intent handler", function() {
-            context("with no reprompt", function() {
-              var app = new Alexa.app("myapp");
-              var expectedMessage = "tubular!";
-              var expectedReprompt = "sweet reprompt dude!";
-              describe("outputSpeech", function() {
+            var app = new Alexa.app("myapp");
+            var expectedMessage = "tubular!";
+            var expectedReprompt = "sweet reprompt dude!";
+            describe("outputSpeech", function() {
 
-                it("handles reprompting correctly", function() {
-                  app.launch(function(req, res) {
-                    res.say(expectedMessage).say(expectedMessage).reprompt(expectedReprompt);
-                  });
-                  var subject = app.request(mockRequest).then(function(response) {
-                    return response.response.outputSpeech;
-                  });
-                  return expect(subject).to.eventually.become({
-                    ssml: "<speak>" + expectedMessage + " " + expectedMessage + "</speak>",
-                    type: "SSML"
-                  });
-                  subject = app.request(mockRequest).then(function(response) {
-                    return response.reprompt.outputSpeech;
-                  });
-                  return expect(subject).to.eventually.become({
-                    ssml: "<speak>" + expectedReprompt + "</speak>",
-                    type: "SSML"
-                  });
+              it("handles reprompting correctly", function() {
+                app.launch(function(req, res) {
+                  res.say(expectedMessage).say(expectedMessage).reprompt(expectedReprompt);
                 });
-                it("combines says into a larger response", function() {
-                  app.launch(function(req, res) {
-                    res.say(expectedMessage).say(expectedMessage);
-                  });
-                  var subject = app.request(mockRequest).then(function(response) {
-                    return response.response.outputSpeech;
-                  });
-                  return expect(subject).to.eventually.become({
-                    ssml: "<speak>" + expectedMessage + " " + expectedMessage + "</speak>",
-                    type: "SSML"
-                  });
+                var subject = app.request(mockRequest).then(function(response) {
+                  return response.response.outputSpeech;
                 });
-                it("responds with expected message", function() {
-                  app.launch(function(req, res) {
-                    res.say(expectedMessage);
-                  });
-                  var subject = app.request(mockRequest).then(function(response) {
-                    return response.response.outputSpeech;
-                  });
-                  return expect(subject).to.eventually.become({
-                    ssml: "<speak>" + expectedMessage + "</speak>",
-                    type: "SSML"
-                  });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + " " + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("combines multiple reprompts?", function() {
+                app.launch(function(req, res) {
+                  res.say(expectedMessage)
+                    .reprompt(expectedReprompt)
+                    .reprompt(expectedReprompt);
+                });
+                var subject = app.request(mockRequest).then(function(response) {
+                  return response.response.reprompt.outputSpeech;
+                });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedReprompt + "</speak>",
+                  type: "SSML"
+                });
+                //return expect(subject).to.eventually.become({
+                  //ssml: "<speak>" + expectedReprompt + " " + expectedReprompt + "</speak>",
+                  //type: "SSML"
+                //});
+              });
+
+              it("combines says into a larger response", function() {
+                app.launch(function(req, res) {
+                  res.say(expectedMessage).say(expectedMessage);
+                });
+                var subject = app.request(mockRequest).then(function(response) {
+                  return response.response.outputSpeech;
+                });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + " " + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("responds with expected message", function() {
+                app.launch(function(req, res) {
+                  res.say(expectedMessage);
+                });
+                var subject = app.request(mockRequest).then(function(response) {
+                  return response.response.outputSpeech;
+                });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
                 });
               });
             });
