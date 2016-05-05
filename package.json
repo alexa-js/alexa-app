@@ -11,8 +11,10 @@
     "skills"
   ],
   "scripts": {
-    "lint": "eslint index.js; true", 
-    "test": "mocha"
+    "lint": "eslint index.js; true",
+    "coverage": "istanbul cover _mocha -- -R spec",
+    "test": "mocha",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*"
   },
   "repository": {
     "type": "git",
@@ -29,7 +31,10 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "chai-as-promised": "^5.3.0",
+    "coveralls": "^2.11.9",
     "eslint": "^2.9.0",
+    "istanbul": "^0.4.3",
     "mocha": "^2.3.4"
   }
 }
