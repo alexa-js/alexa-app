@@ -1,7 +1,8 @@
 # alexa-app
 
-[![Build Status](https://travis-ci.org/mutexkid/alexa-app.svg)](https://travis-ci.org/mutexkid/alexa-app)
-[![Coverage Status](https://coveralls.io/repos/github/mutexkid/alexa-app/badge.svg)](https://coveralls.io/github/mutexkid/alexa-app)
+[![Build Status](https://travis-ci.org/matt-kruse/alexa-app.svg?branch=master)](https://travis-ci.org/matt-kruse/alexa-app)
+[![Coverage Status](https://coveralls.io/repos/github/matt-kruse/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/matt-kruse/alexa-app?branch=master)
+
 
 A Node module to simplify development of Alexa apps (Skills) using Node.js
 
