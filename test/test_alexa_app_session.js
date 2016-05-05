@@ -40,7 +40,7 @@ describe("Alexa", function() {
           ]);
         });
 
-        it("has a res object as expected ", function() {
+        it("has a res object with expected properties", function() {
           app.intent("airportInfoIntent", {}, intentHandler);
           var subject = app.request(mockRequest).then(function(response) {
             return reqObject;
