@@ -52,12 +52,7 @@ describe("Alexa", function() {
               return true;
             };
             var expectedMessage = "tubular!";
-            app.intent("airportInfoIntent", {
-              "slots": {
-                "AIRPORTCODE": "FAACODES"
-              },
-              "utterances": ["{|flight|airport} {|delay|status} {|info} {|for} {-|AIRPORTCODE}"]
-            }, intentHandler);
+            app.intent("airportInfoIntent", {}, intentHandler);
 
             describe("outputSpeech", function() {
               it("combines says into a larger response", function() {
@@ -66,12 +61,7 @@ describe("Alexa", function() {
                   res.say(expectedMessage).say(expectedMessage);
                   return true;
                 };
-                app.intent("airportInfoIntent", {
-                  "slots": {
-                    "AIRPORTCODE": "FAACODES"
-                  },
-                  "utterances": ["{|flight|airport} {|delay|status} {|info} {|for} {-|AIRPORTCODE}"]
-                }, intentHandler);
+                app.intent("airportInfoIntent", {}, intentHandler);
                 var subject = app.request(mockRequest);
                 subject = subject.then(function(response) {
                   return response.response.outputSpeech;
@@ -87,12 +77,7 @@ describe("Alexa", function() {
                   res.say(expectedMessage);
                   return true;
                 };
-                app.intent("airportInfoIntent", {
-                  "slots": {
-                    "AIRPORTCODE": "FAACODES"
-                  },
-                  "utterances": ["{|flight|airport} {|delay|status} {|info} {|for} {-|AIRPORTCODE}"]
-                }, intentHandler);
+                app.intent("airportInfoIntent", { }, intentHandler);
                 var subject = app.request(mockRequest);
                 subject = subject.then(function(response) {
                   return response.response.outputSpeech;
