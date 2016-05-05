@@ -1,5 +1,8 @@
 # alexa-app
 
+[![Build Status](https://travis-ci.org/mutexkid/alexa-app.svg)](https://travis-ci.org/mutexkid/alexa-app)
+[![Coverage Status](https://coveralls.io/repos/github/mutexkid/alexa-app/badge.svg)](https://coveralls.io/github/mutexkid/alexa-app)
+
 A Node module to simplify development of Alexa apps (Skills) using Node.js
 
 Generation of sample utterances from the schema definition in alexa-app has been pulled out to the separate *[alexa-utterances](https://github.com/mreinstein/alexa-utterances)* module.
