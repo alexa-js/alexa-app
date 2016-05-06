@@ -42,8 +42,9 @@ describe("Alexa", function() {
               });
             });
           });
+
           describe("intent handler with card and say function called on res", function() {
-            it("responds with a speech and card", function() {
+            it("responds with a speech and card using deprecated api", function() {
               var cardTitle = "radCard";
               var cardContent = "MyCard Content!";
               intentHandler = function(req, res) {
@@ -70,6 +71,100 @@ describe("Alexa", function() {
                 }),
               ]);
             });
+
+            it("responds with a speech and simple card", function() {
+              var oCard = {
+                  type: "Simple",
+                  title: "My Cool Card",
+                  content: "This is the\ncontent of my card"
+                },
+                expectedCard = JSON.parse(JSON.stringify(oCard));
+
+              intentHandler = function(req, res) {
+                res.say(expectedMessage).card(oCard);
+                return true;
+              };
+              setupIntentHandler(intentHandler);
+              var subject = app.request(mockRequest);
+              var alexaResponse = subject.then(function(response) {
+                return response.response.outputSpeech;
+              });
+              var cardResponse = subject.then(function(response) {
+                return response.response.card;
+              });
+              return Promise.all([
+                expect(alexaResponse).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                }),
+                expect(cardResponse).to.eventually.become(expectedCard),
+              ]);
+            });
+
+            it("responds with a speech and standard card with images", function() {
+              var oCard = {
+                  type: "Standard",
+                  title: "My Cool Card",
+                  text: "Your ride is on the way to 123 Main Street!\nEstimated cost for this ride: $25",
+                  image: {
+                    smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png",
+                    largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
+                  }
+                },
+                expectedCard = JSON.parse(JSON.stringify(oCard));
+
+              intentHandler = function(req, res) {
+                res.say(expectedMessage).card(oCard);
+                return true;
+              };
+              setupIntentHandler(intentHandler);
+              var subject = app.request(mockRequest);
+              var alexaResponse = subject.then(function(response) {
+                return response.response.outputSpeech;
+              });
+              var cardResponse = subject.then(function(response) {
+                return response.response.card;
+              });
+              return Promise.all([
+                expect(alexaResponse).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                }),
+                expect(cardResponse).to.eventually.become(expectedCard),
+              ]);
+            });
+
+            it("responds with a speech and invalid standard card", function() {
+              var oCard = {
+                  type: "Standard",
+                  title: "My Cool Card",
+                  text: "Your ride is on the way to 123 Main Street!\nEstimated cost for this ride: $25",
+                  image: {}
+                },
+                expectedCard = undefined;
+
+              intentHandler = function(req, res) {
+                res.say(expectedMessage).card(oCard);
+                return true;
+              };
+              setupIntentHandler(intentHandler);
+              var subject = app.request(mockRequest);
+              var alexaResponse = subject.then(function(response) {
+                return response.response.outputSpeech;
+              });
+              var cardResponse = subject.then(function(response) {
+                return response.response.card;
+              });
+
+              return Promise.all([
+                expect(alexaResponse).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                }),
+                expect(cardResponse).to.eventually.become(expectedCard),
+              ]);
+            });
+
           });
         });
       });
