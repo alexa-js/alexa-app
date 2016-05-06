@@ -24,7 +24,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.clear = function( /*str*/ ) {
+  this.clear = function(/*str*/) {
     this.response.response.outputSpeech = {
       "type": "PlainText",
       "text": ""
@@ -45,13 +45,54 @@ alexa.response = function() {
     }
     return this;
   };
-  this.card = function(title, content) {
+  this.card = function(oCard) {
+    if (2 == arguments.length) {  //backwards compat
+      oCard = {
+        type: "Simple",
+        title: arguments[0],
+        content: arguments[1]
+      }
+    }
+
+    var requiredAttrs = [],
+      clenseAttrs = [];
+
+    switch (oCard.type) {
+      case 'Simple':
+        requiredAttrs.push('content');
+        clenseAttrs.push('content');
+        break;
+      case 'Standard':
+        requiredAttrs.push('text');
+        clenseAttrs.push('text');
+        if (('image' in oCard) && ( !('smallImageUrl' in oCard['image']) && !('largeImageUrl' in oCard['image']) )) {
+          console.error('If card.image is defined, must specify at least smallImageUrl or largeImageUrl');
+          return this;
+        }
+        break;
+      default:
+        break;
+    }
+
+    var hasAllReq = requiredAttrs.every(function(idx) {
+      if (!(idx in oCard)) {
+        console.error('Card object is missing required attr "' + idx + '"');
+        return false;
+      }
+      return true;
+    });
+
+    if (!hasAllReq) {
+      return this;
+    }
+
     // remove all SSML to keep the card clean
-    this.response.response.card = {
-      "type": "Simple",
-      "title": title,
-      "content": SSML.cleanse(content)
-    };
+    clenseAttrs.forEach(function(idx) {
+      oCard[idx] = SSML.cleanse(oCard[idx]);
+    });
+
+    this.response.response.card = oCard;
+
     return this;
   };
   this.linkAccount = function() {
@@ -153,8 +194,8 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function( /*request, response, type*/ ) {};
-  this.post = function( /*request, response, type*/ ) {};
+  this.pre = function(/*request, response, type*/) {};
+  this.post = function(/*request, response, type*/) {};
 
   this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
@@ -266,8 +307,8 @@ alexa.app = function(name, endpoint) {
   // Extract the schema and generate a schema JSON object
   this.schema = function() {
     var schema = {
-        "intents": []
-      }, intentName, intent, key;
+      "intents": []
+    }, intentName, intent, key;
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       var intentSchema = {

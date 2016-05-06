@@ -106,7 +106,9 @@ response.clear()
 response.reprompt(String phrase)
 
 // Return a card to the user's Echo app
-response.card(String title, String content)
+// For Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object
+// Skill supports card(String title, String content) for backwards compat of type "Simple"
+response.card(Object card)
 
 // Return a card instructing the user how to link their account to the skill.
 // This internally sets the card response.
@@ -331,6 +333,46 @@ WhatsMyColorIntent what is my favorite color
 WhatsMyColorIntent say my favorite color
 WhatsMyColorIntent tell me my favorite color
 WhatsMyColorIntent tell me what my favorite color is
+
+```
+
+# Cards
+
+The `response.card(Object card)` method allows you to send ["Home Cards"](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app) on the Alexa app,  the companion app available for Fire OS, Android, iOS, and desktop web browsers.
+
+The full specification for the `card` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object)
+
+Card's do not support SSML
+
+**Note**: If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
+
+## Card Examples
+
+Display text only, aka [Simple](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app#Creating%20a%20Basic%20Home%20Card%20to%20Display%20Text):
+
+```javascript
+response.card({
+  type:    "Simple",
+  title:   "My Cool Card",  //this is not required for type Simple
+  content: "This is the\ncontent of my card"
+});
+
+```
+
+Display text and image, aka [Standard](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app#Creating%20a%20Home%20Card%20to%20Display%20Text%20and%20an%20Image):
+
+**Note**: make sure to read the restrictions on hosting the images. Must support CORS AND SSL cert signed by an Amazon approved cert authority.
+
+```javascript
+response.card({
+  type: "Standard",
+  title: "My Cool Card",  //this is not required for type Simple OR Standard
+  text:  "Your ride is on the way to 123 Main Street!\nEstimated cost for this ride: $25",
+  image: {                //image is optional
+    smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png",  //One must be specified
+    largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
+  }
+});
 
 ```
 
