@@ -1,18 +1,18 @@
-var Promise         = require("bluebird");
+var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
-var SSML            = require("./to-ssml");
-var alexa           = {};
+var SSML = require("./to-ssml");
+var alexa = {};
 
 alexa.response = function() {
-  this.resolved         = false;
-  this.response         = {
+  this.resolved = false;
+  this.response = {
     "version":           "1.0",
     "sessionAttributes": {},
     "response":          {
       "shouldEndSession": true
     }
   };
-  this.say              = function(str) {
+  this.say = function(str) {
     if (typeof this.response.response.outputSpeech == "undefined") {
       this.response.response.outputSpeech = {
         "type": "SSML",
@@ -24,14 +24,14 @@ alexa.response = function() {
     }
     return this;
   };
-  this.clear            = function(/*str*/) {
+  this.clear = function(/*str*/) {
     this.response.response.outputSpeech = {
       "type": "PlainText",
       "text": ""
     };
     return this;
   };
-  this.reprompt         = function(str) {
+  this.reprompt = function(str) {
     if (typeof this.response.response.reprompt == "undefined") {
       this.response.response.reprompt = {
         "outputSpeech": {
@@ -45,7 +45,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.card             = function(oCard) {
+  this.card = function(oCard) {
     if (2 == arguments.length) {  //backwards compat
       oCard = {
         type:    "Simple",
@@ -55,7 +55,7 @@ alexa.response = function() {
     }
 
     var requiredAttrs = [],
-        clenseAttrs   = [];
+      clenseAttrs = [];
 
     switch (oCard.type) {
       case 'Simple':
@@ -95,7 +95,7 @@ alexa.response = function() {
 
     return this;
   };
-  this.linkAccount      = function() {
+  this.linkAccount = function() {
     this.response.response.card = {
       "type": "LinkAccount"
     };
@@ -108,7 +108,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.session          = function(key, val) {
+  this.session = function(key, val) {
     if (typeof val == "undefined") {
       return this.response.sessionAttributes[key];
     } else {
@@ -116,7 +116,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.clearSession     = function(key) {
+  this.clearSession = function(key) {
     if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
       delete this.response.sessionAttributes[key];
     } else {
@@ -128,8 +128,8 @@ alexa.response = function() {
 };
 
 alexa.request = function(json) {
-  this.data              = json;
-  this.slot              = function(slotName, defaultValue) {
+  this.data = json;
+  this.slot = function(slotName, defaultValue) {
     try {
       return this.data.request.intent.slots[slotName].value;
     } catch (e) {
@@ -137,7 +137,7 @@ alexa.request = function(json) {
       return defaultValue;
     }
   };
-  this.type              = function() {
+  this.type = function() {
     try {
       return this.data.request.type;
     } catch (e) {
@@ -145,7 +145,7 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.sessionDetails    = {
+  this.sessionDetails = {
     "new":         this.data.session.new,
     "sessionId":   this.data.session.sessionId,
     "userId":      this.data.session.user.userId,
@@ -153,12 +153,12 @@ alexa.request = function(json) {
     "attributes":  this.data.session.attributes,
     "application": this.data.session.application
   };
-  this.userId            = this.data.session.user.userId;
-  this.applicationId     = this.data.session.application.applicationId;
-  this.sessionId         = this.data.session.sessionId;
+  this.userId = this.data.session.user.userId;
+  this.applicationId = this.data.session.application.applicationId;
+  this.sessionId = this.data.session.sessionId;
   this.sessionAttributes = this.data.session.attributes;
-  this.isSessionNew      = (true === this.data.session.new);
-  this.session           = function(key) {
+  this.isSessionNew = (true === this.data.session.new);
+  this.session = function(key) {
     try {
       return this.data.session.attributes[key];
     } catch (e) {
@@ -171,8 +171,8 @@ alexa.request = function(json) {
 alexa.apps = {};
 
 alexa.app = function(name, endpoint) {
-  var self      = this;
-  this.name     = name;
+  var self = this;
+  this.name = name;
   this.messages = {
     // When an intent was passed in that the application was not configured to handle
     "NO_INTENT_FOUND":      "Sorry, the application didn't know what to do with that intent",
@@ -194,18 +194,18 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre  = function(/*request, response, type*/) {
+  this.pre = function(/*request, response, type*/) {
   };
   this.post = function(/*request, response, type*/) {
   };
 
-  this.endpoint         = endpoint;
+  this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
-  this.dictionary       = {};
-  this.intents          = {};
-  this.intent           = function(intentName, schema, func) {
+  this.dictionary = {};
+  this.intents = {};
+  this.intent = function(intentName, schema, func) {
     if (typeof schema == "function") {
-      func   = schema;
+      func = schema;
       schema = null;
     }
     self.intents[intentName] = {
@@ -216,21 +216,21 @@ alexa.app = function(name, endpoint) {
       self.intents[intentName].schema = schema;
     }
   };
-  this.launchFunc       = null;
-  this.launch           = function(func) {
+  this.launchFunc = null;
+  this.launch = function(func) {
     self.launchFunc = func;
   };
   this.sessionEndedFunc = null;
-  this.sessionEnded     = function(func) {
+  this.sessionEnded = function(func) {
     self.sessionEndedFunc = func;
   };
-  this.request          = function(request_json) {
+  this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
-      var request      = new alexa.request(request_json);
-      var response     = new alexa.response();
+      var request = new alexa.request(request_json);
+      var response = new alexa.response();
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
-      response.send    = function(exception) {
+      response.send = function(exception) {
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -240,7 +240,7 @@ alexa.app = function(name, endpoint) {
           resolve(response.response);
         }
       };
-      response.fail    = function(msg, exception) {
+      response.fail = function(msg, exception) {
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -312,7 +312,7 @@ alexa.app = function(name, endpoint) {
       "intents": []
     }, intentName, intent, key;
     for (intentName in self.intents) {
-      intent           = self.intents[intentName];
+      intent = self.intents[intentName];
       var intentSchema = {
         "intent": intent.name,
         "slots":  []
@@ -335,8 +335,8 @@ alexa.app = function(name, endpoint) {
   // Generate a list of sample utterances
   this.utterances = function() {
     var intentName,
-        intent,
-        out = "";
+      intent,
+      out = "";
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       if (intent.schema && intent.schema.utterances) {
