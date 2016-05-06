@@ -6,9 +6,9 @@ var alexa = {};
 alexa.response = function() {
   this.resolved = false;
   this.response = {
-    "version":           "1.0",
+    "version": "1.0",
     "sessionAttributes": {},
-    "response":          {
+    "response": {
       "shouldEndSession": true
     }
   };
@@ -48,8 +48,8 @@ alexa.response = function() {
   this.card = function(oCard) {
     if (2 == arguments.length) {  //backwards compat
       oCard = {
-        type:    "Simple",
-        title:   arguments[0],
+        type: "Simple",
+        title: arguments[0],
         content: arguments[1]
       }
     }
@@ -146,11 +146,11 @@ alexa.request = function(json) {
     }
   };
   this.sessionDetails = {
-    "new":         this.data.session.new,
-    "sessionId":   this.data.session.sessionId,
-    "userId":      this.data.session.user.userId,
+    "new": this.data.session.new,
+    "sessionId": this.data.session.sessionId,
+    "userId": this.data.session.user.userId,
     "accessToken": this.data.session.user.accessToken || null,
-    "attributes":  this.data.session.attributes,
+    "attributes": this.data.session.attributes,
     "application": this.data.session.application
   };
   this.userId = this.data.session.user.userId;
@@ -175,13 +175,13 @@ alexa.app = function(name, endpoint) {
   this.name = name;
   this.messages = {
     // When an intent was passed in that the application was not configured to handle
-    "NO_INTENT_FOUND":      "Sorry, the application didn't know what to do with that intent",
+    "NO_INTENT_FOUND": "Sorry, the application didn't know what to do with that intent",
     // When the app was used with 'open' or 'launch' but no launch handler was defined
-    "NO_LAUNCH_FUNCTION":   "Try telling the application what to do instead of opening it",
+    "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
     // When a request type was not recognized
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
     // If some other exception happens
-    "GENERIC_ERROR":        "Sorry, the application encountered an error"
+    "GENERIC_ERROR": "Sorry, the application encountered an error"
   };
 
   // Persist session variables from every request into every response?
@@ -209,7 +209,7 @@ alexa.app = function(name, endpoint) {
       schema = null;
     }
     self.intents[intentName] = {
-      "name":     intentName,
+      "name": intentName,
       "function": func
     };
     if (schema) {
@@ -315,7 +315,7 @@ alexa.app = function(name, endpoint) {
       intent = self.intents[intentName];
       var intentSchema = {
         "intent": intent.name,
-        "slots":  []
+        "slots": []
       };
       if (intent.schema) {
         if (intent.schema.slots) {
@@ -386,8 +386,8 @@ alexa.app = function(name, endpoint) {
     if (enableDebug) {
       express.get(endpoint, function(req, res) {
         res.render("test", {
-          "json":       self,
-          "schema":     self.schema(),
+          "json": self,
+          "schema": self.schema(),
           "utterances": self.utterances()
         });
       });
