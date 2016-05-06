@@ -134,7 +134,7 @@ describe("Alexa", function() {
               ]);
             });
 
-            it("responds with a speech and invalid standard card", function() {
+            it("responds with a speech and no card because it was called with invalid info", function() {
               var oCard = {
                   type: "Standard",
                   title: "My Cool Card",
