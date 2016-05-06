@@ -194,10 +194,8 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function(/*request, response, type*/) {
-  };
-  this.post = function(/*request, response, type*/) {
-  };
+  this.pre = function(/*request, response, type*/) {};
+  this.post = function(/*request, response, type*/) {};
 
   this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
