@@ -51,7 +51,7 @@ alexa.response = function() {
         type: "Simple",
         title: arguments[0],
         content: arguments[1]
-      }
+      };
     }
 
     var requiredAttrs = [],
