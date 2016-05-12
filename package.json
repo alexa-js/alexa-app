@@ -1,6 +1,6 @@
 {
   "name": "alexa-app",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps (Skills) using Node.js",
   "main": "index.js",
   "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
@@ -10,6 +10,12 @@
     "alexa",
     "skills"
   ],
+  "scripts": {
+    "lint": "eslint index.js; true",
+    "coverage": "istanbul cover _mocha -- -R spec",
+    "test": "mocha",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/matt-kruse/alexa-app.git"
@@ -21,5 +27,14 @@
   "dependencies": {
     "alexa-utterances": "^0.1.0",
     "bluebird": "^2.10.2",
+    "numbered": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.3.0",
+    "coveralls": "^2.11.9",
+    "eslint": "^2.9.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.3.4"
   }
 }

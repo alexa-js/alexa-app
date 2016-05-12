@@ -1,5 +1,9 @@
 # alexa-app
 
+[![Build Status](https://travis-ci.org/matt-kruse/alexa-app.svg?branch=master)](https://travis-ci.org/matt-kruse/alexa-app)
+[![Coverage Status](https://coveralls.io/repos/github/matt-kruse/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/matt-kruse/alexa-app?branch=master)
+
+
 A Node module to simplify development of Alexa apps (Skills) using Node.js
 
 Generation of sample utterances from the schema definition in alexa-app has been pulled out to the separate *[alexa-utterances](https://github.com/mreinstein/alexa-utterances)* module.
@@ -23,6 +27,8 @@ After defining your application's behavior, your caller (Express, Lambda, etc) s
 The intent schema definition and sample utterances can be included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
 
 NOTE: alexa-app makes no assumptions about what context it is running in. It will run in a stand-alone Node.js app, within an HTTPS server, within an AWS Lambda function, etc. It only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
+
+NOTE: If you don't use AWS Lambda and decide to host an Alexa skill on your own webserver, you will need to validate that requests come from Alexa. This validation is *not* provided by this module. For more details on how to handle alexa request validation, look at https://github.com/mreinstein/alexa-verifier which provides the necessary code, along with an example showing how to integrate with express.
 
 # Features
 
@@ -100,7 +106,9 @@ response.clear()
 response.reprompt(String phrase)
 
 // Return a card to the user's Echo app
-response.card(String title, String content)
+// For Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object
+// Skill supports card(String title, String content) for backwards compat of type "Simple"
+response.card(Object card)
 
 // Return a card instructing the user how to link their account to the skill.
 // This internally sets the card response.
@@ -328,6 +336,46 @@ WhatsMyColorIntent tell me what my favorite color is
 
 ```
 
+# Cards
+
+The `response.card(Object card)` method allows you to send ["Home Cards"](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app) on the Alexa app,  the companion app available for Fire OS, Android, iOS, and desktop web browsers.
+
+The full specification for the `card` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object)
+
+Card's do not support SSML
+
+**Note**: If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
+
+## Card Examples
+
+Display text only, aka [Simple](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app#Creating%20a%20Basic%20Home%20Card%20to%20Display%20Text):
+
+```javascript
+response.card({
+  type:    "Simple",
+  title:   "My Cool Card",  //this is not required for type Simple
+  content: "This is the\ncontent of my card"
+});
+
+```
+
+Display text and image, aka [Standard](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app#Creating%20a%20Home%20Card%20to%20Display%20Text%20and%20an%20Image):
+
+**Note**: make sure to read the restrictions on hosting the images. Must support CORS AND SSL cert signed by an Amazon approved cert authority.
+
+```javascript
+response.card({
+  type: "Standard",
+  title: "My Cool Card",  //this is not required for type Simple OR Standard
+  text:  "Your ride is on the way to 123 Main Street!\nEstimated cost for this ride: $25",
+  image: {                //image is optional
+    smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png",  //One must be specified
+    largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
+  }
+});
+
+```
+
 # Error Handling
 
 Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
@@ -404,7 +452,6 @@ app.express( express_app, "/echo/", false );
 
 // Now POST calls to /echo/sample in express will be handled by the app.request() function.
 // GET calls will not be handled
-
 ```
 
 ## Customizing Default Error Messages
@@ -455,6 +502,10 @@ var app = new alexa.app('hello','myEndpointName');
 All named apps can be found in the alexa.apps object, keyed by name. The value is the app itself.
 
 ## History
+
+- 2.3.2 - Jan 11, 2016
+  - Fixed number output in SSML tags back to being digits
+  - Added automated tests for SSML
 
 - 2.3.0 - Jan 8, 2016
   - Added "numbered" to the depencies list in package.json

@@ -1,0 +1,28 @@
+---
+language: node_js
+node_js:
+  - "5.11"
+
+sudo: false
+
+cache:
+  directories:
+    - node_modules
+    - bower_components
+
+before_install:
+  - "npm config set spin false"
+
+install:
+  - npm install
+
+#before_script:
+  #- cp .env.example .env
+
+script:
+  - "npm run-script test-travis"
+
+after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+
+notifications:
+  email: false
