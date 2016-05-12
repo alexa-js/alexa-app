@@ -1,0 +1,38 @@
+{
+   "intents": [
+      {
+         "intent": "testIntentTwo",
+         "slots": [
+            {
+               "name": "MyCustomSlotType",
+               "type": "CUSTOMTYPE"
+            },
+            {
+               "name": "Tubular",
+               "type": "AMAZON.LITERAL"
+            },
+            {
+               "name": "Radical",
+               "type": "AMAZON.US_STATE"
+            }
+         ]
+      },
+      {
+         "intent": "testIntent",
+         "slots": [
+            {
+               "name": "AirportCode",
+               "type": "FAACODES"
+            },
+            {
+               "name": "Awesome",
+               "type": "AMAZON.DATE"
+            },
+            {
+               "name": "Tubular",
+               "type": "AMAZON.LITERAL"
+            }
+         ]
+      }
+   ]
+}
