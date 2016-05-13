@@ -11,7 +11,7 @@
     "skills"
   ],
   "scripts": {
-    "lint": "eslint index.js; true",
+    "lint": "eslint index.js;",
     "coverage": "istanbul cover _mocha -- -R spec",
     "test": "mocha",
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*"
