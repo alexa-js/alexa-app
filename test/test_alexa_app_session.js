@@ -54,5 +54,113 @@ describe("Alexa", function() {
         });
       });
     });
+
+    describe("#response", function() {
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+      var expectedMessage = "tubular";
+      context("intent handler with shouldEndSession = false", function () {
+        var app = new Alexa.app("myapp");
+        var intentHandler = function (req, res) {
+          res.say(expectedMessage).shouldEndSession(false);
+          res.session("foo", true);
+          res.session("bar", {
+            qaz: "woah"
+          });
+          res.clearSession();
+          return true;
+        };
+        app.intent("airportInfoIntent", {}, intentHandler);
+
+        it("responds with an empty session object after clearing session", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+          return Promise.all([
+            expect(subject).to.eventually.become({})
+          ]);
+        });
+      });
+    });
+
+    describe("#response", function() {
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+      var expectedMessage = "tubular";
+      context("intent handler with shouldEndSession = false", function () {
+        var app = new Alexa.app("myapp");
+        var intentHandler = function (req, res) {
+          res.say(expectedMessage).shouldEndSession(false);
+          res.session("foo", true);
+          res.session("bar", {
+            qaz: "woah"
+          });
+          res.clearSession("bar");
+          return true;
+        };
+        app.intent("airportInfoIntent", {}, intentHandler);
+
+        it("responds with session object missing a cleared session variable", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+          return Promise.all([
+            expect(subject).to.eventually.become({"foo": true})
+          ]);
+        });
+
+      });
+    });
+
+    describe("#response", function() {
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+      var expectedMessage = "tubular";
+      context("intent handler with shouldEndSession = false", function () {
+        var app = new Alexa.app("myapp");
+        var intentHandler = function (req, res) {
+          res.say(expectedMessage).shouldEndSession(false);
+          res.session("bar", {
+            qaz: "woah"
+          });
+          res.session("foo", res.session("bar"));
+          return true;
+        };
+        app.intent("airportInfoIntent", {}, intentHandler);
+
+        it("responds with a copied session object", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.sessionAttributes["foo"];
+          });
+          return Promise.all([
+            expect(subject).to.eventually.become({
+              qaz: "woah"
+            })
+          ]);
+        });
+      });
+    });
+
+    describe("#response", function() {
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+      var expectedMessage = "tubular";
+      var expectedReprompt = "totally";
+      context("intent handler with shouldEndSession = false", function () {
+        var app = new Alexa.app("myapp");
+        var intentHandler = function (req, res) {
+          res.say(expectedMessage).shouldEndSession(false, expectedReprompt);
+          return true;
+        };
+        app.intent("airportInfoIntent", {}, intentHandler);
+
+        it("responds reprompted message on shouldEndSession", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.response.reprompt.outputSpeech;
+          });
+          return expect(subject).to.eventually.become({
+            ssml: "<speak>" + expectedReprompt + "</speak>",
+            type: "SSML"
+          });
+        });
+      });
+    });
+
   });
 });
