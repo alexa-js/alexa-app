@@ -55,6 +55,50 @@ describe("Alexa", function() {
             app.intent("airportInfoIntent", {}, intentHandler);
 
             describe("outputSpeech", function() {
+              context("with a post method", function() {
+                it("invokes the post method after the intenthandler", function() {
+                  var postMessage = "hallelujah";
+                  app = new Alexa.app("myapp");
+                  app.post = function(req, res, type) {
+                    res.say(postMessage);
+                  };
+                  app.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.say("foobar");
+                      return true;
+                    });
+                  var subject = app.request(mockRequest).then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>foobar hallelujah</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
+              context("with a pre method", function() {
+                it("invokes the pre method before intenthandler", function() {
+                  var preMessage = "hallelujah";
+                  app = new Alexa.app("myapp");
+                  app.pre = function(req, res, type) {
+                    res.say(preMessage);
+                  };
+                  app.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.say("foobar");
+                      return true;
+                    });
+                  var subject = app.request(mockRequest).then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>hallelujah foobar</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
               it("clears output when clear is called", function() {
                 app = new Alexa.app("myapp");
                 intentHandler = function(req, res) {
@@ -86,7 +130,7 @@ describe("Alexa", function() {
                 });
                 //this seems like a strange result - should type be ssml? looks like a bug
                 return expect(subject).to.eventually.become({
-                  ssml: "<speak>tubular!</speak>", 
+                  ssml: "<speak>tubular!</speak>",
                   text: "",
                   type: "PlainText"
                 });

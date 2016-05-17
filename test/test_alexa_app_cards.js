@@ -43,6 +43,38 @@ describe("Alexa", function() {
             });
           });
 
+          describe("with a missing required attribute", function() {
+            describe("of a known type", function() {
+              it("adds no card response", function() {
+                var intentHandler = function(req, res) {
+                  res.say("sweet!").card({
+                    type: "Simple"
+                  });
+                };
+                setupIntentHandler(intentHandler);
+                var subject = app.request(mockRequest);
+                var cardResponse = subject.then(function(response) {
+                  console.log(response.response);
+                  return response.response;
+                });
+                expect(cardResponse).to.eventually.not.have.property("card");
+              });
+            });
+            describe("of an unknown type", function() {
+              it("adds no card response", function() {
+                var intentHandler = function(req, res) {
+                  res.say("sweet!").card({});
+                };
+                setupIntentHandler(intentHandler);
+                var subject = app.request(mockRequest);
+                var cardResponse = subject.then(function(response) {
+                  return response.response.card;
+                });
+                expect(cardResponse).to.eventually.become({});
+              });
+            });
+          });
+
           describe("intent handler with card and say function called on res", function() {
             it("responds with a speech and card using deprecated api", function() {
               var cardTitle = "radCard";
