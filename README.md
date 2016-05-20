@@ -227,6 +227,29 @@ app.intent('sampleIntent',
 
 The slots object is a simple Name:Type mapping. The type must be one of Amazon's supported slot types: LITERAL, NUMBER, DATE, TIME, DURATION
 
+### custom slot types
+
+[Custom slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interaction-model-reference#Custom Slot Type Syntax) are supported via the following syntax:
+
+```javascript
+app.intent('sampleIntent',
+	{
+		"slots":{"CustomSlotName": "CustomSlotType" },
+		"utterances":[ "airport {information|status} for {-|CustomSlotName}" ]
+	},
+	function(request,response) { ... }
+);
+```
+
+This will result in an utterance list of the following:
+
+```
+sampleIntent     airport information for {CustomSlotName}
+sampleIntent     airport status for {CustomSlotName}
+```
+
+Note that the "CustomSlotType" type values must be specified in the Skill Interface's Interaction Model for the custom slot type to function correctly.
+
 ### utterances
 
 The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded. Any number of sample utterances may be passed in the utterances array. Below are some sample utterances macros and what they will be expanded to.
