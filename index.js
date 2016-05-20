@@ -344,7 +344,7 @@ alexa.app = function(name, endpoint) {
             self.dictionary,
             self.exhaustiveUtterances);
           list.forEach(function(utterance) {
-            out += intent.name + "\t" + (utterance.replace(/\s+/g, " ")) + "\n";
+            out += intent.name + "\t" + (utterance.replace(/\s+/g, " ")).trim() + "\n";
           });
         });
       }
