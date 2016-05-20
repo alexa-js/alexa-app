@@ -1,9 +1,6 @@
 /*jshint expr: true*/
 "use strict";
 var chai = require("chai");
-var chaiAsPromised = require("chai-as-promised");
-var mockHelper = require("./helpers/mock_helper");
-chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
