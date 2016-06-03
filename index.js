@@ -222,7 +222,7 @@ alexa.app = function(name, endpoint) {
   this.sessionEnded = function(func) {
     self.sessionEndedFunc = func;
   };
-  this.request = function(request_json) {
+  this.request = function(request_json, state) {
     return new Promise(function(resolve, reject) {
       var request = new alexa.request(request_json);
       var response = new alexa.response();
@@ -266,7 +266,7 @@ alexa.app = function(name, endpoint) {
           if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-              if (false !== self.intents[intent]["function"](request, response)) {
+              if (false !== self.intents[intent]["function"](request, response, state)) {
                 response.send();
               }
             } else {
@@ -274,7 +274,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("LaunchRequest" === requestType) {
             if (typeof self.launchFunc == "function") {
-              if (false !== self.launchFunc(request, response)) {
+              if (false !== self.launchFunc(request, response, state)) {
                 response.send();
               }
             } else {
@@ -282,7 +282,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("SessionEndedRequest" === requestType) {
             if (typeof self.sessionEndedFunc == "function") {
-              if (false !== self.sessionEndedFunc(request, response)) {
+              if (false !== self.sessionEndedFunc(request, response, state)) {
                 response.send();
               }
             }
