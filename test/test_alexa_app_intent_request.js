@@ -111,8 +111,8 @@ describe("Alexa", function() {
                   return response.response.outputSpeech;
                 });
                 return expect(subject).to.eventually.become({
-                  text: "",
-                  type: "PlainText"
+                  ssml: "<speak></speak>",
+                  type: "SSML"
                 });
               });
               it("clears output when clear is called and say is then called", function() {
@@ -128,11 +128,9 @@ describe("Alexa", function() {
                 subject = subject.then(function(response) {
                   return response.response.outputSpeech;
                 });
-                //this seems like a strange result - should type be ssml? looks like a bug
                 return expect(subject).to.eventually.become({
                   ssml: "<speak>tubular!</speak>",
-                  text: "",
-                  type: "PlainText"
+                  type: "SSML"
                 });
               });
 

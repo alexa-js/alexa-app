@@ -26,8 +26,8 @@ alexa.response = function() {
   };
   this.clear = function(/*str*/) {
     this.response.response.outputSpeech = {
-      "type": "PlainText",
-      "text": ""
+      "type": "SSML",
+      "ssml": SSML.fromStr("")
     };
     return this;
   };
