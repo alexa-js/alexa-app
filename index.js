@@ -98,7 +98,7 @@ alexa.response = function(session) {
 
     // remove all SSML to keep the card clean
     clenseAttrs.forEach(function(idx) {
-      oCard[idx] = SSML.cleanse(oCard[idx]);
+      oCard[idx] = SSML.cleanse(oCard[idx], true);
     });
 
     this.response.response.card = oCard;
