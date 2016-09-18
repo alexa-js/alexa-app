@@ -29,11 +29,13 @@ var ssml = {
 
     return ssml_str.replace(/  +/, " ");
   },
-  cleanse: function(str) {
+  cleanse: function(str, multiNewline) {
     // <p> is left in place to support intended HTML output
-    return str.replace(/<\/?(speak|break|phoneme|audio|say-as|s\b|w\b)[^>]*>/gi, " ")
-      .replace(/\s*\n\s*/g, "\n")
-      .replace(/  +/g, " ")
+    var rval = str.replace(/<\/?(speak|break|phoneme|audio|say-as|s\b|w\b)[^>]*>/gi, " ");
+    if (!multiNewline) {
+      rval = rval.replace(/\s*\n\s*/g, "\n");
+    }
+    return rval.replace(/  +/g, " ")
       .replace(/ ([.,!?;:])/g, "$1")
       .trim();
   }
