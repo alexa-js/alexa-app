@@ -3,16 +3,18 @@ var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
 
-alexa.response = function() {
+alexa.response = function () {
+  var self = this;
   this.resolved = false;
   this.response = {
     "version": "1.0",
     "sessionAttributes": {},
     "response": {
+      "directives": [],
       "shouldEndSession": true
     }
   };
-  this.say = function(str) {
+  this.say = function (str) {
     if (typeof this.response.response.outputSpeech == "undefined") {
       this.response.response.outputSpeech = {
         "type": "SSML",
@@ -24,14 +26,14 @@ alexa.response = function() {
     }
     return this;
   };
-  this.clear = function(/*str*/) {
+  this.clear = function (/*str*/) {
     this.response.response.outputSpeech = {
       "type": "PlainText",
       "text": ""
     };
     return this;
   };
-  this.reprompt = function(str) {
+  this.reprompt = function (str) {
     if (typeof this.response.response.reprompt == "undefined") {
       this.response.response.reprompt = {
         "outputSpeech": {
@@ -45,7 +47,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.card = function(oCard) {
+  this.card = function (oCard) {
     if (2 == arguments.length) {  //backwards compat
       oCard = {
         type: "Simple",
@@ -65,7 +67,7 @@ alexa.response = function() {
       case 'Standard':
         requiredAttrs.push('text');
         clenseAttrs.push('text');
-        if (('image' in oCard) && ( !('smallImageUrl' in oCard['image']) && !('largeImageUrl' in oCard['image']) )) {
+        if (('image' in oCard) && (!('smallImageUrl' in oCard['image']) && !('largeImageUrl' in oCard['image']))) {
           console.error('If card.image is defined, must specify at least smallImageUrl or largeImageUrl');
           return this;
         }
@@ -74,7 +76,7 @@ alexa.response = function() {
         break;
     }
 
-    var hasAllReq = requiredAttrs.every(function(idx) {
+    var hasAllReq = requiredAttrs.every(function (idx) {
       if (!(idx in oCard)) {
         console.error('Card object is missing required attr "' + idx + '"');
         return false;
@@ -87,7 +89,7 @@ alexa.response = function() {
     }
 
     // remove all SSML to keep the card clean
-    clenseAttrs.forEach(function(idx) {
+    clenseAttrs.forEach(function (idx) {
       oCard[idx] = SSML.cleanse(oCard[idx]);
     });
 
@@ -95,20 +97,20 @@ alexa.response = function() {
 
     return this;
   };
-  this.linkAccount = function() {
+  this.linkAccount = function () {
     this.response.response.card = {
       "type": "LinkAccount"
     };
     return this;
   };
-  this.shouldEndSession = function(bool, reprompt) {
+  this.shouldEndSession = function (bool, reprompt) {
     this.response.response.shouldEndSession = bool;
     if (reprompt) {
       this.reprompt(reprompt);
     }
     return this;
   };
-  this.session = function(key, val) {
+  this.session = function (key, val) {
     if (typeof val == "undefined") {
       return this.response.sessionAttributes[key];
     } else {
@@ -116,7 +118,7 @@ alexa.response = function() {
     }
     return this;
   };
-  this.clearSession = function(key) {
+  this.clearSession = function (key) {
     if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
       delete this.response.sessionAttributes[key];
     } else {
@@ -124,12 +126,64 @@ alexa.response = function() {
     }
     return this;
   };
-
+  this.audioPlayer = {
+    play: function (url, token, playBehavior, expectedPreviousToken, offsetInMilliseconds) {
+      if (2 == arguments.length) {
+        audioPlayerDirective = {
+          "type": "AudioPlayer.Play",
+          "playBehavior": "REPLACE_ALL",
+          "audioItem": {
+            "stream": {
+              "url": url,
+              "token": token,
+              "expectedPreviousToken": "no previous token",
+              "offsetInMilliseconds": 0
+            }
+          }
+        }
+      } else {
+        audioPlayerDirective = {
+          "type": "AudioPlayer.Play",
+          "playBehavior": playBehavior,
+          "audioItem": {
+            "stream": {
+              "url": url,
+              "token": token,
+              "expectedPreviousToken": expectedPreviousToken,
+              "offsetInMilliseconds": offsetInMilliseconds
+            }
+          }
+        }
+      }
+      return self.response.response.directives.push(audioPlayerDirective);
+    },
+    stop: function () {
+      audioPlayerDirective = {
+        "type": "AudioPlayer.Stop",
+      }
+      return self.response.response.directives.push(audioPlayerDirective);
+    },
+    clearQueue: function (clearBehavior) {
+      if (0 == arguments.length) {
+        audioPlayerDirective = {
+        "type": "AudioPlayer.ClearQueue",
+        "clearBehavior": "CLEAR_ALL"
+        } 
+      } else {
+        audioPlayerDirective = {
+          "type": "AudioPlayer.ClearQueue",
+          "clearBehavior": clearBehavior
+        }
+        return self.response.response.directives.push(audioPlayerDirective);
+      }
+    }
+  }
 };
 
-alexa.request = function(json) {
+alexa.request = function (json) {
   this.data = json;
-  this.slot = function(slotName, defaultValue) {
+  console.log('alexa.request\'s json parameter: ', this.data);
+  this.slot = function (slotName, defaultValue) {
     try {
       return this.data.request.intent.slots[slotName].value;
     } catch (e) {
@@ -137,7 +191,7 @@ alexa.request = function(json) {
       return defaultValue;
     }
   };
-  this.type = function() {
+  this.type = function () {
     try {
       return this.data.request.type;
     } catch (e) {
@@ -158,7 +212,7 @@ alexa.request = function(json) {
   this.sessionId = this.data.session.sessionId;
   this.sessionAttributes = this.data.session.attributes;
   this.isSessionNew = (true === this.data.session.new);
-  this.session = function(key) {
+  this.session = function (key) {
     try {
       return this.data.session.attributes[key];
     } catch (e) {
@@ -166,12 +220,41 @@ alexa.request = function(json) {
       return;
     }
   };
+  this.context = function () {
+    try {
+      return this.data.context = {
+        "System": {
+          "application": {
+            "applicationId": this.applicationId
+          },
+          "user": {
+            "userId": this.data.session.user.userId,
+            "accessToken": this.data.session.user.accessToken
+          },
+          "device": {
+            "supportedInterfaces": {
+              "AudioPlayer": {}
+            }
+          }
+        },
+        "AudioPlayer": {
+          "token": this.sessionId,
+          "offsetInMilliseconds": this.data.request.offsetInMilliseconds,
+          "playerActivity": this.data.request.playerActivity
+        }
+      };
+    } catch (e) {
+      console.error("missing context", e);
+      return null;
+    }
+  }
 };
 
 alexa.apps = {};
 
-alexa.app = function(name, endpoint) {
+alexa.app = function (name, endpoint) {
   var self = this;
+  console.log('alexa.app self: ', self);
   this.name = name;
   this.messages = {
     // When an intent was passed in that the application was not configured to handle
@@ -194,14 +277,14 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function(/*request, response, type*/) {};
-  this.post = function(/*request, response, type*/) {};
+  this.pre = function (/*request, response, type*/) { };
+  this.post = function (/*request, response, type*/) { };
 
   this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
   this.dictionary = {};
   this.intents = {};
-  this.intent = function(intentName, schema, func) {
+  this.intent = function (intentName, schema, func) {
     if (typeof schema == "function") {
       func = schema;
       schema = null;
@@ -215,20 +298,23 @@ alexa.app = function(name, endpoint) {
     }
   };
   this.launchFunc = null;
-  this.launch = function(func) {
+  this.launch = function (func) {
     self.launchFunc = func;
   };
   this.sessionEndedFunc = null;
-  this.sessionEnded = function(func) {
+  this.sessionEnded = function (func) {
     self.sessionEndedFunc = func;
   };
-  this.request = function(request_json) {
-    return new Promise(function(resolve, reject) {
+  this.request = function (request_json) {
+    console.log('request_json in this.request: ', request_json);
+    return new Promise(function (resolve, reject) {
       var request = new alexa.request(request_json);
+      console.log('request in this.request\'s promise: ', request);
       var response = new alexa.response();
+      console.log('response in this.request\'s promise: ', response);
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
-      response.send = function(exception) {
+      response.send = function (exception) {
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -238,7 +324,7 @@ alexa.app = function(name, endpoint) {
           resolve(response.response);
         }
       };
-      response.fail = function(msg, exception) {
+      response.fail = function (msg, exception) {
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -258,6 +344,8 @@ alexa.app = function(name, endpoint) {
             response.session(key, request.sessionAttributes[key]);
           }
         }
+        var context = request.context();
+        console.log('context in try block in this.request: ', context);
         var requestType = request.type();
         if (typeof self.pre == "function") {
           self.pre(request, response, requestType);
@@ -305,7 +393,7 @@ alexa.app = function(name, endpoint) {
   };
 
   // Extract the schema and generate a schema JSON object
-  this.schema = function() {
+  this.schema = function () {
     var schema = {
       "intents": []
     }, intentName, intent, key;
@@ -331,19 +419,19 @@ alexa.app = function(name, endpoint) {
   };
 
   // Generate a list of sample utterances
-  this.utterances = function() {
+  this.utterances = function () {
     var intentName,
       intent,
       out = "";
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       if (intent.schema && intent.schema.utterances) {
-        intent.schema.utterances.forEach(function(sample) {
+        intent.schema.utterances.forEach(function (sample) {
           var list = AlexaUtterances(sample,
             intent.schema.slots,
             self.dictionary,
             self.exhaustiveUtterances);
-          list.forEach(function(utterance) {
+          list.forEach(function (utterance) {
             out += intent.name + "\t" + (utterance.replace(/\s+/g, " ")).trim() + "\n";
           });
         });
@@ -353,28 +441,28 @@ alexa.app = function(name, endpoint) {
   };
 
   // A built-in handler for AWS Lambda
-  this.handler = function(event, context) {
+  this.handler = function (event, context) {
     self.request(event)
-      .then(function(response) {
+      .then(function (response) {
         context.succeed(response);
       })
-      .catch(function(response) {
+      .catch(function (response) {
         context.fail(response);
       });
   };
 
   // For backwards compatibility
-  this.lambda = function() {
+  this.lambda = function () {
     return self.handler;
   };
 
   // A utility method to bootstrap alexa endpoints into express automatically
-  this.express = function(express, path, enableDebug) {
+  this.express = function (express, path, enableDebug) {
     var endpoint = (path || "/") + (self.endpoint || self.name);
-    express.post(endpoint, function(req, res) {
-      self.request(req.body).then(function(response) {
+    express.post(endpoint, function (req, res) {
+      self.request(req.body).then(function (response) {
         res.json(response);
-      }, function() {
+      }, function () {
         res.status(500).send("Server Error");
       });
     });
@@ -382,7 +470,7 @@ alexa.app = function(name, endpoint) {
       enableDebug = true;
     }
     if (enableDebug) {
-      express.get(endpoint, function(req, res) {
+      express.get(endpoint, function (req, res) {
         res.render("test", {
           "json": self,
           "schema": self.schema(),
@@ -396,7 +484,7 @@ alexa.app = function(name, endpoint) {
   if (name) {
     alexa.apps[name] = self;
   }
-
+  console.log('this! :', this);
   return this;
 };
 
