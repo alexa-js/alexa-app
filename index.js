@@ -190,6 +190,14 @@ alexa.response = function () {
 
 alexa.request = function (json) {
 	this.data = json;
+	this.session = function (key) {
+		try {
+			return this.data.session.attributes[key];
+		} catch (e) {
+			console.error("key not found on session attributes: " + key, e);
+			return;
+		}
+	};
 	this.slot = function (slotName, defaultValue) {
 		try {
 			return this.data.request.intent.slots[slotName].value;
@@ -219,17 +227,9 @@ alexa.request = function (json) {
 	this.sessionId = this.data.session.sessionId;
 	this.sessionAttributes = this.data.session.attributes;
 	this.isSessionNew = (true === this.data.session.new);
-	this.session = function (key) {
-		try {
-			return this.data.session.attributes[key];
-		} catch (e) {
-			console.error("key not found on session attributes: " + key, e);
-			return;
-		}
-	};
 	this.context = function () {
 		try {
-			return this.data.context = {
+			return this.data.request.context = {
 				"System": {
 					"application": {
 						"applicationId": this.applicationId
@@ -312,6 +312,7 @@ alexa.app = function (name, endpoint) {
 		self.sessionEndedFunc = func;
 	};
 	this.request = function (request_json) {
+		// console.log('request_json --->', request_json);
 		return new Promise(function (resolve, reject) {
 			var request = new alexa.request(request_json);
 			var response = new alexa.response();
@@ -347,9 +348,10 @@ alexa.app = function (name, endpoint) {
 						response.session(key, request.sessionAttributes[key]);
 					}
 				}
+				var context = request.context();
 				var requestType = request.type();
 				if (typeof self.pre == "function") {
-					self.pre(request, response, requestType);
+					self.pre(request, response, requestType, context);
 				}
 				if (!response.resolved) {
 					if ("IntentRequest" === requestType) {
