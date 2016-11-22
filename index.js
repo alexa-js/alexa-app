@@ -136,11 +136,10 @@ alexa.response = function () {
 					"url": url,
 					"token": token,
 					"expectedPreviousToken": undefined,
-					"offsetInMilliseconds": 0,
-					
+					"offsetInMilliseconds": 0
 				}
 			}
-		}
+		};
 		// configure with additional arguments
 		switch (arguments.length) {
 			// with playBehavior
@@ -167,25 +166,26 @@ alexa.response = function () {
 	this.audioPlayerStop = function () {
 		var audioPlayerDirective = {
 			"type": "AudioPlayer.Stop",
-		}
+		};
 		self.response.response.directives.push(audioPlayerDirective);
 		return this;
 	};
 	this.audioPlayerClearQueue = function (clearBehavior) {
+		var audioPlayerDirective;
 		if (0 == arguments.length) {
-			var audioPlayerDirective = {
+			audioPlayerDirective = {
 				"type": "AudioPlayer.ClearQueue",
 				"clearBehavior": "CLEAR_ALL"
-			}
+			};
 		} else {
-			var audioPlayerDirective = {
+			audioPlayerDirective = {
 				"type": "AudioPlayer.ClearQueue",
 				"clearBehavior": clearBehavior
-			}
+			};
 			self.response.response.directives.push(audioPlayerDirective);
 		}
 		return this;
-	}
+	};
 }
 
 alexa.request = function (json) {
@@ -254,7 +254,7 @@ alexa.request = function (json) {
 			console.error("missing context", e);
 			return null;
 		}
-	}
+	};
 };
 
 alexa.apps = {};
@@ -347,7 +347,6 @@ alexa.app = function (name, endpoint) {
 						response.session(key, request.sessionAttributes[key]);
 					}
 				}
-				var context = request.context();
 				var requestType = request.type();
 				if (typeof self.pre == "function") {
 					self.pre(request, response, requestType);
