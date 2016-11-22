@@ -165,7 +165,7 @@ alexa.response = function () {
 	};
 	this.audioPlayerStop = function () {
 		var audioPlayerDirective = {
-			"type": "AudioPlayer.Stop",
+			"type": "AudioPlayer.Stop"
 		};
 		self.response.response.directives.push(audioPlayerDirective);
 		return this;
@@ -186,7 +186,7 @@ alexa.response = function () {
 		}
 		return this;
 	};
-}
+};
 
 alexa.request = function (json) {
 	this.data = json;
