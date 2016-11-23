@@ -172,11 +172,12 @@ alexa.response = function () {
 	};
 	this.audioPlayerClearQueue = function (clearBehavior) {
 		var audioPlayerDirective;
-		if (0 == arguments.length) {
+		if (arguments.length === 0) {
 			audioPlayerDirective = {
 				"type": "AudioPlayer.ClearQueue",
 				"clearBehavior": "CLEAR_ALL"
 			};
+			self.response.response.directives.push(audioPlayerDirective);
 		} else {
 			audioPlayerDirective = {
 				"type": "AudioPlayer.ClearQueue",
@@ -312,7 +313,6 @@ alexa.app = function (name, endpoint) {
 		self.sessionEndedFunc = func;
 	};
 	this.request = function (request_json) {
-		// console.log('request_json --->', request_json);
 		return new Promise(function (resolve, reject) {
 			var request = new alexa.request(request_json);
 			var response = new alexa.response();
