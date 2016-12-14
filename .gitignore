@@ -44,5 +44,8 @@ Temporary Items
 .apdisk
 /coverage
 
-#IDE
+# IDE
 .idea
+
+# NPM
+npm-debug.log
