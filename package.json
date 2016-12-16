@@ -13,8 +13,9 @@
   "scripts": {
     "lint": "eslint index.js;",
     "coverage": "istanbul cover _mocha -- -R spec",
-    "test": "mocha",
-    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*"
+    "test": "./node_modules/.bin/mocha",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
+    "danger": "./node_modules/.bin/danger"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "coveralls": "^2.11.9",
     "eslint": "^2.9.0",
     "istanbul": "^0.4.3",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "danger": "0.6.10"
   }
 }

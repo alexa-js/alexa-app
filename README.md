@@ -119,12 +119,12 @@ response.linkAccount()
 response.shouldEndSession(boolean end [, String reprompt] )
 
 // Set a session variable
-// By defailt, Alexa only persists session variables to the next request. The alexa-app module 
+// By defailt, Alexa only persists session variables to the next request. The alexa-app module
 // makes session variables persist across multiple requests.
 response.session(String attributeName, String attributeValue)
 
 // Send the response as success
-// You don't usually need to call this. This is only required if your handler is 
+// You don't usually need to call this. This is only required if your handler is
 // asynchronous - for example, if it makes an http request and needs to wait for
 // the response, then send it back to Alexa when finished.
 response.send()
@@ -177,7 +177,7 @@ app.sessionEnded(function(request,response) {
 
 # Execute Code On Every Request
 
-In addition to specific event handlers, you can define functions that will run on every request. 
+In addition to specific event handlers, you can define functions that will run on every request.
 
 ## pre()
 
@@ -216,7 +216,7 @@ Pass an object with two properties: slots and utterances.
 ```javascript
 app.intent('sampleIntent',
 	{
-		"slots":{"NAME":"LITERAL","AGE":"NUMBER"}, 
+		"slots":{"NAME":"LITERAL","AGE":"NUMBER"},
 		"utterances":[ "my {name is|name's} {names|NAME} and {I am|I'm} {1-100|AGE}{ years old|}" ]
 	},
 	function(request,response) { ... }
@@ -439,7 +439,7 @@ app.intent('checkStatus', function(request,response) {
 
 ## Connect to AWS Lambda
 
-Amazon has documentation on how to setup your Alexa app to run in AWS Lambda. 
+Amazon has documentation on how to setup your Alexa app to run in AWS Lambda.
 
 Apps built using alexa-app have a built-in "handler" method to handle calls from AWS Lambda. You don't need to do anything different to make them work within Lambda, other than to setup the Lambda Function correctly and make sure that the Handler is set to "index.handler", which is the default value.
 
@@ -526,28 +526,10 @@ All named apps can be found in the alexa.apps object, keyed by name. The value i
 
 ## History
 
-- 2.3.2 - Jan 11, 2016
-  - Fixed number output in SSML tags back to being digits
-  - Added automated tests for SSML
+See [CHANGELOG](CHANGELOG.md) for details.
 
-- 2.3.0 - Jan 8, 2016
-  - Added "numbered" to the depencies list in package.json
+## License
 
-- 2.3.0 - Jan 4, 2016
-  - Added support for SSML
-  - Added .linkAccount() method to return Link Account card
-  - Added request.sessionDetails.accessToken for skills using account linking
-  - Added MIT license file
+Copyright (c) 2016 Matt Kruse
 
-- 2.2.0 - Oct 26, 2015
-  - Bumped alexa-utterances to version 0.1.0
-  - Added support for the "exhaustiveUtterances" option in alexa-utterances (Issue #27)
-  - By default, alexa-app utterances now avoid the cartesian product of all slot values
-
-- 2.1.5 - Oct 25, 2015
-  - Externalized the generation of utterances to the new alexa-utterances module (Issue #26)
-  
-- 2.1.4 - Sep 14, 2015
-  - Remove hyphen from generated numbers in utterances (Issue #17)
-  - Collapse multiple whitespaces to one space in utterances (Issue #18)
-
+MIT License, see [LICENSE](LICENSE.md) for details.
