@@ -47,9 +47,9 @@ describe("Alexa", function() {
           });
           return Promise.all([
             expect(subject).to.eventually.have
-              .property("applicationId", "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"),
+            .property("applicationId", "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"),
             expect(subject).to.eventually.have
-              .property("userId", "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2")
+            .property("userId", "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2")
           ]);
         });
       });
@@ -58,9 +58,9 @@ describe("Alexa", function() {
     describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
       var expectedMessage = "tubular";
-      context("intent handler with shouldEndSession = false", function () {
+      context("intent handler with shouldEndSession = false", function() {
         var app = new Alexa.app("myapp");
-        var intentHandler = function (req, res) {
+        var intentHandler = function(req, res) {
           res.say(expectedMessage).shouldEndSession(false);
           res.session("foo", true);
           res.session("bar", {
@@ -85,9 +85,9 @@ describe("Alexa", function() {
     describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
       var expectedMessage = "tubular";
-      context("intent handler with shouldEndSession = false", function () {
+      context("intent handler with shouldEndSession = false", function() {
         var app = new Alexa.app("myapp");
-        var intentHandler = function (req, res) {
+        var intentHandler = function(req, res) {
           res.say(expectedMessage).shouldEndSession(false);
           res.session("foo", true);
           res.session("bar", {
@@ -103,7 +103,7 @@ describe("Alexa", function() {
             return response.sessionAttributes;
           });
           return Promise.all([
-            expect(subject).to.eventually.become({"foo": true})
+            expect(subject).to.eventually.become({ "foo": true })
           ]);
         });
 
@@ -113,9 +113,9 @@ describe("Alexa", function() {
     describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
       var expectedMessage = "tubular";
-      context("intent handler with shouldEndSession = false", function () {
+      context("intent handler with shouldEndSession = false", function() {
         var app = new Alexa.app("myapp");
-        var intentHandler = function (req, res) {
+        var intentHandler = function(req, res) {
           res.say(expectedMessage).shouldEndSession(false);
           res.session("bar", {
             qaz: "woah"
@@ -142,9 +142,9 @@ describe("Alexa", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
       var expectedMessage = "tubular";
       var expectedReprompt = "totally";
-      context("intent handler with shouldEndSession = false", function () {
+      context("intent handler with shouldEndSession = false", function() {
         var app = new Alexa.app("myapp");
-        var intentHandler = function (req, res) {
+        var intentHandler = function(req, res) {
           res.say(expectedMessage).shouldEndSession(false, expectedReprompt);
           return true;
         };

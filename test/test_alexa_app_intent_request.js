@@ -156,7 +156,7 @@ describe("Alexa", function() {
                   res.say(expectedMessage);
                   return true;
                 };
-                app.intent("airportInfoIntent", { }, intentHandler);
+                app.intent("airportInfoIntent", {}, intentHandler);
                 var subject = app.request(mockRequest);
                 subject = subject.then(function(response) {
                   return response.response.outputSpeech;

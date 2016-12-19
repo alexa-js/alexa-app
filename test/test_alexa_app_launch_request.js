@@ -65,8 +65,8 @@ describe("Alexa", function() {
                   type: "SSML"
                 });
                 //return expect(subject).to.eventually.become({
-                  //ssml: "<speak>" + expectedReprompt + " " + expectedReprompt + "</speak>",
-                  //type: "SSML"
+                //ssml: "<speak>" + expectedReprompt + " " + expectedReprompt + "</speak>",
+                //type: "SSML"
                 //});
               });
 
