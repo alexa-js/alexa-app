@@ -145,6 +145,14 @@ alexa.request = function(json) {
       return null;
     }
   };
+  // session is not included for AudioPlayer or PlaybackController requests
+  if (!this.data.session) {
+    this.data.session = {
+      application: this.data.context.System.application,
+      user: this.data.context.System.user,
+      device: this.data.context.System.device
+    };
+  }
   this.sessionDetails = {
     "new": this.data.session.new,
     "sessionId": this.data.session.sessionId,
