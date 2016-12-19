@@ -201,7 +201,9 @@ The last thing executed for every request. It is even called if there is an exce
 ```javascript
 app.post = function(request,response,type,exception) {
 	// Always turn an exception into a successful response
-	response.clear().say("An error occured: "+exception).send();
+	if(exception){
+		response.clear().say("An error occured: "+exception).send();
+	}
 };
 ```
 
