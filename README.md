@@ -58,6 +58,9 @@ String request.type()
 // return the value passed in for a given slot name
 String request.slot("slotName")
 
+// check if you can use session (read or write)
+Boolean request.hasSession()
+
 // return the value of a session variable
 String request.session("attributeName")
 
@@ -95,6 +98,9 @@ response.linkAccount()
 // tell Alexa whether the user's session is over; sessions end by default
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
+
+// check if you can use session (read or write)
+Boolean response.hasSession()
 
 // set a session variable
 // by defailt, Alexa only persists session variables to the next request

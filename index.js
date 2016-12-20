@@ -3,15 +3,20 @@ var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
 
-alexa.response = function() {
+alexa.response = function(hasSession) {
   this.resolved = false;
   this.response = {
     "version": "1.0",
-    "sessionAttributes": {},
     "response": {
       "shouldEndSession": true
     }
   };
+  this.hasSession = function() {
+    return hasSession;
+  };
+  if (this.hasSession()) {
+    this.response.sessionAttributes = {};
+  }
   this.say = function(str) {
     if (typeof this.response.response.outputSpeech == "undefined") {
       this.response.response.outputSpeech = {
@@ -109,18 +114,26 @@ alexa.response = function() {
     return this;
   };
   this.session = function(key, val) {
-    if (typeof val == "undefined") {
-      return this.response.sessionAttributes[key];
+    if (this.hasSession()) {
+      if (typeof val == "undefined") {
+        return this.response.sessionAttributes[key];
+      } else {
+        this.response.sessionAttributes[key] = val;
+      }
     } else {
-      this.response.sessionAttributes[key] = val;
+      throw "NO_SESSION";
     }
     return this;
   };
   this.clearSession = function(key) {
-    if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
-      delete this.response.sessionAttributes[key];
+    if (this.hasSession()) {
+      if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
+        delete this.response.sessionAttributes[key];
+      } else {
+        this.response.sessionAttributes = {};
+      }
     } else {
-      this.response.sessionAttributes = {};
+      throw "NO_SESSION";
     }
     return this;
   };
@@ -145,33 +158,36 @@ alexa.request = function(json) {
       return null;
     }
   };
-  // session is not included for AudioPlayer or PlaybackController requests
-  if (!this.data.session) {
-    this.data.session = {
-      application: this.data.context.System.application,
-      user: this.data.context.System.user,
-      device: this.data.context.System.device
+  this.hasSession = (function(ctx) {
+    var hasSession = (typeof ctx.data.session != "undefined");
+    return function() {
+      return hasSession;
     };
+  })(this);
+  if (this.hasSession()) {
+    this.sessionDetails = {
+      "new": this.data.session.new,
+      "sessionId": this.data.session.sessionId,
+      "userId": this.data.session.user.userId,
+      "accessToken": this.data.session.user.accessToken || null,
+      "attributes": this.data.session.attributes,
+      "application": this.data.session.application
+    };
+    this.sessionId = this.data.session.sessionId;
+    this.sessionAttributes = this.data.session.attributes;
+    this.isSessionNew = (true === this.data.session.new);
   }
-  this.sessionDetails = {
-    "new": this.data.session.new,
-    "sessionId": this.data.session.sessionId,
-    "userId": this.data.session.user.userId,
-    "accessToken": this.data.session.user.accessToken || null,
-    "attributes": this.data.session.attributes,
-    "application": this.data.session.application
-  };
-  this.userId = this.data.session.user.userId;
-  this.applicationId = this.data.session.application.applicationId;
-  this.sessionId = this.data.session.sessionId;
-  this.sessionAttributes = this.data.session.attributes;
-  this.isSessionNew = (true === this.data.session.new);
+  this.userId = this.data.context.System.user.userId;
+  this.applicationId = this.data.context.System.application.applicationId;
   this.session = function(key) {
-    try {
-      return this.data.session.attributes[key];
-    } catch (e) {
-      console.error("key not found on session attributes: " + key, e);
-      return;
+    if (this.hasSession()) {
+      try {
+        return this.data.session.attributes[key];
+      } catch (e) {
+        console.error("key not found on session attributes: " + key, e);
+      }
+    } else {
+      throw "NO_SESSION";
     }
   };
 };
@@ -188,6 +204,9 @@ alexa.app = function(name, endpoint) {
     "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
     // When a request type was not recognized
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
+    // When a request and response don't contain session object
+    // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
+    "NO_SESSION": "There is not session to store or get values",
     // If some other exception happens
     "GENERIC_ERROR": "Sorry, the application encountered an error"
   };
@@ -233,7 +252,7 @@ alexa.app = function(name, endpoint) {
   this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
       var request = new alexa.request(request_json);
-      var response = new alexa.response();
+      var response = new alexa.response(request.hasSession());
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
