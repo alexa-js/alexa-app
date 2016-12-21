@@ -36,7 +36,7 @@ app.intent("number", {
     "slots": { "number": "NUMBER" },
     "utterances": ["say the number {1-100|number}"]
   },
-  function(request, response) {
+  function(request, response, session) {
     var number = request.slot("number");
     response.say("You asked for the number " + number);
   }
@@ -57,15 +57,6 @@ String request.type()
 
 // return the value passed in for a given slot name
 String request.slot("slotName")
-
-// check if you can use session (read or write)
-Boolean request.hasSession()
-
-// return the value of a session variable
-String request.session("attributeName")
-
-// session details, as passed by Amazon in the request
-request.sessionDetails = { ... }
 
 // the raw request JSON object
 request.data
@@ -99,14 +90,6 @@ response.linkAccount()
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
 
-// check if you can use session (read or write)
-Boolean response.hasSession()
-
-// set a session variable
-// by defailt, Alexa only persists session variables to the next request
-// the alexa-app module makes session variables persist across multiple requests
-response.session(String attributeName, String attributeValue)
-
 // send the response to the Alexa device (success)
 // this is not required for synchronous handlers
 // you must call this from asynchronous handlers
@@ -121,6 +104,23 @@ response.fail(String message)
 response.say("OK").send()
 ```
 
+## session
+```javascript
+// check if you can use session (read or write)
+Boolean session.isAvailable()
+
+// set a session variable
+// by defailt, Alexa only persists session variables to the next request
+// the alexa-app module makes session variables persist across multiple requests
+session.set(String attributeName, String attributeValue)
+
+// return the value of a session variable
+String session.get(String attributeName)
+
+// session details, as passed by Amazon in the request
+session.details = { ... }
+```
+
 # Request Handlers
 
 Your app can define a single handler for the `Launch` event and the `SessionEnded` event, and multiple intent handlers.
@@ -128,7 +128,7 @@ Your app can define a single handler for the `Launch` event and the `SessionEnde
 ## LaunchRequest
 
 ```javascript
-app.launch(function(request, response) {
+app.launch(function(request, response, session) {
   response.say("Hello World");
   response.card("Hello World", "This is an example card");
 });
@@ -139,11 +139,11 @@ app.launch(function(request, response) {
 Define the handler for multiple intents using multiple calls to `intent()`. Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return false. See example further below.
 
 ```javascript
-app.intent("buy", function(request, response) {
+app.intent("buy", function(request, response, session) {
   response.say("You bought a " + request.slot("item"));
 });
 
-app.intent("sell", function(request, response) {
+app.intent("sell", function(request, response, session) {
   response.say("You sold your items!");
 });
 ```
@@ -151,7 +151,7 @@ app.intent("sell", function(request, response) {
 ## SessionEndRequest
 
 ```javascript
-app.sessionEnded(function(request, response) {
+app.sessionEnded(function(request, response, session) {
   // cleanup the user's server-side session
   logout(request.userId);
   // no response required
@@ -167,8 +167,8 @@ In addition to specific event handlers, you can define functions that will run o
 Executed before any event handlers. This is useful to setup new sessions, validate the `applicationId`, or do any other kind of validations.
 
 ```javascript
-app.pre = function(request, response, type) {
-  if (request.sessionDetails.application.applicationId != "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
+app.pre = function(request, response, type, session) {
+  if (request.applicationId != "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
     // fail ungracefully
     response.fail("Invalid applicationId");
   }
@@ -179,10 +179,10 @@ Note that the `post()` method still gets called, even if the `pre()` function ca
 
 ## post()
 
-The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the last argument.
+The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
 
 ```javascript
-app.post = function(request, response, type, exception) {
+app.post = function(request, response, type, exception, session) {
   if (exception) {
     // always turn an exception into a successful response
     response.clear().say("An error occured: " + exception).send();
@@ -208,7 +208,7 @@ app.intent("sampleIntent", {
       "my {name is|name's} {names|NAME} and {I am|I'm} {1-100|AGE}{ years old|}"
     ]
   },
-  function(request, response) {
+  function(request, response, session) {
 
   }
 );
@@ -231,7 +231,7 @@ app.intent("sampleIntent", {
       "airport {information|status} for {-|CustomSlotName}"
     ]
   },
-  function(request, response) {... }
+  function(request, response, session) {... }
 );
 ```
 
@@ -392,7 +392,7 @@ response.card({
 Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
 
 ```javascript
-app.error = function(exception, request, response) {
+app.error = function(exception, request, response, session) {
     response.say("Sorry, something bad happened");
 };
 ```
@@ -400,7 +400,7 @@ app.error = function(exception, request, response) {
 If you do want exceptions to bubble out to the caller (and potentially cause Express to crash, for example), you can throw the exception.
 
 ```javascript
-app.error = function(exception, request, response) {
+app.error = function(exception, request, response, session) {
   console.log(exception);
   throw exception;
 };
@@ -413,7 +413,7 @@ app.error = function(exception, request, response) {
 If an intent handler will return a response later, it must return `false`. This tells the alexa-app library not to send the response automatically. In this case, the handler function must manually call `response.send()` to finish the response.
 
 ```javascript
-app.intent("checkStatus", function(request, response) {
+app.intent("checkStatus", function(request, response, session) {
   http.get("http://server.com/status.html", function(res) {
     // this is async and will run after the http call returns
     response.say(res.statusText);
@@ -474,21 +474,21 @@ See the code for default messages you can override.
 ## Read/write session data
 
 ```javascript
-app.launch(function(request, response) {
-  response.session("number", 42);
+app.launch(function(request, response, session) {
+  session.set("number", 42);
   response.say("Would you like to know the number?");
   response.shouldEndSession(false);
 });
 
-app.intent("tellme", function(request, response) {
-  response.say("The number is " + request.session("number"));
+app.intent("tellme", function(request, response, session) {
+  response.say("The number is " + session.get("number"));
   // clear only the 'number' attribute from the session
-  response.clearSesssion("number");
+  session.clear("number");
 });
 
 // the session variables can be entirely cleared, or cleared by key
-app.intent("clear", function(request, response) {
-  response.clearSession(); // or: response.clearSession("key") to clear a single value
+app.intent("clear", function(request, response, session) {
+  session.clear(); // or: session.clear("key") to clear a single value
   response.say("Session cleared!");
 });
 ```

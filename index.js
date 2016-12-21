@@ -3,7 +3,7 @@ var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
 
-alexa.response = function(hasSession) {
+alexa.response = function(session) {
   this.resolved = false;
   this.response = {
     "version": "1.0",
@@ -11,12 +11,6 @@ alexa.response = function(hasSession) {
       "shouldEndSession": true
     }
   };
-  this.hasSession = function() {
-    return hasSession;
-  };
-  if (this.hasSession()) {
-    this.response.sessionAttributes = {};
-  }
   this.say = function(str) {
     if (typeof this.response.response.outputSpeech == "undefined") {
       this.response.response.outputSpeech = {
@@ -113,34 +107,34 @@ alexa.response = function(hasSession) {
     }
     return this;
   };
+  this.sessionObject = session;
+  this.setSessionAttributes = function(attributes) {
+    this.response.sessionAttributes = attributes;
+  };
+  // prepare response object
+  this.prepare = function() {
+    this.setSessionAttributes(this.sessionObject.getAttributes());
+  };
+
+  // legacy code below
+  // @deprecated
   this.session = function(key, val) {
-    if (this.hasSession()) {
-      if (typeof val == "undefined") {
-        return this.response.sessionAttributes[key];
-      } else {
-        this.response.sessionAttributes[key] = val;
-      }
+    if (typeof val == "undefined") {
+      return this.sessionObject.get(key);
     } else {
-      throw "NO_SESSION";
+      this.sessionObject.set(key, val);
     }
     return this;
   };
+  // @deprecated
   this.clearSession = function(key) {
-    if (this.hasSession()) {
-      if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
-        delete this.response.sessionAttributes[key];
-      } else {
-        this.response.sessionAttributes = {};
-      }
-    } else {
-      throw "NO_SESSION";
-    }
+    this.sessionObject.clear(key);
     return this;
   };
 
 };
 
-alexa.request = function(json) {
+alexa.request = function(json, session) {
   this.data = json;
   this.slot = function(slotName, defaultValue) {
     try {
@@ -158,37 +152,70 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.hasSession = (function(ctx) {
-    var hasSession = (typeof ctx.data.session != "undefined");
-    return function() {
-      return hasSession;
-    };
-  })(this);
-  if (this.hasSession()) {
-    this.sessionDetails = {
-      "new": this.data.session.new,
-      "sessionId": this.data.session.sessionId,
-      "userId": this.data.session.user.userId,
-      "accessToken": this.data.session.user.accessToken || null,
-      "attributes": this.data.session.attributes,
-      "application": this.data.session.application
-    };
-    this.sessionId = this.data.session.sessionId;
-    this.sessionAttributes = this.data.session.attributes;
-    this.isSessionNew = (true === this.data.session.new);
-  }
   this.userId = this.data.context.System.user.userId;
   this.applicationId = this.data.context.System.application.applicationId;
+
+  // legacy code below
+  // @deprecated
+  this.sessionDetails = session;
+  // @deprecated
+  this.sessionId = session.sessionId;
+  // @deprecated
+  this.sessionAttributes = session.attributes;
+  // @deprecated
+  this.isSessionNew = session.isNew();
+  // @deprecated
   this.session = function(key) {
-    if (this.hasSession()) {
-      try {
-        return this.data.session.attributes[key];
-      } catch (e) {
-        console.error("key not found on session attributes: " + key, e);
+    return session.get(key);
+  };
+};
+
+alexa.session = function(session) {
+  var isAvailable = (typeof session != "undefined");
+  this.isAvailable = function() {
+    return isAvailable;
+  };
+  if (isAvailable) {
+    this.isNew = function() {
+      return (true === session.new);
+    };
+    this.get = function(key) {
+      return this.attributes[key];
+    };
+    this.set = function(key, value) {
+      this.attributes[key] = value;
+    };
+    this.clear = function(key) {
+      if (typeof key == "string" && typeof this.attributes[key] != "undefined") {
+        delete this.attributes[key];
+      } else {
+        this.attributes = {};
       }
-    } else {
+    };
+    this.details = {
+      "new": session.new,
+      "sessionId": session.sessionId,
+      "userId": session.user.userId,
+      "accessToken": session.user.accessToken || null,
+      "attributes": session.attributes,
+      "application": session.application
+    };
+    // Persist all the session attributes across requests.
+    // The Alexa API doesn't think session variables should persist for the entire
+    // duration of the session, but I do.
+    this.attributes = session.attributes || {};
+    this.sessionId = session.sessionId;
+  } else {
+    this.isNew = this.get = this.set = this.clear = function() {
       throw "NO_SESSION";
-    }
+    };
+    this.details = {};
+    this.attributes = {};
+    this.sessionId = null;
+  }
+  this.getAttributes = function() {
+    // do some stuff with session data
+    return this.attributes;
   };
 };
 
@@ -206,7 +233,7 @@ alexa.app = function(name, endpoint) {
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
     // When a request and response don't contain session object
     // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
-    "NO_SESSION": "There is not session to store or get values",
+    "NO_SESSION": "This request doesn't support session attributes",
     // If some other exception happens
     "GENERIC_ERROR": "Sorry, the application encountered an error"
   };
@@ -221,8 +248,8 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function(/*request, response, type*/) {};
-  this.post = function(/*request, response, type*/) {};
+  this.pre = function(/*request, response, type, session*/) {};
+  this.post = function(/*request, response, type, session*/) {};
 
   this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
@@ -251,14 +278,16 @@ alexa.app = function(name, endpoint) {
   };
   this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
-      var request = new alexa.request(request_json);
-      var response = new alexa.response(request.hasSession());
+      var session = new alexa.session(request_json.session);
+      var request = new alexa.request(request_json, session);
+      var response = new alexa.response(session);
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
+        response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
-          self.post(request, response, requestType, exception);
+          self.post(request, response, requestType, exception, session);
         }
         if (!response.resolved) {
           response.resolved = true;
@@ -266,9 +295,10 @@ alexa.app = function(name, endpoint) {
         }
       };
       response.fail = function(msg, exception) {
+        response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
-          self.post(request, response, requestType, exception);
+          self.post(request, response, requestType, exception, session);
         }
         if (!response.resolved) {
           response.resolved = true;
@@ -276,24 +306,15 @@ alexa.app = function(name, endpoint) {
         }
       };
       try {
-        var key;
-        // Copy all the session attributes from the request into the response so they persist.
-        // The Alexa API doesn't think session variables should persist for the entire 
-        // duration of the session, but I do.
-        if (request.sessionAttributes && self.persistentSession) {
-          for (key in request.sessionAttributes) {
-            response.session(key, request.sessionAttributes[key]);
-          }
-        }
         var requestType = request.type();
         if (typeof self.pre == "function") {
-          self.pre(request, response, requestType);
+          self.pre(request, response, requestType, session);
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-              if (false !== self.intents[intent]["function"](request, response)) {
+              if (false !== self.intents[intent]["function"](request, response, session)) {
                 response.send();
               }
             } else {
@@ -301,7 +322,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("LaunchRequest" === requestType) {
             if (typeof self.launchFunc == "function") {
-              if (false !== self.launchFunc(request, response)) {
+              if (false !== self.launchFunc(request, response, session)) {
                 response.send();
               }
             } else {
@@ -309,7 +330,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("SessionEndedRequest" === requestType) {
             if (typeof self.sessionEndedFunc == "function") {
-              if (false !== self.sessionEndedFunc(request, response)) {
+              if (false !== self.sessionEndedFunc(request, response, session)) {
                 response.send();
               }
             }
@@ -319,7 +340,7 @@ alexa.app = function(name, endpoint) {
         }
       } catch (e) {
         if (typeof self.error == "function") {
-          self.error(e, request, response);
+          self.error(e, request, response, session);
         } else if (typeof e == "string" && self.messages[e]) {
           response.say(self.messages[e]);
           response.send(e);
