@@ -134,7 +134,7 @@ alexa.response = function(session) {
 
 };
 
-alexa.request = function(json, session) {
+alexa.request = function(json) {
   this.data = json;
   this.slot = function(slotName, defaultValue) {
     try {
@@ -155,18 +155,26 @@ alexa.request = function(json, session) {
   this.userId = this.data.context.System.user.userId;
   this.applicationId = this.data.context.System.application.applicationId;
 
+  var session = new alexa.session(json.session);
+  this.hasSession = function() {
+    return session.isAvailable();
+  };
+  this.getSession = function() {
+    return session;
+  };
+
   // legacy code below
   // @deprecated
-  this.sessionDetails = session;
+  this.sessionDetails = this.getSession().details;
   // @deprecated
-  this.sessionId = session.sessionId;
+  this.sessionId = this.getSession().sessionId;
   // @deprecated
-  this.sessionAttributes = session.attributes;
+  this.sessionAttributes = this.getSession().attributes;
   // @deprecated
-  this.isSessionNew = session.isNew();
+  this.isSessionNew = this.getSession().isNew();
   // @deprecated
   this.session = function(key) {
-    return session.get(key);
+    return this.getSession().get(key);
   };
 };
 
@@ -248,8 +256,8 @@ alexa.app = function(name, endpoint) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function(/*request, response, type, session*/) {};
-  this.post = function(/*request, response, type, session*/) {};
+  this.pre = function(/*request, response, type*/) {};
+  this.post = function(/*request, response, type*/) {};
 
   this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
@@ -278,16 +286,15 @@ alexa.app = function(name, endpoint) {
   };
   this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
-      var session = new alexa.session(request_json.session);
-      var request = new alexa.request(request_json, session);
-      var response = new alexa.response(session);
+      var request = new alexa.request(request_json);
+      var response = new alexa.response(request.getSession());
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
         response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
-          self.post(request, response, requestType, exception, session);
+          self.post(request, response, requestType, exception);
         }
         if (!response.resolved) {
           response.resolved = true;
@@ -298,7 +305,7 @@ alexa.app = function(name, endpoint) {
         response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
-          self.post(request, response, requestType, exception, session);
+          self.post(request, response, requestType, exception);
         }
         if (!response.resolved) {
           response.resolved = true;
@@ -308,13 +315,13 @@ alexa.app = function(name, endpoint) {
       try {
         var requestType = request.type();
         if (typeof self.pre == "function") {
-          self.pre(request, response, requestType, session);
+          self.pre(request, response, requestType);
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-              if (false !== self.intents[intent]["function"](request, response, session)) {
+              if (false !== self.intents[intent]["function"](request, response)) {
                 response.send();
               }
             } else {
@@ -322,7 +329,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("LaunchRequest" === requestType) {
             if (typeof self.launchFunc == "function") {
-              if (false !== self.launchFunc(request, response, session)) {
+              if (false !== self.launchFunc(request, response)) {
                 response.send();
               }
             } else {
@@ -330,7 +337,7 @@ alexa.app = function(name, endpoint) {
             }
           } else if ("SessionEndedRequest" === requestType) {
             if (typeof self.sessionEndedFunc == "function") {
-              if (false !== self.sessionEndedFunc(request, response, session)) {
+              if (false !== self.sessionEndedFunc(request, response)) {
                 response.send();
               }
             }
@@ -340,7 +347,7 @@ alexa.app = function(name, endpoint) {
         }
       } catch (e) {
         if (typeof self.error == "function") {
-          self.error(e, request, response, session);
+          self.error(e, request, response);
         } else if (typeof e == "string" && self.messages[e]) {
           response.say(self.messages[e]);
           response.send(e);
