@@ -171,7 +171,7 @@ alexa.request = function(json) {
   // @deprecated
   this.sessionAttributes = this.getSession().attributes;
   // @deprecated
-  this.isSessionNew = this.getSession().isNew();
+  this.isSessionNew = this.hasSession() ? this.getSession().isNew() : false;
   // @deprecated
   this.session = function(key) {
     return this.getSession().get(key);

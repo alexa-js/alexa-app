@@ -162,5 +162,71 @@ describe("Alexa", function() {
       });
     });
 
+    describe("#request", function() {
+      var mockRequest = mockHelper.load("audio_player_event_request.json");
+      context("request without session", function() {
+        var app = new Alexa.app("myapp");
+        app.pre = function(req, res, type) {
+          if (req.hasSession()) {
+            // unreachable code, because the request doesn't have session
+            req.getSession().set("foo", "bar");
+          }
+        };
+
+        it("responds with an empty session object", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+          return Promise.all([
+            expect(subject).to.eventually.become({})
+          ]);
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      var mockRequest = mockHelper.load("audio_player_event_request.json");
+      context("request without session", function() {
+        context("trying to get session variable", function() {
+          var app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            req.getSession().get("foo");
+          };
+          describe("outputSpeech", function() {
+            var subject = app.request(mockRequest).then(function(response) {
+              return response.response.outputSpeech;
+            });
+            it("responds with NO_SESSION message", function() {
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>" + app.messages.NO_SESSION + "</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+        });
+
+        context("trying to set session variable", function() {
+          var app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            req.getSession().set("foo", "bar");
+          };
+          describe("outputSpeech", function() {
+            var subject = app.request(mockRequest).then(function(response) {
+              return response.response.outputSpeech;
+            });
+            it("responds with NO_SESSION message", function() {
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>" + app.messages.NO_SESSION + "</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+        });
+      });
+    });
+
   });
 });
