@@ -4,6 +4,7 @@
 
 * [#76](https://github.com/matt-kruse/alexa-app/pull/76): `response.clear()` now sets the default `outputSpeech` to SSML - [@rickwargo](https://github.com/rickwargo).
 * [#90](https://github.com/matt-kruse/alexa-app/pull/90): Added [Danger](http://danger.systems), PR linter - [@dblock](https://github.com/dblock).
+* [#91](https://github.com/matt-kruse/alexa-app/pull/91): Fixed "Cannot read property 'new' of undefined" init error - [@fremail](https://github.com/fremail).
 * Your contribution here.
 
 ### 2.3.4 (May 23, 2016)

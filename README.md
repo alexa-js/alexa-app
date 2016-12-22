@@ -58,11 +58,11 @@ String request.type()
 // return the value passed in for a given slot name
 String request.slot("slotName")
 
-// return the value of a session variable
-String request.session("attributeName")
+// check if you can use session (read or write)
+Boolean request.hasSession()
 
-// session details, as passed by Amazon in the request
-request.sessionDetails = { ... }
+// return the session object
+Session request.getSession()
 
 // the raw request JSON object
 request.data
@@ -96,11 +96,6 @@ response.linkAccount()
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
 
-// set a session variable
-// by defailt, Alexa only persists session variables to the next request
-// the alexa-app module makes session variables persist across multiple requests
-response.session(String attributeName, String attributeValue)
-
 // send the response to the Alexa device (success)
 // this is not required for synchronous handlers
 // you must call this from asynchronous handlers
@@ -113,6 +108,26 @@ response.fail(String message)
 
 // calls to response can be chained together
 response.say("OK").send()
+```
+
+## session
+```javascript
+// check if you can use session (read or write)
+Boolean request.hasSession()
+
+// get the session object
+var session = request.getSession()
+
+// set a session variable
+// by defailt, Alexa only persists session variables to the next request
+// the alexa-app module makes session variables persist across multiple requests
+session.set(String attributeName, String attributeValue)
+
+// return the value of a session variable
+String session.get(String attributeName)
+
+// session details, as passed by Amazon in the request
+session.details = { ... }
 ```
 
 # Request Handlers
@@ -162,7 +177,7 @@ Executed before any event handlers. This is useful to setup new sessions, valida
 
 ```javascript
 app.pre = function(request, response, type) {
-  if (request.sessionDetails.application.applicationId != "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
+  if (request.applicationId != "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
     // fail ungracefully
     response.fail("Invalid applicationId");
   }
@@ -173,7 +188,7 @@ Note that the `post()` method still gets called, even if the `pre()` function ca
 
 ## post()
 
-The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the last argument.
+The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
 
 ```javascript
 app.post = function(request, response, type, exception) {
@@ -469,20 +484,22 @@ See the code for default messages you can override.
 
 ```javascript
 app.launch(function(request, response) {
-  response.session("number", 42);
+  request.getSession().set("number", 42);
   response.say("Would you like to know the number?");
   response.shouldEndSession(false);
 });
 
 app.intent("tellme", function(request, response) {
-  response.say("The number is " + request.session("number"));
+  var session = request.getSession();
+  response.say("The number is " + session.get("number"));
   // clear only the 'number' attribute from the session
-  response.clearSesssion("number");
+  session.clear("number");
 });
 
 // the session variables can be entirely cleared, or cleared by key
 app.intent("clear", function(request, response) {
-  response.clearSession(); // or: response.clearSession("key") to clear a single value
+  var session = request.getSession();
+  session.clear(); // or: session.clear("key") to clear a single value
   response.say("Session cleared!");
 });
 ```

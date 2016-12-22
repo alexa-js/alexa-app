@@ -3,11 +3,10 @@ var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
 
-alexa.response = function() {
+alexa.response = function(session) {
   this.resolved = false;
   this.response = {
     "version": "1.0",
-    "sessionAttributes": {},
     "response": {
       "shouldEndSession": true
     }
@@ -108,20 +107,28 @@ alexa.response = function() {
     }
     return this;
   };
+  this.sessionObject = session;
+  this.setSessionAttributes = function(attributes) {
+    this.response.sessionAttributes = attributes;
+  };
+  // prepare response object
+  this.prepare = function() {
+    this.setSessionAttributes(this.sessionObject.getAttributes());
+  };
+
+  // legacy code below
+  // @deprecated
   this.session = function(key, val) {
     if (typeof val == "undefined") {
-      return this.response.sessionAttributes[key];
+      return this.sessionObject.get(key);
     } else {
-      this.response.sessionAttributes[key] = val;
+      this.sessionObject.set(key, val);
     }
     return this;
   };
+  // @deprecated
   this.clearSession = function(key) {
-    if (typeof key == "string" && typeof this.response.sessionAttributes[key] != "undefined") {
-      delete this.response.sessionAttributes[key];
-    } else {
-      this.response.sessionAttributes = {};
-    }
+    this.sessionObject.clear(key);
     return this;
   };
 
@@ -145,26 +152,78 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.sessionDetails = {
-    "new": this.data.session.new,
-    "sessionId": this.data.session.sessionId,
-    "userId": this.data.session.user.userId,
-    "accessToken": this.data.session.user.accessToken || null,
-    "attributes": this.data.session.attributes,
-    "application": this.data.session.application
+  this.userId = this.data.context.System.user.userId;
+  this.applicationId = this.data.context.System.application.applicationId;
+
+  var session = new alexa.session(json.session);
+  this.hasSession = function() {
+    return session.isAvailable();
   };
-  this.userId = this.data.session.user.userId;
-  this.applicationId = this.data.session.application.applicationId;
-  this.sessionId = this.data.session.sessionId;
-  this.sessionAttributes = this.data.session.attributes;
-  this.isSessionNew = (true === this.data.session.new);
+  this.getSession = function() {
+    return session;
+  };
+
+  // legacy code below
+  // @deprecated
+  this.sessionDetails = this.getSession().details;
+  // @deprecated
+  this.sessionId = this.getSession().sessionId;
+  // @deprecated
+  this.sessionAttributes = this.getSession().attributes;
+  // @deprecated
+  this.isSessionNew = this.hasSession() ? this.getSession().isNew() : false;
+  // @deprecated
   this.session = function(key) {
-    try {
-      return this.data.session.attributes[key];
-    } catch (e) {
-      console.error("key not found on session attributes: " + key, e);
-      return;
-    }
+    return this.getSession().get(key);
+  };
+};
+
+alexa.session = function(session) {
+  var isAvailable = (typeof session != "undefined");
+  this.isAvailable = function() {
+    return isAvailable;
+  };
+  if (isAvailable) {
+    this.isNew = function() {
+      return (true === session.new);
+    };
+    this.get = function(key) {
+      return this.attributes[key];
+    };
+    this.set = function(key, value) {
+      this.attributes[key] = value;
+    };
+    this.clear = function(key) {
+      if (typeof key == "string" && typeof this.attributes[key] != "undefined") {
+        delete this.attributes[key];
+      } else {
+        this.attributes = {};
+      }
+    };
+    this.details = {
+      "new": session.new,
+      "sessionId": session.sessionId,
+      "userId": session.user.userId,
+      "accessToken": session.user.accessToken || null,
+      "attributes": session.attributes,
+      "application": session.application
+    };
+    // Persist all the session attributes across requests.
+    // The Alexa API doesn't think session variables should persist for the entire
+    // duration of the session, but I do.
+    this.attributes = session.attributes || {};
+    this.sessionId = session.sessionId;
+  } else {
+    this.isNew = this.get = this.set = this.clear = function() {
+      throw "NO_SESSION";
+    };
+    this.details = {};
+    this.attributes = {};
+    this.sessionId = null;
+  }
+  this.getAttributes = function() {
+    // do some stuff with session data
+    return this.attributes;
   };
 };
 
@@ -180,6 +239,9 @@ alexa.app = function(name, endpoint) {
     "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
     // When a request type was not recognized
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
+    // When a request and response don't contain session object
+    // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
+    "NO_SESSION": "This request doesn't support session attributes",
     // If some other exception happens
     "GENERIC_ERROR": "Sorry, the application encountered an error"
   };
@@ -225,10 +287,11 @@ alexa.app = function(name, endpoint) {
   this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
       var request = new alexa.request(request_json);
-      var response = new alexa.response();
+      var response = new alexa.response(request.getSession());
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
+        response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -239,6 +302,7 @@ alexa.app = function(name, endpoint) {
         }
       };
       response.fail = function(msg, exception) {
+        response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
           postExecuted = true;
           self.post(request, response, requestType, exception);
@@ -249,15 +313,6 @@ alexa.app = function(name, endpoint) {
         }
       };
       try {
-        var key;
-        // Copy all the session attributes from the request into the response so they persist.
-        // The Alexa API doesn't think session variables should persist for the entire 
-        // duration of the session, but I do.
-        if (request.sessionAttributes && self.persistentSession) {
-          for (key in request.sessionAttributes) {
-            response.session(key, request.sessionAttributes[key]);
-          }
-        }
         var requestType = request.type();
         if (typeof self.pre == "function") {
           self.pre(request, response, requestType);
