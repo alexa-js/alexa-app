@@ -325,6 +325,8 @@ alexa.app = function(name, endpoint) {
   this.messages = {
     // When an intent was passed in that the application was not configured to handle
     "NO_INTENT_FOUND": "Sorry, the application didn't know what to do with that intent",
+    // When an AudioPlayer event was passed in that the application was not configured to handle
+    "NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND": "Sorry, the application didn't know what to do with that AudioPlayer event",
     // When the app was used with 'open' or 'launch' but no launch handler was defined
     "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
     // When a request type was not recognized
@@ -365,6 +367,13 @@ alexa.app = function(name, endpoint) {
     if (schema) {
       self.intents[intentName].schema = schema;
     }
+  };
+  this.audioPlayerEventHandlers = {};
+  this.audioPlayer = function(eventName, func) {
+    self.audioPlayerEventHandlers[eventName] = {
+      "name": eventName,
+      "function": func
+    };
   };
   this.launchFunc = null;
   this.launch = function(func) {
@@ -431,6 +440,16 @@ alexa.app = function(name, endpoint) {
               if (false !== self.sessionEndedFunc(request, response)) {
                 response.send();
               }
+            }
+          } else if (0 === requestType.indexOf("AudioPlayer.")) {
+            var event = requestType.slice(12);
+            var eventHandlerObject = self.audioPlayerEventHandlers[event];
+            if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
+              if (false !== eventHandlerObject["function"](request, response)) {
+                response.send();
+              }
+            } else {
+              throw "NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND";
             }
           } else {
             throw "INVALID_REQUEST_TYPE";

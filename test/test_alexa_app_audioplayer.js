@@ -174,5 +174,80 @@ describe("Alexa", function () {
         });
       });
     });
+
+    describe("request with AudioPlayer.PlaybackFinished type", function() {
+      var mockRequest = mockHelper.load("audio_player_event_request.json");
+      context("but there is not PlaybackFinished event handler", function() {
+        describe("outputSpeech", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.response.outputSpeech;
+          });
+          it("responds with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            return expect(subject).to.eventually.become({
+              ssml: "<speak>" + app.messages.NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND + "</speak>",
+              type: "SSML"
+            });
+          });
+        });
+      });
+      context("set PlaybackFinished event handler with play directive", function() {
+        var url = "https://testing";
+        var token = "some token";
+        var playBehavior = "ENQUEUE";
+        app.audioPlayer("PlaybackFinished", function(request, response) {
+          response.audioPlayerPlay(url, token, playBehavior);
+        });
+        describe("response", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.response.directives[0];
+          });
+          it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            return expect(subject).to.eventually.become({
+              type: 'AudioPlayer.Play',
+              playBehavior: playBehavior,
+              audioItem: {
+                stream: {
+                  url: url,
+                  token: token,
+                  expectedPreviousToken: undefined,
+                  offsetInMilliseconds: 0
+                }
+              }
+            });
+          });
+        });
+      });
+      context("set PlaybackFinished event handler with async response", function () {
+        var url = "https://testing";
+        var token = "some token";
+        var playBehavior = "ENQUEUE";
+        app.audioPlayer("PlaybackFinished", function(request, response) {
+          setTimeout(function() {
+            response.audioPlayerPlay(url, token, playBehavior);
+            response.send();
+          }, 0);
+          return false;
+        });
+        describe("response", function() {
+          var subject = app.request(mockRequest).then(function(response) {
+            return response.response.directives[0];
+          });
+          it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            return expect(subject).to.eventually.become({
+              type: 'AudioPlayer.Play',
+              playBehavior: playBehavior,
+              audioItem: {
+                stream: {
+                  url: url,
+                  token: token,
+                  expectedPreviousToken: undefined,
+                  offsetInMilliseconds: 0
+                }
+              }
+            });
+          });
+        });
+      });
+    });
   });
 });

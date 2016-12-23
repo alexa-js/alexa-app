@@ -167,6 +167,33 @@ app.sessionEnded(function(request, response) {
 });
 ```
 
+## AudioPlayer Event Request
+
+Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false. 
+You can define handlers for these events:
+* PlaybackStarted
+* PlaybackFinished
+* PlaybackStopped
+* PlaybackNearlyFinished
+* PlaybackFailed
+
+See example further below.
+
+```javascript
+app.audioPlayer("PlaybackNearlyFinished", function(request, response) {
+  // immediate response
+  response.audioPlayerPlay("https://next-song-url", "some-token", "ENQUEUE");
+});
+app.audioPlayer("PlaybackFinished", function(request, response) {
+  // async response
+  getNextSongFromDB(function(url, token) {
+    response.audioPlayerPlay(url, token, "ENQUEUE");
+    response.send();
+  });
+  return false;
+});
+```
+
 # Execute Code On Every Request
 
 In addition to specific event handlers, you can define functions that will run on every request.
