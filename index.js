@@ -178,20 +178,11 @@ alexa.response = function(session) {
     return this;
   };
   this.audioPlayerClearQueue = function (clearBehavior) {
-    var audioPlayerDirective;
-    if (arguments.length === 0) {
-      audioPlayerDirective = {
-        "type": "AudioPlayer.ClearQueue",
-        "clearBehavior": "CLEAR_ALL"
-      };
-      self.response.response.directives.push(audioPlayerDirective);
-    } else {
-      audioPlayerDirective = {
-        "type": "AudioPlayer.ClearQueue",
-        "clearBehavior": clearBehavior
-      };
-      self.response.response.directives.push(audioPlayerDirective);
-    }
+    var audioPlayerDirective = {
+      "type": "AudioPlayer.ClearQueue",
+      "clearBehavior": clearBehavior || "CLEAR_ALL"
+    };
+    self.response.response.directives.push(audioPlayerDirective);
     return this;
   };
 };
@@ -412,10 +403,9 @@ alexa.app = function(name, endpoint) {
         }
       };
       try {
-        var context = request.context();
         var requestType = request.type();
         if (typeof self.pre == "function") {
-          self.pre(request, response, requestType, context);
+          self.pre(request, response, requestType);
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {

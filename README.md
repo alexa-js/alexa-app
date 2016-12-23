@@ -170,20 +170,29 @@ app.sessionEnded(function(request, response) {
 ## AudioPlayer Event Request
 
 Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false. 
-You can define handlers for these events:
+
+You can define handlers for the following events:
+
 * PlaybackStarted
 * PlaybackFinished
 * PlaybackStopped
 * PlaybackNearlyFinished
 * PlaybackFailed
 
-See example further below.
+Read more about AudioPlayer request types in [AudioPlayer Interface Doc](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#audioplayer-requests).
+
+The following example will return `play` directive with a next audio on `AudioPlayer.PlaybackNearlyFinished` request.
 
 ```javascript
 app.audioPlayer("PlaybackNearlyFinished", function(request, response) {
   // immediate response
-  response.audioPlayerPlay("https://next-song-url", "some-token", "ENQUEUE");
+  response.audioPlayerPlay("https://next-song-url", "some-token", "ENQUEUE", "previous token");
 });
+```
+
+See an example of asynchronous response below.
+
+```javascript
 app.audioPlayer("PlaybackFinished", function(request, response) {
   // async response
   getNextSongFromDB(function(url, token) {
