@@ -46,6 +46,7 @@ Temporary Items
 
 # IDE
 .idea
+.vscode
 
 # NPM
 npm-debug.log

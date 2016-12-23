@@ -1,0 +1,52 @@
+{
+    "version": "1.0",
+    "session": {
+        "new": false,
+        "sessionId": "amzn1.echo-api.session.abeee1a7-aee0-41e6-8192-e6faaed9f5ef",
+        "application": {
+            "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+        },
+        "attributes": {},
+        "user": {
+            "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+        }
+    },
+    "request": {
+        "type": "IntentRequest",
+        "requestId": "amzn1.echo-api.request.6919844a-733e-4e89-893a-fdcb77e2ef0d",
+        "timestamp": "2015-05-13T12:34:56Z",
+        "intent": {
+            "name": "audioPlayerIntent",
+            "slots": {}
+        },
+        "context": {
+            "application": {
+                "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00fuck"
+            },
+            "user": {
+                "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2",
+                "accessToken": "sample.accessToken"
+            },
+            "device": {
+                "supportedInterfaces": {
+                    "AudioPlayer": {}
+                }
+            }
+        },
+        "AudioPlayer": {
+            "token": "amzn1.echo-api.session.abeee1a7-aee0-41e6-8192-e6faaed9f5ef",
+            "offsetInMilliseconds": 0,
+            "playerActivity": "PLAYING"
+        }
+    },
+    "context": {
+        "System": {
+            "user": {
+                "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+            },
+            "application": {
+                "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+            }
+        }
+    }
+}

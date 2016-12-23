@@ -4,10 +4,12 @@ var SSML = require("./to-ssml");
 var alexa = {};
 
 alexa.response = function(session) {
+  var self = this;
   this.resolved = false;
   this.response = {
     "version": "1.0",
     "response": {
+      "directives": [],
       "shouldEndSession": true
     }
   };
@@ -131,7 +133,67 @@ alexa.response = function(session) {
     this.sessionObject.clear(key);
     return this;
   };
-
+  this.audioPlayerPlay = function (url, token, playBehavior, offsetInMilliseconds, expectedPreviousToken) {
+    // defaults.  Must supply at least url & token, the rest are optional
+    var audioPlayerDirective = {
+      "type": "AudioPlayer.Play",
+      "playBehavior": "REPLACE_ALL",
+      "audioItem": {
+        "stream": {
+          "url": url,
+          "token": token,
+          "expectedPreviousToken": undefined,
+          "offsetInMilliseconds": 0
+        }
+      }
+    };
+    // configure with additional arguments
+    switch (arguments.length) {
+      // with playBehavior
+      case 3:
+        audioPlayerDirective.playBehavior = playBehavior;
+        break;
+      // with playBehavior & offsetInMilliseconds
+      case 4:
+        audioPlayerDirective.playBehavior = playBehavior;
+        audioPlayerDirective.audioItem.stream.offsetInMilliseconds = offsetInMilliseconds;
+        break;
+      // with playBehavior, offsetInMilliseconds, & expectedPreviousToken
+      case 5:
+        audioPlayerDirective.playBehavior = playBehavior;
+        audioPlayerDirective.audioItem.stream.offsetInMilliseconds = offsetInMilliseconds;
+        audioPlayerDirective.audioItem.stream.expectedPreviousToken = expectedPreviousToken;
+        break;
+      default:
+        break;
+    }
+    self.response.response.directives.push(audioPlayerDirective);
+    return this;
+  };
+  this.audioPlayerStop = function () {
+    var audioPlayerDirective = {
+      "type": "AudioPlayer.Stop"
+    };
+    self.response.response.directives.push(audioPlayerDirective);
+    return this;
+  };
+  this.audioPlayerClearQueue = function (clearBehavior) {
+    var audioPlayerDirective;
+    if (arguments.length === 0) {
+      audioPlayerDirective = {
+        "type": "AudioPlayer.ClearQueue",
+        "clearBehavior": "CLEAR_ALL"
+      };
+      self.response.response.directives.push(audioPlayerDirective);
+    } else {
+      audioPlayerDirective = {
+        "type": "AudioPlayer.ClearQueue",
+        "clearBehavior": clearBehavior
+      };
+      self.response.response.directives.push(audioPlayerDirective);
+    }
+    return this;
+  };
 };
 
 alexa.request = function(json) {
@@ -154,6 +216,34 @@ alexa.request = function(json) {
   };
   this.userId = this.data.context.System.user.userId;
   this.applicationId = this.data.context.System.application.applicationId;
+  this.context = function () {
+    try {
+      return this.data.request.context = {
+        "System": {
+          "application": {
+            "applicationId": this.applicationId
+          },
+          "user": {
+            "userId": this.data.session.user.userId,
+            "accessToken": this.data.session.accessToken
+          },
+          "device": {
+            "supportedInterfaces": {
+              "AudioPlayer": {}
+            }
+          }
+        },
+        "AudioPlayer": {
+          "token": this.sessionId,
+          "offsetInMilliseconds": this.data.request.offsetInMilliseconds,
+          "playerActivity": this.data.request.playerActivity
+        }
+      };
+    } catch (e) {
+      console.error("missing context", e);
+      return null;
+    }
+  };
 
   var session = new alexa.session(json.session);
   this.hasSession = function() {
@@ -313,9 +403,10 @@ alexa.app = function(name, endpoint) {
         }
       };
       try {
+        var context = request.context();
         var requestType = request.type();
         if (typeof self.pre == "function") {
-          self.pre(request, response, requestType);
+          self.pre(request, response, requestType, context);
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {
