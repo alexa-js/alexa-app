@@ -117,22 +117,6 @@ alexa.response = function(session) {
   this.prepare = function() {
     this.setSessionAttributes(this.sessionObject.getAttributes());
   };
-
-  // legacy code below
-  // @deprecated
-  this.session = function(key, val) {
-    if (typeof val == "undefined") {
-      return this.sessionObject.get(key);
-    } else {
-      this.sessionObject.set(key, val);
-    }
-    return this;
-  };
-  // @deprecated
-  this.clearSession = function(key) {
-    this.sessionObject.clear(key);
-    return this;
-  };
   this.audioPlayerPlay = function (url, token, playBehavior, offsetInMilliseconds, expectedPreviousToken) {
     // defaults.  Must supply at least url & token, the rest are optional
     var audioPlayerDirective = {
@@ -183,6 +167,22 @@ alexa.response = function(session) {
       "clearBehavior": clearBehavior || "CLEAR_ALL"
     };
     self.response.response.directives.push(audioPlayerDirective);
+    return this;
+  };
+
+  // legacy code below
+  // @deprecated
+  this.session = function(key, val) {
+    if (typeof val == "undefined") {
+      return this.sessionObject.get(key);
+    } else {
+      this.sessionObject.set(key, val);
+    }
+    return this;
+  };
+  // @deprecated
+  this.clearSession = function(key) {
+    this.sessionObject.clear(key);
     return this;
   };
 };
