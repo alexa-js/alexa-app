@@ -92,6 +92,17 @@ response.card(Object card)
 // this internally sets the card response
 response.linkAccount()
 
+// play audio stream (send AudioPlayer.Play directive) @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
+// skill supports stream(String url, String token, String expectedPreviousToken, Integer offsetInMilliseconds)
+response.audioPlayerPlayStream(String playBehavior, Object stream)
+
+// stop playing audio strem (send AudioPlayer.Stop directive)
+response.audioPlayerStop()
+
+// clear audio player queue (send AudioPlayer.ClearQueue directive)
+// clearBehavior is "CLEAR_ALL" by default
+response.audioPlayerClearQueue([ String clearBehavior ])
+
 // tell Alexa whether the user's session is over; sessions end by default
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
@@ -164,6 +175,54 @@ app.sessionEnded(function(request, response) {
   // cleanup the user's server-side session
   logout(request.userId);
   // no response required
+});
+```
+
+## AudioPlayer Event Request
+
+Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false. 
+
+You can define handlers for the following events:
+
+* PlaybackStarted
+* PlaybackFinished
+* PlaybackStopped
+* PlaybackNearlyFinished
+* PlaybackFailed
+
+Read more about AudioPlayer request types in [AudioPlayer Interface Doc](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#audioplayer-requests).
+
+The following example will return `play` directive with a next audio on `AudioPlayer.PlaybackNearlyFinished` request.
+
+```javascript
+app.audioPlayer("PlaybackNearlyFinished", function(request, response) {
+  // immediate response
+  var stream = {
+    "url": "https://next-song-url",
+    "token": "some_token",
+    "expectedPreviousToken": "some_previous_token",
+    "offsetInMilliseconds": 0
+  };
+  response.audioPlayerPlayStream("ENQUEUE", stream);
+});
+```
+
+See an example of asynchronous response below.
+
+```javascript
+app.audioPlayer("PlaybackFinished", function(request, response) {
+  // async response
+  getNextSongFromDB(function(url, token) {
+    var stream = {
+      "url": url,
+      "token": token,
+      "expectedPreviousToken": "some_previous_token",
+      "offsetInMilliseconds": 0
+    };
+    response.audioPlayerPlayStream("ENQUEUE", stream);
+    response.send();
+  });
+  return false;
 });
 ```
 
