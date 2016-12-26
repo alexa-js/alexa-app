@@ -25,108 +25,33 @@ describe("Alexa", function () {
       describe("response", function () {
         context("alexa directive response", function () {
           var mockRequest = mockHelper.load("intent_audioplayer.json"),
-            Url = "someurl.com",
-            token = "some_token",
             playBehavior = "ENQUEUE",
-            offsetInMilliseconds = 1000,
-            expectedPreviousToken = "some_previous_token";
-          it("contains AudioPlayer directive array property", function () {
-            var intentHandler = function (req, res) {
-              res.audioPlayerPlay(Url, token);
-              return true;
+            stream = {
+              url: "someurl.com",
+              token: "some_token",
+              expectedPreviousToken: "some_previous_token",
+              offsetInMilliseconds: 1000
             };
-            app.intent("audioPlayerIntent", {}, intentHandler);
-            var subject = app.request(mockRequest);
-            subject = subject.then(function (response) {
+          var intentHandler = function (req, res) {
+            res.audioPlayerPlayStream(playBehavior, stream);
+            return true;
+          };
+          app.intent("audioPlayerIntent", {}, intentHandler);
+          it("contains AudioPlayer directive array property", function () {
+            var subject = app.request(mockRequest).then(function (response) {
               return response.response.directives;
             });
             return expect(subject).to.eventually.be.an("array");
           });
-          it("audioPlayerPlay directive can take url & token", function () {
-            var intentHandler = function (req, res) {
-              res.audioPlayerPlay(Url, token);
-              return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
+          it("audioPlayerPlay directive contains stream object", function () {
             var subject = app.request(mockRequest).then(function (response) {
               return response.response.directives[0];
             });
             return expect(subject).to.eventually.become({
               type: 'AudioPlayer.Play',
-              playBehavior: 'REPLACE_ALL',
+              playBehavior: playBehavior,
               audioItem: {
-                stream: {
-                  url: 'someurl.com',
-                  token: 'some_token',
-                  expectedPreviousToken: undefined,
-                  offsetInMilliseconds: 0
-                }
-              }
-            });
-          });
-          it("audioPlayerPlay directive can take url, token, & playBehavior ", function () {
-            var intentHandler = function (req, res) {
-              res.audioPlayerPlay(Url, token, playBehavior);
-              return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
-            var subject = app.request(mockRequest).then(function (response) {
-              return response.response.directives[0];
-            });
-            return expect(subject).to.eventually.become({
-              type: 'AudioPlayer.Play',
-              playBehavior: 'ENQUEUE',
-              audioItem: {
-                stream: {
-                  url: 'someurl.com',
-                  token: 'some_token',
-                  expectedPreviousToken: undefined,
-                  offsetInMilliseconds: 0
-                }
-              }
-            });
-          });
-          it("audioPlayerPlay directive can take url, token, playBehavior, & offsetInMilliseconds", function () {
-            var intentHandler = function (req, res) {
-              res.audioPlayerPlay(Url, token, playBehavior, offsetInMilliseconds);
-              return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
-            var subject = app.request(mockRequest).then(function (response) {
-              return response.response.directives[0];
-            });
-            return expect(subject).to.eventually.become({
-              type: 'AudioPlayer.Play',
-              playBehavior: 'ENQUEUE',
-              audioItem: {
-                stream: {
-                  url: 'someurl.com',
-                  token: 'some_token',
-                  expectedPreviousToken: undefined,
-                  offsetInMilliseconds: 1000
-                }
-              }
-            });
-          });
-          it("audioPlayerPlay directive can take url, token, playBehavior, offsetInMilliseconds, & expectedPreviousToken", function () {
-            var intentHandler = function (req, res) {
-              res.audioPlayerPlay(Url, token, playBehavior, offsetInMilliseconds, expectedPreviousToken);
-              return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
-            var subject = app.request(mockRequest).then(function (response) {
-              return response.response.directives[0];
-            });
-            return expect(subject).to.eventually.become({
-              type: 'AudioPlayer.Play',
-              playBehavior: 'ENQUEUE',
-              audioItem: {
-                stream: {
-                  url: 'someurl.com',
-                  token: 'some_token',
-                  expectedPreviousToken: "some_previous_token",
-                  offsetInMilliseconds: 1000
-                }
+                stream: stream
               }
             });
           });
@@ -191,11 +116,15 @@ describe("Alexa", function () {
         });
       });
       context("set PlaybackFinished event handler with play directive", function() {
-        var url = "https://testing";
-        var token = "some token";
+        var stream = {
+          url: "https://testing",
+          token: "some token",
+          expectedPreviousToken: undefined,
+          offsetInMilliseconds: 0
+        };
         var playBehavior = "ENQUEUE";
         app.audioPlayer("PlaybackFinished", function(request, response) {
-          response.audioPlayerPlay(url, token, playBehavior);
+          response.audioPlayerPlayStream(playBehavior, stream);
         });
         describe("response", function() {
           var subject = app.request(mockRequest).then(function(response) {
@@ -206,24 +135,23 @@ describe("Alexa", function () {
               type: 'AudioPlayer.Play',
               playBehavior: playBehavior,
               audioItem: {
-                stream: {
-                  url: url,
-                  token: token,
-                  expectedPreviousToken: undefined,
-                  offsetInMilliseconds: 0
-                }
+                stream: stream
               }
             });
           });
         });
       });
       context("set PlaybackFinished event handler with async response", function () {
-        var url = "https://testing";
-        var token = "some token";
+        var stream = {
+          url: "https://testing",
+          token: "some token",
+          expectedPreviousToken: undefined,
+          offsetInMilliseconds: 0
+        };
         var playBehavior = "ENQUEUE";
         app.audioPlayer("PlaybackFinished", function(request, response) {
           setTimeout(function() {
-            response.audioPlayerPlay(url, token, playBehavior);
+            response.audioPlayerPlayStream(playBehavior, stream);
             response.send();
           }, 0);
           return false;
@@ -237,12 +165,7 @@ describe("Alexa", function () {
               type: 'AudioPlayer.Play',
               playBehavior: playBehavior,
               audioItem: {
-                stream: {
-                  url: url,
-                  token: token,
-                  expectedPreviousToken: undefined,
-                  offsetInMilliseconds: 0
-                }
+                stream: stream
               }
             });
           });

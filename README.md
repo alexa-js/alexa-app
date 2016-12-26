@@ -92,6 +92,17 @@ response.card(Object card)
 // this internally sets the card response
 response.linkAccount()
 
+// play audio stream (send AudioPlayer.Play directive) @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
+// skill supports stream(String url, String token, String expectedPreviousToken, Integer offsetInMilliseconds)
+response.audioPlayerPlayStream(String playBehavior, Object stream)
+
+// stop playing audio strem (send AudioPlayer.Stop directive)
+response.audioPlayerStop()
+
+// clear audio player queue (send AudioPlayer.ClearQueue directive)
+// clearBehavior is "CLEAR_ALL" by default
+response.audioPlayerClearQueue([ String clearBehavior ])
+
 // tell Alexa whether the user's session is over; sessions end by default
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
@@ -186,7 +197,13 @@ The following example will return `play` directive with a next audio on `AudioPl
 ```javascript
 app.audioPlayer("PlaybackNearlyFinished", function(request, response) {
   // immediate response
-  response.audioPlayerPlay("https://next-song-url", "some-token", "ENQUEUE", "previous token");
+  var stream = {
+    "url": "https://next-song-url",
+    "token": "some_token",
+    "expectedPreviousToken": "some_previous_token",
+    "offsetInMilliseconds": 0
+  };
+  response.audioPlayerPlayStream("ENQUEUE", stream);
 });
 ```
 
@@ -196,7 +213,13 @@ See an example of asynchronous response below.
 app.audioPlayer("PlaybackFinished", function(request, response) {
   // async response
   getNextSongFromDB(function(url, token) {
-    response.audioPlayerPlay(url, token, "ENQUEUE");
+    var stream = {
+      "url": url,
+      "token": token,
+      "expectedPreviousToken": "some_previous_token",
+      "offsetInMilliseconds": 0
+    };
+    response.audioPlayerPlayStream("ENQUEUE", stream);
     response.send();
   });
   return false;

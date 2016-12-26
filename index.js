@@ -117,42 +117,20 @@ alexa.response = function(session) {
   this.prepare = function() {
     this.setSessionAttributes(this.sessionObject.getAttributes());
   };
-  this.audioPlayerPlay = function (url, token, playBehavior, offsetInMilliseconds, expectedPreviousToken) {
-    // defaults.  Must supply at least url & token, the rest are optional
+  this.audioPlayerPlay = function(playBehavior, audioItem) {
     var audioPlayerDirective = {
       "type": "AudioPlayer.Play",
-      "playBehavior": "REPLACE_ALL",
-      "audioItem": {
-        "stream": {
-          "url": url,
-          "token": token,
-          "expectedPreviousToken": undefined,
-          "offsetInMilliseconds": 0
-        }
-      }
+      "playBehavior": playBehavior,
+      "audioItem": audioItem
     };
-    // configure with additional arguments
-    switch (arguments.length) {
-      // with playBehavior
-      case 3:
-        audioPlayerDirective.playBehavior = playBehavior;
-        break;
-      // with playBehavior & offsetInMilliseconds
-      case 4:
-        audioPlayerDirective.playBehavior = playBehavior;
-        audioPlayerDirective.audioItem.stream.offsetInMilliseconds = offsetInMilliseconds;
-        break;
-      // with playBehavior, offsetInMilliseconds, & expectedPreviousToken
-      case 5:
-        audioPlayerDirective.playBehavior = playBehavior;
-        audioPlayerDirective.audioItem.stream.offsetInMilliseconds = offsetInMilliseconds;
-        audioPlayerDirective.audioItem.stream.expectedPreviousToken = expectedPreviousToken;
-        break;
-      default:
-        break;
-    }
     self.response.response.directives.push(audioPlayerDirective);
     return this;
+  };
+  this.audioPlayerPlayStream = function(playBehavior, stream) {
+    var audioItem = {
+      "stream": stream
+    };
+    return this.audioPlayerPlay(playBehavior, audioItem);
   };
   this.audioPlayerStop = function () {
     var audioPlayerDirective = {
