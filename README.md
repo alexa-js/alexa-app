@@ -455,6 +455,16 @@ response.card({
 });
 ```
 
+# Custom Directives
+
+The `response.directive(Object directive)` method allows you to set custom directive objects to devices to perform a specific device-level actions.
+
+The full specification for the `directive` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#response-format).
+
+The `alexa-app` library has special handling for AudioPlayer directives, so you only need to use this method for more general custom directives.
+
+The `response.directive` adds your directive object to the directives array in the response. Currently, there is no way to remove a directive from the response once it is set except through `response.clear()`.
+
 # Error Handling
 
 Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
