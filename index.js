@@ -147,6 +147,9 @@ alexa.response = function(session) {
     self.response.response.directives.push(audioPlayerDirective);
     return this;
   };
+  this.directive = function (directive) {
+    self.response.response.directives.push(directive);
+  }
 
   // legacy code below
   // @deprecated
