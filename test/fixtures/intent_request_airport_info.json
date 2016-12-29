@@ -19,15 +19,5 @@
       "name": "airportInfoIntent",
       "slots": {}
     }
-  },
-  "context": {
-    "System": {
-      "user": {
-        "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
-      },
-      "application": {
-        "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
-      }
-    }
   }
 }
