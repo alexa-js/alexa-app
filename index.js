@@ -183,36 +183,6 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.userId = this.data.context.System.user.userId;
-  this.applicationId = this.data.context.System.application.applicationId;
-  this.context = function () {
-    try {
-      return this.data.request.context = {
-        "System": {
-          "application": {
-            "applicationId": this.applicationId
-          },
-          "user": {
-            "userId": this.data.session.user.userId,
-            "accessToken": this.data.session.accessToken
-          },
-          "device": {
-            "supportedInterfaces": {
-              "AudioPlayer": {}
-            }
-          }
-        },
-        "AudioPlayer": {
-          "token": this.sessionId,
-          "offsetInMilliseconds": this.data.request.offsetInMilliseconds,
-          "playerActivity": this.data.request.playerActivity
-        }
-      };
-    } catch (e) {
-      console.error("missing context", e);
-      return null;
-    }
-  };
 
   var session = new alexa.session(json.session);
   this.hasSession = function() {
@@ -220,6 +190,42 @@ alexa.request = function(json) {
   };
   this.getSession = function() {
     return session;
+  };
+
+  this.userId = null;
+  this.applicationId = null;
+  var context = null;
+  if (json.context || json.request.context) {
+    context = json.context || json.request.context;
+    this.userId = context.System.user.userId;
+    this.applicationId = context.System.application.applicationId;
+  } else if (this.hasSession()) {
+    this.userId = session.details.userId;
+    this.applicationId = session.details.application.applicationId;
+    context = {
+      "System": {
+        "application": {
+          "applicationId": this.applicationId
+        },
+        "user": {
+          "userId": this.userId,
+          "accessToken": session.details.accessToken
+        },
+        "device": {
+          "supportedInterfaces": {
+            "AudioPlayer": {}
+          }
+        }
+      },
+      "AudioPlayer": {
+        "token": null,
+        "offsetInMilliseconds": null,
+        "playerActivity": null
+      }
+    };
+  }
+  this.context = function() {
+    return this.data.context = this.data.request.context = context;
   };
 
   // legacy code below

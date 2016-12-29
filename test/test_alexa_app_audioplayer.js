@@ -16,10 +16,10 @@ describe("Alexa", function () {
       context("with an audioPlayer intent", function () {
         var mockRequest = mockHelper.load("intent_audioplayer.json");
         it("includes the context object", function () {
-          return expect(mockRequest.request).to.have.property("context");
+          return expect(mockRequest).to.have.property("context");
         });
-        it("request includes AudioPlayer object", function () {
-          return expect(mockRequest.request).to.have.property("AudioPlayer");
+        it("request context includes AudioPlayer object", function () {
+          return expect(mockRequest.context).to.have.property("AudioPlayer");
         });
       });
       describe("response", function () {
