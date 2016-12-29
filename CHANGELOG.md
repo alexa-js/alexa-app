@@ -1,6 +1,6 @@
 ## Changelog
 
-### 2.3.5 (Next)
+### 2.4.0 (Next)
 
 * [#76](https://github.com/matt-kruse/alexa-app/pull/76): `response.clear()` now sets the default `outputSpeech` to SSML - [@rickwargo](https://github.com/rickwargo).
 * [#90](https://github.com/matt-kruse/alexa-app/pull/90): Added [Danger](http://danger.systems), PR linter - [@dblock](https://github.com/dblock).

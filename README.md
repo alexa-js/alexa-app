@@ -11,6 +11,10 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js.
 	npm install alexa-app --save
 ```
 
+# Stable Release
+
+You're reading the documentation for the next release of alexa-app, which should be 2.4.0. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.3.4](https://github.com/matt-kruse/alexa-app/blob/v2.3.4/README.md).
+
 # Summary
 
 The alexa-app module does the dirty work of interpretting the JSON request from the Alexa platform and building the JSON response that can be spoken on an Alexa-compatible device, such as the Echo. It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
@@ -180,7 +184,7 @@ app.sessionEnded(function(request, response) {
 
 ## AudioPlayer Event Request
 
-Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false. 
+Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false.
 
 You can define handlers for the following events:
 
