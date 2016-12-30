@@ -183,9 +183,16 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.userId = this.data.context.System.user.userId;
-  this.applicationId = this.data.context.System.application.applicationId;
-  this.context = this.data.context;
+
+  this.userId = null;
+  this.applicationId = null;
+  this.context = null;
+
+  if (this.data.context) {
+    this.userId = this.data.context.System.user.userId;
+    this.applicationId = this.data.context.System.application.applicationId;
+    this.context = this.data.context;
+  }
 
   var session = new alexa.session(json.session);
   this.hasSession = function() {
