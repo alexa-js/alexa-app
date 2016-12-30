@@ -185,10 +185,7 @@ alexa.request = function(json) {
   };
   this.userId = this.data.context.System.user.userId;
   this.applicationId = this.data.context.System.application.applicationId;
-  
-  this.context = function () {
-    return this.data.request.context;
-  };
+  this.context = this.data.context;
 
   var session = new alexa.session(json.session);
   this.hasSession = function() {

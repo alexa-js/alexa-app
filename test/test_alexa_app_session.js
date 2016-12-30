@@ -26,6 +26,15 @@ describe("Alexa", function() {
           return true;
         };
         app.intent("airportInfoIntent", {}, intentHandler);
+
+        it("reponds with expected context applicationId", function() {
+          return app.request(mockRequest).then((response) => {
+            expect(reqObject.context).to
+              .have.deep.property("System.application.applicationId", "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe");
+          });
+        });
+
+
         it("responds with a session object", function() {
           var subject = app.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
