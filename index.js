@@ -185,33 +185,9 @@ alexa.request = function(json) {
   };
   this.userId = this.data.context.System.user.userId;
   this.applicationId = this.data.context.System.application.applicationId;
+  
   this.context = function () {
-    try {
-      return this.data.request.context = {
-        "System": {
-          "application": {
-            "applicationId": this.applicationId
-          },
-          "user": {
-            "userId": this.data.session.user.userId,
-            "accessToken": this.data.session.accessToken
-          },
-          "device": {
-            "supportedInterfaces": {
-              "AudioPlayer": {}
-            }
-          }
-        },
-        "AudioPlayer": {
-          "token": this.sessionId,
-          "offsetInMilliseconds": this.data.request.offsetInMilliseconds,
-          "playerActivity": this.data.request.playerActivity
-        }
-      };
-    } catch (e) {
-      console.error("missing context", e);
-      return null;
-    }
+    return this.data.request.context;
   };
 
   var session = new alexa.session(json.session);
