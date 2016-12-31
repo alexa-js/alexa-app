@@ -195,6 +195,123 @@ describe("Alexa", function() {
     });
 
     describe("#request", function() {
+      context("request without session", function() {
+        var app, mockRequest;
+        beforeEach(() => {
+          mockRequest = mockHelper.load("audio_player_event_request.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            req.getSession().clear();
+          };
+        });
+
+        it("session.clear() should not throw", function() {
+          app.request(mockRequest).should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request without session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("audio_player_event_request.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("intent_request_airport_info.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
+        var app, mockRequest;
+        beforeEach(() => {
+          mockRequest = mockHelper.load("intent_request_airport_info.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            req.getSession().clear();
+          };
+        });
+
+        it("session.clear() should not throw", function() {
+          app.request(mockRequest).should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session and attributes", function() {
+        var app, mockRequest;
+        beforeEach(() => {
+          mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            req.getSession().clear();
+          };
+        });
+
+        it("session.clear() should not throw", function() {
+          app.request(mockRequest).should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
       var mockRequest = mockHelper.load("audio_player_event_request.json");
       context("request without session", function() {
         context("trying to get session variable", function() {
