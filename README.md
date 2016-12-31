@@ -68,6 +68,9 @@ Boolean request.hasSession()
 // return the session object
 Session request.getSession()
 
+// return the request context
+request.context
+
 // the raw request JSON object
 request.data
 ```
