@@ -213,6 +213,69 @@ describe("Alexa", function() {
     });
 
     describe("#request", function() {
+      context("request without session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("audio_player_event_request.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("intent_request_airport_info.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
+        var app, mockRequest, returnedAttributeValue;
+        beforeEach(() => {
+          returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
+          app = new Alexa.app("myapp");
+          app.pre = function(req, res, type) {
+            returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+          };
+        });
+
+        it("session.get(key) should not throw if attribute is not present", function() {
+          return app.request(mockRequest)
+            .then(() => returnedAttributeValue.should.equal(undefined))
+            .should.eventually.succeed;
+        });
+
+      });
+    });
+
+    describe("#request", function() {
       context("request with session", function() {
         var app, mockRequest;
         beforeEach(() => {
