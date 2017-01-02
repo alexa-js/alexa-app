@@ -224,9 +224,9 @@ describe("Alexa", function() {
           };
         });
 
-        it("session.get(key) should not throw if attribute is not present", function() {
+        it("session.get(key) should throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined));
+            .then(() => expect(returnedAttributeValue).to.not.be.undefined);
         });
 
       });
@@ -246,7 +246,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined));
+            .then(() => expect(returnedAttributeValue).to.be.undefined);
         });
 
       });
@@ -266,7 +266,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined));
+            .then(() => expect(returnedAttributeValue).to.be.undefined);
         });
 
       });
