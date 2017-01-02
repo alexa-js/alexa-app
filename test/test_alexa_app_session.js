@@ -254,19 +254,26 @@ describe("Alexa", function() {
 
     describe("#request", function() {
       context("request with session", function() {
-        var app, mockRequest, returnedAttributeValue;
+        var app, mockRequest, returnedAttributeValue, returnedAirportCode, returnedAirportCodeBackwardsCompat;
         beforeEach(() => {
           returnedAttributeValue = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
+          returnedAirportCode = "INITIAL TEST VALUE WHICH SHOULD BE OVERRIDDEN";
           mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
           app = new Alexa.app("myapp");
           app.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
+            returnedAirportCode = req.getSession().get("airportCode");
+            returnedAirportCodeBackwardsCompat = req.session("airportCode");
           };
         });
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => expect(returnedAttributeValue).to.be.undefined);
+            .then(function() {
+              expect(returnedAttributeValue).to.be.undefined;
+              expect(returnedAirportCode).to.equal("DAL");
+              expect(returnedAirportCodeBackwardsCompat).to.equal("DAL");
+            });
         });
 
       });
