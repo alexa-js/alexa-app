@@ -206,7 +206,7 @@ describe("Alexa", function() {
         });
 
         it("session.clear() should not throw", function() {
-          app.request(mockRequest).should.eventually.succeed;
+          return app.request(mockRequest);
         });
 
       });
@@ -226,8 +226,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined))
-            .should.eventually.succeed;
+            .then(() => returnedAttributeValue.should.equal(undefined));
         });
 
       });
@@ -247,8 +246,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined))
-            .should.eventually.succeed;
+            .then(() => returnedAttributeValue.should.equal(undefined));
         });
 
       });
@@ -268,8 +266,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should not throw if attribute is not present", function() {
           return app.request(mockRequest)
-            .then(() => returnedAttributeValue.should.equal(undefined))
-            .should.eventually.succeed;
+            .then(() => returnedAttributeValue.should.equal(undefined));
         });
 
       });
@@ -287,7 +284,7 @@ describe("Alexa", function() {
         });
 
         it("session.clear() should not throw", function() {
-          app.request(mockRequest).should.eventually.succeed;
+          return app.request(mockRequest);
         });
 
       });
@@ -305,7 +302,7 @@ describe("Alexa", function() {
         });
 
         it("session.clear() should not throw", function() {
-          app.request(mockRequest).should.eventually.succeed;
+          return app.request(mockRequest);
         });
 
       });
