@@ -115,6 +115,7 @@ describe("Alexa", function() {
                   type: "SSML"
                 });
               });
+
               it("clears output when clear is called and say is then called", function() {
                 app = new Alexa.app("myapp");
                 intentHandler = function(req, res) {
@@ -150,6 +151,7 @@ describe("Alexa", function() {
                   type: "SSML"
                 });
               });
+
               it("responds with expected message", function() {
                 app = new Alexa.app("myapp");
                 intentHandler = function(req, res) {
@@ -164,6 +166,38 @@ describe("Alexa", function() {
                 return expect(subject).to.eventually.become({
                   ssml: "<speak>" + expectedMessage + "</speak>",
                   type: "SSML"
+                });
+              });
+
+              context("when fail is called", function() {
+                it("fails ungracefully", function() {
+                  app = new Alexa.app("myapp");
+                  app.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.fail("whoops");
+                      return true;
+                    });
+                  var subject = app.request(mockRequest);
+                  return expect(subject).to.be.rejectedWith("whoops");
+                });
+
+                it("can clear failure in post", function() {
+                  app = new Alexa.app("myapp");
+                  app.post = function(req, res, type) {
+                    res.clear().say("An error occured!").send();
+                  };
+                  app.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.fail("whoops");
+                      return true;
+                    });
+                  var subject = app.request(mockRequest).then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>An error occured!</speak>",
+                    type: "SSML"
+                  });
                 });
               });
             });
