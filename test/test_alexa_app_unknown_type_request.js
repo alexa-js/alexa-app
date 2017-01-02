@@ -11,7 +11,7 @@ describe("Alexa", function() {
   var Alexa = require("../index");
   describe("app", function() {
     var app = new Alexa.app("myapp");
-    describe("#request", function() {
+    describe("unknown type #request", function() {
       describe("response", function() {
 
         var mockRequest = mockHelper.load("unknown_type_request.json");
