@@ -200,6 +200,18 @@ describe("Alexa", function() {
                   });
                 });
               });
+
+              context("when an exception occurs", function() {
+                it("reports failure", function() {
+                  app = new Alexa.app("myapp");
+                  app.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      throw new Error("whoops");
+                    });
+                  var subject = app.request(mockRequest);
+                  return expect(subject).to.be.rejectedWith("Unhandled exception: whoops.");
+                });
+              });
             });
           });
         });

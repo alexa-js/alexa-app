@@ -27,12 +27,24 @@ describe("Alexa", function() {
           return expect(subject).to.be.rejectedWith("foobar");
         });
 
+        it("defaults to unhandled exception", function() {
+          app = new Alexa.app("myapp");
+
+          app.error = function(e, request, response) {
+            // don't handle
+          };
+
+          var subject = app.request(mockRequest);
+          return expect(subject).to.be.rejectedWith("Unhandled exception.");
+        });
+
         it("fails with not a valid request", function() {
           app = new Alexa.app("myapp");
 
           var subject = app.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });
+
           return expect(subject).to.eventually.become({
             ssml: "<speak>Error: not a valid request</speak>",
             type: "SSML"
