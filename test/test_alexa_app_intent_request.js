@@ -169,6 +169,38 @@ describe("Alexa", function() {
                 });
               });
 
+              it("retrieves a slot value", function() {
+                app = new Alexa.app("myapp");
+                app.intent("airportInfoIntent", {}, function(req, res) {
+                  res.say(req.slot("AirportCode"));
+                  return true;
+                });
+                var subject = app.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>JFK</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("retrieves default slot value", function() {
+                app = new Alexa.app("myapp");
+                app.intent("airportInfoIntent", {}, function(req, res) {
+                  res.say(req.slot("InvalidSlotName", "default value"));
+                  return true;
+                });
+                var subject = app.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>default value</speak>",
+                  type: "SSML"
+                });
+              });
+
               context("when fail is called", function() {
                 it("fails ungracefully", function() {
                   app = new Alexa.app("myapp");
