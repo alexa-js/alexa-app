@@ -22,7 +22,7 @@ describe("Alexa", function () {
 
         context("AudioPlayer.PlaybackFinished", () => {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_finished.json"); })
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_finished.json"); })
 
           it("should succeed and return empty object ", () => {
             return testApp.request(mockRequest)
@@ -33,7 +33,7 @@ describe("Alexa", function () {
 
         context("AudioPlayer.PlaybackFailed", () => {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_failed.json"); })
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_failed.json"); })
 
           it("should succeed and return empty object ", () => {
             return testApp.request(mockRequest)
@@ -44,7 +44,7 @@ describe("Alexa", function () {
 
         context("AudioPlayer.PlaybackNearlyFinished", () => {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_nearly_finished.json"); })
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_nearly_finished.json"); })
 
           it("should succeed and return empty object ", () => {
             return testApp.request(mockRequest)
@@ -56,7 +56,7 @@ describe("Alexa", function () {
 
         context("AudioPlayer.PlaybackStarted", () => {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_started.json"); })
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_started.json"); })
 
           it("should succeed and return empty object ", () => {
             return testApp.request(mockRequest)
@@ -67,7 +67,7 @@ describe("Alexa", function () {
 
         context("AudioPlayer.PlaybackStopped", () => {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_stopped.json"); })
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_stopped.json"); })
 
           it("should succeed and return empty object ", () => {
             return testApp.request(mockRequest)
