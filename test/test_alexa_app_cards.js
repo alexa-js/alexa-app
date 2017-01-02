@@ -54,7 +54,6 @@ describe("Alexa", function() {
                 setupIntentHandler(intentHandler);
                 var subject = app.request(mockRequest);
                 var cardResponse = subject.then(function(response) {
-                  console.log(response.response);
                   return response.response;
                 });
                 expect(cardResponse).to.eventually.not.have.property("card");
