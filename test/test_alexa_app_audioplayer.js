@@ -13,6 +13,70 @@ describe("Alexa", function () {
   describe("app", function () {
     var app = new Alexa.app("myapp");
     describe("request", function () {
+
+      context("without an audioPlayer intent", function () {
+        var testApp;
+        beforeEach(() => {
+          testApp = new Alexa.app("testApp");
+        });
+
+        context("AudioPlayer.PlaybackFinished", () => {
+          var mockRequest;
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_finished.json"); })
+
+          it("should succeed and return empty object ", () => {
+            return testApp.request(mockRequest)
+              .should.eventually.be.fulfilled
+              .and.not.have.deep.property("response.outputSpeech.type");
+          });
+        });
+
+        context("AudioPlayer.PlaybackFailed", () => {
+          var mockRequest;
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_failed.json"); })
+
+          it("should succeed and return empty object ", () => {
+            return testApp.request(mockRequest)
+              .should.eventually.be.fulfilled
+              .and.not.have.deep.property("response.outputSpeech.type");
+          });
+        });
+
+        context("AudioPlayer.PlaybackNearlyFinished", () => {
+          var mockRequest;
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_nearly_finished.json"); })
+
+          it("should succeed and return empty object ", () => {
+            return testApp.request(mockRequest)
+              .should.eventually.be.fulfilled
+              .and.not.have.deep.property("response.outputSpeech.type");
+          });
+        });
+
+
+        context("AudioPlayer.PlaybackStarted", () => {
+          var mockRequest;
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_started.json"); })
+
+          it("should succeed and return empty object ", () => {
+            return testApp.request(mockRequest)
+              .should.eventually.be.fulfilled
+              .and.not.have.deep.property("response.outputSpeech.type");
+          });
+        });
+
+        context("AudioPlayer.PlaybackStopped", () => {
+          var mockRequest;
+          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events\\playback_stopped.json"); })
+
+          it("should succeed and return empty object ", () => {
+            return testApp.request(mockRequest)
+              .should.eventually.be.fulfilled
+              .and.not.have.deep.property("response.outputSpeech.type");
+          });
+        });
+      });
+
       context("with an audioPlayer intent", function () {
         var mockRequest = mockHelper.load("intent_audioplayer.json");
         it("includes the context object", function () {
@@ -102,19 +166,7 @@ describe("Alexa", function () {
 
     describe("request with AudioPlayer.PlaybackFinished type", function() {
       var mockRequest = mockHelper.load("audio_player_event_request.json");
-      context("but there is not PlaybackFinished event handler", function() {
-        describe("outputSpeech", function() {
-          var subject = app.request(mockRequest).then(function(response) {
-            return response.response.outputSpeech;
-          });
-          it("responds with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
-            return expect(subject).to.eventually.become({
-              ssml: "<speak>" + app.messages.NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND + "</speak>",
-              type: "SSML"
-            });
-          });
-        });
-      });
+
       context("set PlaybackFinished event handler with play directive", function() {
         var stream = {
           url: "https://testing",

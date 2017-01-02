@@ -397,7 +397,7 @@ alexa.app = function(name, endpoint) {
                 response.send();
               }
             } else {
-              throw "NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND";
+              response.send();
             }
           } else {
             throw "INVALID_REQUEST_TYPE";

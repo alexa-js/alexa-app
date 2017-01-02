@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "request": {
+    "type": "AudioPlayer.PlaybackStarted",
+    "requestId": "amzn1.echo-api.request.9cdaa4db-f20e-4c58-8d01-c75322d6c423",
+    "timestamp": "2015-05-13T12:34:56Z",
+    "token": "THIS_IS_SOME_RANDOM_STRING",
+    "offsetInMilliseconds": 0,
+    "locale": "en-US"
+  },
+  "context": {
+    "System": {
+      "user": {
+        "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+      },
+      "application": {
+        "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+      }
+    }
+  }
+}
