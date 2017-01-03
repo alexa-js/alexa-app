@@ -163,15 +163,23 @@ app.launch(function(request, response) {
 
 ## IntentRequest
 
-Define the handler for multiple intents using multiple calls to `intent()`. Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return false. See example further below.
+Define the handler for multiple intents using multiple calls to `intent()`. Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false`. See example further below.
 
 ```javascript
-app.intent("buy", function(request, response) {
-  response.say("You bought a " + request.slot("item"));
-});
+app.intent("live", {
+    "slots": {
+      "city": "AMAZON.US_CITY"
+    },
+    "utterances": [
+      "in {-|city}"
+    ]
+  }, function(request, response) {
+    response.say("You live in " + request.slot("city"));
+  }
+);
 
-app.intent("sell", function(request, response) {
-  response.say("You sold your items!");
+app.intent("vacation", function(request, response) {
+  response.say("You're now on vacation.");
 });
 ```
 
@@ -276,11 +284,11 @@ Pass an object with two properties: slots and utterances.
 ```javascript
 app.intent("sampleIntent", {
     "slots": {
-      "NAME": "LITERAL",
-      "AGE": "NUMBER"
+      "NAME": "AMAZON.US_FIRST_NAME",
+      "AGE": "AMAZON.NUMBER"
     },
     "utterances": [
-      "my {name is|name's} {names|NAME} and {I am|I'm} {1-100|AGE}{ years old|}"
+      "my {name is|name's} {NAME} and {I am|I'm} {1-100|AGE}{ years old|}"
     ]
   },
   function(request, response) {
@@ -291,7 +299,7 @@ app.intent("sampleIntent", {
 
 ### slots
 
-The slots object is a simple `Name:Type` mapping. The type must be one of Amazon's supported slot types: `LITERAL`, `NUMBER`, `DATE`, `TIME`, `DURATION`, etc.
+The slots object is a simple `name: type` mapping. The type must be one of Amazon's [built-in slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference), such as `AMAZON.DATE` or `AMAZON.NUMBER`.
 
 ### custom slot types
 
@@ -402,7 +410,7 @@ app.schema() =>
     "intent": "MyColorIsIntent",
     "slots": [{
       "name": "Color",
-      "type": "LITERAL"
+      "type": "AMAZON.Color"
     }]
   }]
 }
@@ -489,9 +497,9 @@ If an intent handler will return a response later, it must return `false`. This 
 
 ```javascript
 app.intent("checkStatus", function(request, response) {
-  http.get("http://server.com/status.html", function(res) {
+  http.get("http://server.com/status.html", function(rc) {
     // this is async and will run after the http call returns
-    response.say(res.statusText);
+    response.say(rc.statusText);
     // must call send to end the original request
     response.send();
   });

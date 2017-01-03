@@ -411,7 +411,11 @@ alexa.app = function(name, endpoint) {
           response.send(e);
         }
         if (!response.resolved) {
-          response.fail("Unhandled exception" + e.message, e);
+          if (e.message) {
+            response.fail("Unhandled exception: " + e.message + ".", e);
+          } else {
+            response.fail("Unhandled exception.", e);
+          }
         }
       }
     });

@@ -9,26 +9,35 @@ chai.config.includeStack = true;
 
 describe("Alexa", function() {
   var Alexa = require("../index");
+
   describe("app", function() {
+    var testApp;
+    beforeEach(() => {
+      testApp = new Alexa.app("testApp");
+    });
+
     describe("#schema", function() {
-      var app = new Alexa.app("myapp");
-      app.intent("testIntentTwo", {
-        "slots": {
-          "MyCustomSlotType": "CUSTOMTYPE",
-          "Tubular": "AMAZON.LITERAL",
-          "Radical": "AMAZON.US_STATE",
-        },
+      beforeEach(() => {
+        testApp.intent("testIntentTwo", {
+          "slots": {
+            "MyCustomSlotType": "CUSTOMTYPE",
+            "Tubular": "AMAZON.LITERAL",
+            "Radical": "AMAZON.US_STATE",
+          },
+        });
+
+        testApp.intent("testIntent", {
+          "slots": {
+            "AirportCode": "FAACODES",
+            "Awesome": "AMAZON.DATE",
+            "Tubular": "AMAZON.LITERAL"
+          },
+        });
       });
-      app.intent("testIntent", {
-        "slots": {
-          "AirportCode": "FAACODES",
-          "Awesome": "AMAZON.DATE",
-          "Tubular": "AMAZON.LITERAL"
-        },
-      });
-      var expected = JSON.stringify(mockHelper.load("expected_intent_schema.json"));
-      var subject = JSON.stringify(JSON.parse(app.schema()));
+
       it("generates the expected schema", function() {
+        var expected = JSON.stringify(mockHelper.load("expected_intent_schema.json"));
+        var subject = JSON.stringify(JSON.parse(testApp.schema()));
         expect(subject).to.eq(expected);
       });
     });
