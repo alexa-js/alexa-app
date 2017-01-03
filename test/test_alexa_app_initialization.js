@@ -10,19 +10,26 @@ chai.config.includeStack = true;
 
 describe("Alexa", function() {
   var Alexa = require("../index");
+
   describe("app", function() {
-    var app = new Alexa.app("myapp");
+    var testApp;
+    beforeEach(() => {
+      testApp = new Alexa.app("testApp");
+    });
+
     describe("initialization", function() {
       describe("defaults", function() {
         it("sets persistent session to true", function() {
-          return expect(app.persistentSession).to.eq(true);
+          return expect(testApp.persistentSession).to.eq(true);
         });
+
         it("sets exhaustiveUtterances to false", function() {
-          return expect(app.exhaustiveUtterances).to.eq(false);
+          return expect(testApp.exhaustiveUtterances).to.eq(false);
         });
       });
+
       it("sets the name of the app to expected", function() {
-        return expect(app.name).to.eq("myapp");
+        return expect(testApp.name).to.eq("testApp");
       });
     });
   });
