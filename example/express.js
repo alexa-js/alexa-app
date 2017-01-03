@@ -29,7 +29,5 @@ alexaApp.intent("nameIntent", {
 
 alexaApp.express(app, "/echo/");
 
-// launch /echo/test in your browser with a GET request
-
 app.listen(PORT);
-console.log("Listening on port " + PORT);
+console.log("Listening on port " + PORT + ", try http://localhost:" + PORT + "/echo/test");
