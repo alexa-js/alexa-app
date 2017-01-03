@@ -9,5 +9,5 @@
     "express": "^4.13.0"
   },
   "author": "Matt Kruse <github@mattkruse.com> (http://mattkruse.com/)",
-  "license": "ISC"
+  "license": "MIT"
 }
