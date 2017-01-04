@@ -28,8 +28,12 @@ describe("Alexa", function() {
         });
       });
 
-      it("sets the name of the app to expected", function() {
+      it("sets the name of the app", function() {
         return expect(testApp.name).to.eq("testApp");
+      });
+
+      it("adds to alexa.apps", function() {
+        return expect(Alexa.apps["testApp"]).to.eq(testApp);
       });
     });
   });
