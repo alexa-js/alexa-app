@@ -5,6 +5,8 @@ var chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 var sinonChai = require("sinon-chai");
 chai.use(sinonChai);
+var chaiString = require('chai-string');
+chai.use(chaiString);
 var expect = chai.expect;
 chai.config.includeStack = true;
 var mockHelper = require("./helpers/mock_helper");
@@ -12,6 +14,7 @@ var sinon = require("sinon");
 var express = require('express');
 var request = require("supertest-as-promised");
 var bodyParser = require('body-parser');
+var path = require('path');
 
 describe("Alexa", function() {
   var Alexa = require("../index");
@@ -22,6 +25,8 @@ describe("Alexa", function() {
     beforeEach(() => {
       var app = express();
       app.use(bodyParser.json());
+      app.set('views', path.join(__dirname, 'views'));
+      app.set('view engine', 'ejs');
       var testApp = new Alexa.app("testApp");
       testApp.express(app, '/', true)
       testServer = app.listen(3000);
@@ -49,6 +54,14 @@ describe("Alexa", function() {
           .send({ x: 1 })
           .expect(200).then(function(response) {
             return expect(response.body.response.outputSpeech.ssml).to.eq("<speak>Error: not a valid request</speak>")
+          });
+      });
+
+      it("dumps debug schema", function() {
+        return request(testServer)
+          .get('/testApp')
+          .expect(200).then(function(response) {
+            expect(response.text).to.startWith('{"name":"testApp"')
           });
       });
     });

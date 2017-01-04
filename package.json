@@ -43,6 +43,8 @@
     "istanbul": "^0.4.3",
     "mocha": "^2.3.4",
     "danger": "0.6.10",
-    "body-parser": "^1.15.2"
+    "body-parser": "^1.15.2",
+    "ejs": "^2.5.5",
+    "chai-string": "^1.3.0"
   }
 }
