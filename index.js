@@ -389,7 +389,7 @@ alexa.app = function(name, endpoint) {
                 response.send();
               }
             }
-          } else if (0 === requestType.indexOf("AudioPlayer.")) {
+          } else if (requestType && 0 === requestType.indexOf("AudioPlayer.")) {
             var event = requestType.slice(12);
             var eventHandlerObject = self.audioPlayerEventHandlers[event];
             if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
