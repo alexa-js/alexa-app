@@ -13,7 +13,7 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js.
 
 # Stable Release
 
-You're reading the documentation for the next release of alexa-app, which should be 2.4.0. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.3.4](https://github.com/matt-kruse/alexa-app/blob/v2.3.4/README.md).
+You're reading the documentation for the stable release of alexa-app, 2.4.0. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version.
 
 # Summary
 
