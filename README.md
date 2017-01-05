@@ -1,5 +1,6 @@
 # alexa-app
 
+[![NPM](https://img.shields.io/npm/v/alexa-app.svg)](https://www.npmjs.com/package/alexa-app/)
 [![Build Status](https://travis-ci.org/matt-kruse/alexa-app.svg?branch=master)](https://travis-ci.org/matt-kruse/alexa-app)
 [![Coverage Status](https://coveralls.io/repos/github/matt-kruse/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/matt-kruse/alexa-app?branch=master)
 
