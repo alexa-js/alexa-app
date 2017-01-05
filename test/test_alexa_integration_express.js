@@ -20,15 +20,16 @@ describe("Alexa", function() {
   var Alexa = require("../index");
 
   describe("app", function() {
+    var app;
     var testServer;
+    var testApp;
 
     beforeEach(() => {
-      var app = express();
+      app = express();
       app.use(bodyParser.json());
       app.set('views', path.join(__dirname, 'views'));
       app.set('view engine', 'ejs');
-      var testApp = new Alexa.app("testApp");
-      testApp.express(app, '/', true)
+      testApp = new Alexa.app("testApp");
       testServer = app.listen(3000);
     });
 
@@ -36,7 +37,11 @@ describe("Alexa", function() {
       testServer.close();
     });
 
-    describe("#express", function() {
+    context("#express with default options", function() {
+      beforeEach(() => {
+        testApp.express(app, '/')
+      });
+
       it("returns a response for a valid request", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
@@ -63,6 +68,32 @@ describe("Alexa", function() {
           .expect(200).then(function(response) {
             expect(response.text).to.startWith('{"name":"testApp"')
           });
+      });
+    });
+
+    context("#express with debug set to true", function() {
+      beforeEach(() => {
+        testApp.express(app, '/', true)
+      });
+
+      it("dumps debug schema", function() {
+        return request(testServer)
+          .get('/testApp')
+          .expect(200).then(function(response) {
+            expect(response.text).to.startWith('{"name":"testApp"')
+          });
+      });
+    });
+
+    context("#express with debug set to false", function() {
+      beforeEach(() => {
+        testApp.express(app, '/', false)
+      });
+
+      it("cannot dump debug schema", function() {
+        return request(testServer)
+          .get('/testApp')
+          .expect(404);
       });
     });
   });
