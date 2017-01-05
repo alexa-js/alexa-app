@@ -45,10 +45,22 @@ git add README.md CHANGELOG.md
 git commit -m "Preparing for release, 2.4.0."
 ```
 
+Tag the release.
+
+```
+git tag v2.4.0
+```
+
 Release.
 
 ```
 $ npm release
+```
+
+Push.
+
+```
+$ git push --tags
 ```
 
 ### Prepare for the Next Developer Iteration
