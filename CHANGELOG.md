@@ -1,13 +1,16 @@
 ## Changelog
 
-### 2.4.0 (Next)
+### 2.4.1 (Next)
+
+* Your contribution here.
+
+### 2.4.0 (January 5, 2017)
 
 * [#76](https://github.com/matt-kruse/alexa-app/pull/76): `response.clear()` now sets the default `outputSpeech` to SSML - [@rickwargo](https://github.com/rickwargo).
 * [#90](https://github.com/matt-kruse/alexa-app/pull/90): Added [Danger](http://danger.systems), PR linter - [@dblock](https://github.com/dblock).
 * [#91](https://github.com/matt-kruse/alexa-app/pull/91): Fixed "Cannot read property 'new' of undefined" init error - [@fremail](https://github.com/fremail).
 * [#88](https://github.com/matt-kruse/alexa-app/pull/88), [#92](https://github.com/matt-kruse/alexa-app/pull/92): AudioPlayer functionality - [@wschaeferiii](https://github.com/wschaeferiii) and [@fremail](https://github.com/fremail).
 * [#101](https://github.com/matt-kruse/alexa-app/pull/101): Added `request.context` - [@trayburn](https://github.com/trayburn).
-* Your contribution here.
 
 ### 2.3.4 (May 23, 2016)
 
