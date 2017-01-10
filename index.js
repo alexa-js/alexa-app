@@ -227,7 +227,9 @@ alexa.session = function(session) {
       return (true === session.new);
     };
     this.get = function(key) {
-      return this.attributes[key];
+      // getAttributes deep clones the attributes object, so updates to objects
+      // will not affect the session until `set` is called explicitly
+      return this.getAttributes()[key];
     };
     this.set = function(key, value) {
       this.attributes[key] = value;
@@ -262,7 +264,9 @@ alexa.session = function(session) {
   }
   this.getAttributes = function() {
     // do some stuff with session data
-    return this.attributes;
+    // Deep clone attributes so direct updates to objects are not set in the
+    // session unless `.set` is called explicitly
+    return JSON.parse(JSON.stringify(this.attributes));
   };
 };
 
