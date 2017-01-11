@@ -4,6 +4,7 @@
 
 * [#119](https://github.com/alexa-js/alexa-app/pull/119): Moved to the [alexa-js organization](https://github.com/alexa-js) - [@dblock](https://github.com/dblock).
 * Your contribution here.
+* [#118](https://github.com/matt-kruse/alexa-app/pull/118), [#117](https://github.com/matt-kruse/alexa-app/issues/117): Prevent updating session attributes directly - [@ajcrites](https://github.com/ajcrites).
 
 ### 2.4.0 (January 5, 2017)
 

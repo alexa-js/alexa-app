@@ -140,6 +140,9 @@ var session = request.getSession()
 // set a session variable
 // by defailt, Alexa only persists session variables to the next request
 // the alexa-app module makes session variables persist across multiple requests
+// Note that you *must* use `.set` or `.clear` to update
+// session properties. Updating properties of `attributeValue`
+// that are objects will not persist until `.set` is called
 session.set(String attributeName, String attributeValue)
 
 // return the value of a session variable

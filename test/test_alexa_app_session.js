@@ -77,6 +77,66 @@ describe("Alexa", function() {
             )
           ]);
         });
+
+        it("does not update session properties without explicit set", function() {
+          testApp.pre = function(req, res, type) {
+            var session = req.getSession();
+            session.set("foo", true);
+            session.set("bar", {qaz: "woah"});
+          };
+
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
+            res.say("message").shouldEndSession(false);
+            var session = req.getSession();
+            var bar = session.get("bar");
+            bar.qaz = "not woah";
+            return true;
+          });
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+
+          return Promise.all([
+            expect(subject).to.eventually.become({
+              foo: true,
+              bar: {
+                qaz: "woah"
+              }
+            })
+          ]);
+        });
+
+        it("updates session properties with explicit set", function() {
+          testApp.pre = function(req, res, type) {
+            var session = req.getSession();
+            session.set("foo", true);
+            session.set("bar", {qaz: "woah"});
+          };
+
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
+            res.say("message").shouldEndSession(false);
+            var session = req.getSession();
+            var bar = session.get("bar");
+            bar.qaz = "not woah";
+            session.set("bar", bar);
+            session.set("foo", false);
+            return true;
+          });
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+
+          return Promise.all([
+            expect(subject).to.eventually.become({
+              foo: false,
+              bar: {
+                qaz: "not woah"
+              }
+            })
+          ]);
+        });
       });
     });
 
