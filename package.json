@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/matt-kruse/alexa-app.git"
+    "url": "https://github.com/alexa-js/alexa-app.git"
   },
   "bugs": {
-    "url": "https://github.com/matt-kruse/alexa-app/issues"
+    "url": "https://github.com/alexa-js/alexa-app/issues"
   },
   "license": "MIT",
   "dependencies": {
