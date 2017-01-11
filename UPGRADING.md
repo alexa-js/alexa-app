@@ -1,6 +1,14 @@
 # Upgrading Alexa-app
 
-### Upgrading to >= 2.3.5
+### Upgrading to >= 2.4.1
+
+#### Changed session object behavior
+
+When working with the session, `session.get` will return a deep copy of the value stored in the session. If this value is an object and you make direct changes to the object, you must call `session.set` again in order for the changes to propagate to the session.
+
+See [#118](https://github.com/matt-kruse/alexa-app/pull/118) for more information.
+
+### Upgrading to >= 2.4.0
 
 #### Changed session interface
 
@@ -43,7 +51,4 @@ if (request.hasSession()) {
 
 You can easily use the session, but first you need to check if `request` has session: `Boolean request.hasSession()`. Otherwise the session properties will be empty and the session functions will throw "NO_SESSION" exception.
 
-When working with the session, `session.get` will return a deep copy of the value stored in the session. If this value is an object and you make direct changes to the object, you must call `session.set` again in order for the changes to propagate to the session.
-
-See [#91](https://github.com/matt-kruse/alexa-app/pull/91) and [#118](https://github.com/matt-kruse/alexa-app/pull/118) for more information.
-
+See [#91](https://github.com/matt-kruse/alexa-app/pull/91) for more information.
