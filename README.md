@@ -1,8 +1,8 @@
 # alexa-app
 
 [![NPM](https://img.shields.io/npm/v/alexa-app.svg)](https://www.npmjs.com/package/alexa-app/)
-[![Build Status](https://travis-ci.org/matt-kruse/alexa-app.svg?branch=master)](https://travis-ci.org/matt-kruse/alexa-app)
-[![Coverage Status](https://coveralls.io/repos/github/matt-kruse/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/matt-kruse/alexa-app?branch=master)
+[![Build Status](https://travis-ci.org/alexa-js/alexa-app.svg?branch=master)](https://travis-ci.org/alexa-js/alexa-app)
+[![Coverage Status](https://coveralls.io/repos/github/alexa-js/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/alexa-js/alexa-app?branch=master)
 
 A Node module to simplify development of Alexa apps (Skills) using Node.js.
 
@@ -14,7 +14,7 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js.
 
 # Stable Release
 
-You're reading the documentation for the next release of alexa-app, which should be 2.4.1. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.4.0](https://github.com/matt-kruse/alexa-app/blob/v2.4.0/README.md).
+You're reading the documentation for the next release of alexa-app, which should be 2.4.1. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.4.0](https://github.com/alexa-js/alexa-app/blob/v2.4.0/README.md).
 
 # Summary
 
@@ -608,7 +608,7 @@ If you don't use AWS Lambda and host an Alexa skill on your own webserver, you w
 
 ### Development
 
-Use the [alexa-app-server](https://github.com/matt-kruse/alexa-app-server) module in combination with alexa-app as a container for multiple alexa-app skills using Node.js and Express. It lets you run and debug your apps locally, and can also be used as a full production server for your apps.
+Use the [alexa-app-server](https://github.com/alexa-js/alexa-app-server) module in combination with alexa-app as a container for multiple alexa-app skills using Node.js and Express. It lets you run and debug your apps locally, and can also be used as a full production server for your apps.
 
 # History
 

@@ -41,5 +41,5 @@ if (request.hasSession()) {
 
 You can easily use the session, but first you need to check if `request` has session: `Boolean request.hasSession()`. Otherwise the session properties will be empty and the session functions will throw "NO_SESSION" exception.
 
-See [#91](https://github.com/matt-kruse/alexa-app/pull/91) for more information.
+See [#91](https://github.com/alexa-js/alexa-app/pull/91) for more information.
 

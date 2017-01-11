@@ -12,13 +12,13 @@ npm install
 npm test
 ```
 
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/matt-kruse/alexa-app).
+Check that the last build succeeded in [Travis CI](https://travis-ci.org/alexa-js/alexa-app).
 
-Those with r/w permissions to the [master alexa-app repository](https://github.com/matt-kruse/alexa-app) generally have alexa-app-based projects. Point one to alexa-app HEAD and run all your tests to catch any obvious regressions.
+Those with r/w permissions to the [master alexa-app repository](https://github.com/alexa-js/alexa-app) generally have alexa-app-based projects. Point one to alexa-app HEAD and run all your tests to catch any obvious regressions.
 
 ```
 "dependencies": {
-  "alexa-app": "matt-kruse/alexa-app"
+  "alexa-app": "alexa-js/alexa-app"
 }
 ```
 
@@ -71,7 +71,7 @@ Modify the "Stable Release" section in [README.md](README.md). Change the text t
 ## Stable Release
 
 You're reading the documentation for the next release of alexa-app, which should be 2.4.1.
-The current stable release is [2.4.0](https://github.com/matt-kruse/alexa-app/blob/v2.4.0/README.md).
+The current stable release is [2.4.0](https://github.com/alexa-js/alexa-app/blob/v2.4.0/README.md).
 ```
 
 Add the next release to [CHANGELOG.md](CHANGELOG.md).
