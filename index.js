@@ -263,7 +263,6 @@ alexa.session = function(session) {
     this.sessionId = null;
   }
   this.getAttributes = function() {
-    // do some stuff with session data
     // Deep clone attributes so direct updates to objects are not set in the
     // session unless `.set` is called explicitly
     return JSON.parse(JSON.stringify(this.attributes));

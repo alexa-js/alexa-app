@@ -24,7 +24,7 @@ if (request.hasSession()) {
   session.isNew();
   // set a session variable
   session.set("foo", "bar");
-  // get a session variable
+  // get a session variable (copies objects)
   session.get("foo");
   // delete one session variable
   session.clear("foo");
@@ -35,11 +35,15 @@ if (request.hasSession()) {
   // get session details
   session.details;
   // get session attributes (object of variables)
+  // NOTE: Working directly with these circumvents the deep
+  // copy returned by `session.get`
   session.attributes;
 }
 ```
 
 You can easily use the session, but first you need to check if `request` has session: `Boolean request.hasSession()`. Otherwise the session properties will be empty and the session functions will throw "NO_SESSION" exception.
 
-See [#91](https://github.com/alexa-js/alexa-app/pull/91) for more information.
+When working with the session, `session.get` will return a deep copy of the value stored in the session. If this value is an object and you make direct changes to the object, you must call `session.set` again in order for the changes to propagate to the session.
+
+See [#91](https://github.com/matt-kruse/alexa-app/pull/91) and [#118](https://github.com/matt-kruse/alexa-app/pull/118) for more information.
 
