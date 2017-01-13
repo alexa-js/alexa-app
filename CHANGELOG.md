@@ -47,9 +47,9 @@
 
 ### 2.1.5 (Oct 25, 2015)
 
-* [#26](https://github.com/alexa-js/alexa-app/issues/26): Externalized the generation of utterances to the new alexa-utterances module (Issue #26) - [@matt-kruse](https://github.com/matt-kruse).
+* [#26](https://github.com/alexa-js/alexa-app/issues/26): Externalized the generation of utterances to the new alexa-utterances module - [@matt-kruse](https://github.com/matt-kruse).
 
 ### 2.1.4 (Sep 14, 2015)
 
-* [#17](https://github.com/alexa-js/alexa-app/issues/17): Remove hyphen from generated numbers in utterances (Issue #17)
+* [#17](https://github.com/alexa-js/alexa-app/issues/17): Remove hyphen from generated numbers in utterances - [@matt-kruse](https://github.com/matt-kruse).
 * [#18](https://github.com/alexa-js/alexa-app/issues/18): Collapse multiple whitespaces to one space in utterances - [@matt-kruse](https://github.com/matt-kruse).
