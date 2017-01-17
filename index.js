@@ -272,6 +272,12 @@ alexa.session = function(session) {
 alexa.apps = {};
 
 alexa.app = function(name, endpoint) {
+  "use strict"
+
+  if (!(this instanceof alexa.app)) {
+      throw new Error("Function needs to be called with the new keyword");
+  }
+
   var self = this;
   this.name = name;
   this.messages = {
