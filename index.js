@@ -1,3 +1,5 @@
+"use strict";
+
 var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
@@ -272,6 +274,10 @@ alexa.session = function(session) {
 alexa.apps = {};
 
 alexa.app = function(name, endpoint) {
+  if (!(this instanceof alexa.app)) {
+      throw new Error("Function must be called with the new keyword");
+  }
+
   var self = this;
   this.name = name;
   this.messages = {
