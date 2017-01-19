@@ -9,7 +9,7 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js.
 # Installation
 
 ```bash
-	npm install alexa-app --save
+npm install alexa-app --save
 ```
 
 # Stable Release
@@ -295,9 +295,7 @@ app.intent("sampleIntent", {
       "my {name is|name's} {NAME} and {I am|I'm} {1-100|AGE}{ years old|}"
     ]
   },
-  function(request, response) {
-
-  }
+  function(request, response) { ... }
 );
 ```
 
@@ -318,7 +316,7 @@ app.intent("sampleIntent", {
       "airport {information|status} for {-|CustomSlotName}"
     ]
   },
-  function(request, response) {... }
+  function(request, response) { ... }
 );
 ```
 
@@ -480,7 +478,7 @@ Handler functions should not throw exceptions. Ideally, you should catch errors 
 
 ```javascript
 app.error = function(exception, request, response) {
-    response.say("Sorry, something bad happened");
+  response.say("Sorry, something bad happened");
 };
 ```
 
