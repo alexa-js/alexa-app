@@ -18,7 +18,7 @@ You're reading the documentation for the next release of alexa-app, which should
 
 # Summary
 
-The alexa-app module does the dirty work of interpretting the JSON request from the Alexa platform and building the JSON response that can be spoken on an Alexa-compatible device, such as the Echo. It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
+The alexa-app module does the dirty work of interpreting the JSON request from the Alexa platform and building the JSON response that can be spoken on an Alexa-compatible device, such as the Echo. It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
 
 The intent schema definition and sample utterances can be included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
 
