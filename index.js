@@ -417,8 +417,8 @@ alexa.app = function(name, endpoint) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               var intentResult = self.intents[intent]["function"](request, response, callbackHandler);
-              if (intentResult instanceof Promise) {
-                intentResult.asCallback(callbackHandler);
+              if (intentResult && intentResult.then) {
+                Promise.resolve(intentResult).asCallback(callbackHandler);
               }
               else if (false !== intentResult) {
                 callbackHandler();
@@ -429,8 +429,8 @@ alexa.app = function(name, endpoint) {
           } else if ("LaunchRequest" === requestType) {
             if (typeof self.launchFunc == "function") {
               var launchResult = self.launchFunc(request, response, callbackHandler);
-              if (launchResult instanceof Promise) {
-                launchResult.asCallback(callbackHandler);
+              if (launchResult && launchResult.then) {
+                Promise.resolve(launchResult).asCallback(callbackHandler);
               }
               else if (false !== launchResult) {
                 callbackHandler();
@@ -441,8 +441,8 @@ alexa.app = function(name, endpoint) {
           } else if ("SessionEndedRequest" === requestType) {
             if (typeof self.sessionEndedFunc == "function") {
               var sessionEndedResult = self.sessionEndedFunc(request, response, callbackHandler);
-              if (sessionEndedResult instanceof Promise) {
-                sessionEndedResult.asCallback(callbackHandler);
+              if (sessionEndedResult && sessionEndedResult.then) {
+                Promise.resolve(sessionEndedResult).asCallback(callbackHandler);
               }
               else if (false !== sessionEndedResult) {
                 callbackHandler();
@@ -453,8 +453,8 @@ alexa.app = function(name, endpoint) {
             var eventHandlerObject = self.audioPlayerEventHandlers[event];
             if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
               var eventHandlerResult = eventHandlerObject["function"](request, response, callbackHandler);
-              if (eventHandlerObject instanceof Promise) {
-                eventHandlerResult.asCallback(callbackHandler);
+              if (eventHandlerObject && eventHandlerObject.then) {
+                Promise.resolve(eventHandlerResult).asCallback(callbackHandler);
               }
               else if (false !== eventHandlerResult) {
                 callbackHandler();
