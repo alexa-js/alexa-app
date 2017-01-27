@@ -5,6 +5,7 @@
 * [#125](https://github.com/alexa-js/alexa-app/pull/125): Force new when instantiating alexa.app - [@OpenDog](https://github.com/OpenDog).
 * [#119](https://github.com/alexa-js/alexa-app/pull/119): Moved to the [alexa-js organization](https://github.com/alexa-js) - [@dblock](https://github.com/dblock).
 * [#118](https://github.com/matt-kruse/alexa-app/pull/118), [#117](https://github.com/matt-kruse/alexa-app/issues/117): Prevent updating session attributes directly - [@ajcrites](https://github.com/ajcrites).
+* [#133](https://github.com/matt-kruse/alexa-app/pull/133), [#71](https://github.com/matt-kruse/alexa-app/issues/71): Support asynchronous patterns in request handlers - [@ajcrites](https://github.com/ajcrites).
 * Your contribution here.
 
 ### 2.4.0 (January 5, 2017)

@@ -3,6 +3,7 @@
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 var mockHelper = require("./helpers/mock_helper");
+var Promise = require("bluebird");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
@@ -101,6 +102,66 @@ describe("Alexa", function() {
                   ssml: "<speak>" + expectedMessage + "</speak>",
                   type: "SSML"
                 });
+              });
+
+              it("responds with expected message for callback", function() {
+                testApp.launch(function(req, res, cb) {
+                  res.say(expectedMessage);
+
+                  cb();
+
+                  return false;
+                });
+
+                var subject = testApp.request(mockRequest).then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("handles error for callback", function() {
+                testApp.launch(function(req, res, cb) {
+                  res.say(expectedMessage);
+
+                  cb(new Error("callback failure"));
+
+                  return false;
+                });
+
+                var subject = testApp.request(mockRequest);
+
+                return expect(subject).to.be.rejectedWith("callback failure");
+              });
+
+              it("responds with expected message for promise", function() {
+                testApp.launch(function(req, res) {
+                  return Promise.resolve().then(function() {
+                    res.say(expectedMessage);
+                  });
+                });
+
+                var subject = testApp.request(mockRequest).then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("handles error for promise", function() {
+                testApp.launch(function(req, res) {
+                  return Promise.reject(new Error("promise failure"));
+                });
+
+                var subject = testApp.request(mockRequest);
+
+                return expect(subject).to.be.rejectedWith("promise failure");
               });
             });
           });
