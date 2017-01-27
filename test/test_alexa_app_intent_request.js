@@ -3,6 +3,7 @@
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 var mockHelper = require("./helpers/mock_helper");
+var Promise = require("bluebird");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
@@ -203,6 +204,46 @@ describe("Alexa", function() {
                 });
               });
 
+              it("responds with expected message for callback", function() {
+                var intentHandler = function(req, res, cb) {
+                  res.say(expectedMessage);
+                  cb();
+                  return false;
+                };
+
+                testApp.intent("airportInfoIntent", {}, intentHandler);
+
+                var subject = testApp.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
+              it("responds with expected message for promise", function() {
+                var intentHandler = function(req, res) {
+                  return Promise.resolve().then(function() {
+                    res.say(expectedMessage);
+                  });
+                };
+
+                testApp.intent("airportInfoIntent", {}, intentHandler);
+
+                var subject = testApp.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                });
+              });
+
               it("retrieves a slot value", function() {
                 testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(req.slot("AirportCode"));
@@ -276,6 +317,31 @@ describe("Alexa", function() {
                   testApp.intent("airportInfoIntent", {},
                     function(req, res) {
                       throw new Error("whoops");
+                    });
+
+                  var subject = testApp.request(mockRequest);
+                  return expect(subject).to.be.rejectedWith("Unhandled exception: whoops.");
+                });
+              });
+
+              context("when an error is passed to the callback", function() {
+                it("reports failure", function() {
+                  testApp.intent("airportInfoIntent", {},
+                    function(req, res, cb) {
+                      cb(new Error("whoops"));
+                      return false;
+                    });
+
+                  var subject = testApp.request(mockRequest);
+                  return expect(subject).to.be.rejectedWith("Unhandled exception: whoops.");
+                });
+              });
+
+              context("when a response promise is rejected", function() {
+                it("reports failure", function() {
+                  testApp.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      return Promise.reject(new Error("whoops"));
                     });
 
                   var subject = testApp.request(mockRequest);

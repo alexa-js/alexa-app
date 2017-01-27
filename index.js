@@ -345,6 +345,44 @@ alexa.app = function(name, endpoint) {
     return new Promise(function(resolve, reject) {
       var request = new alexa.request(request_json);
       var response = new alexa.response(request.getSession());
+
+      // Error handling when a request fails in any way
+      var handleError = function (e) {
+        if (typeof self.error == "function") {
+          self.error(e, request, response);
+        } else if (typeof e == "string" && self.messages[e]) {
+          response.say(self.messages[e]);
+          response.send(e);
+        }
+        if (!response.resolved) {
+          if (e.message) {
+            response.fail("Unhandled exception: " + e.message + ".", e);
+          } else {
+            response.fail("Unhandled exception.", e);
+          }
+        }
+      };
+
+      // Prevent callback handler (request resolution) from being called
+      // multiple times
+      var callbackHandlerCalled = false;
+      // Sends the request or handles an error if an error is passed in
+      // to the callback.
+      var callbackHandler = function (e) {
+        if (callbackHandlerCalled) {
+          console.warn("Response has already been sent");
+          return;
+        }
+        callbackHandlerCalled = true;
+
+        if (e) {
+          handleError(e);
+        }
+        else {
+          response.send();
+        }
+      };
+
       var postExecuted = false;
       // Attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
@@ -378,32 +416,48 @@ alexa.app = function(name, endpoint) {
           if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-              if (false !== self.intents[intent]["function"](request, response)) {
-                response.send();
+              var intentResult = self.intents[intent]["function"](request, response, callbackHandler);
+              if (intentResult instanceof Promise) {
+                intentResult.asCallback(callbackHandler);
+              }
+              else if (false !== intentResult) {
+                callbackHandler();
               }
             } else {
               throw "NO_INTENT_FOUND";
             }
           } else if ("LaunchRequest" === requestType) {
             if (typeof self.launchFunc == "function") {
-              if (false !== self.launchFunc(request, response)) {
-                response.send();
+              var launchResult = self.launchFunc(request, response, callbackHandler);
+              if (launchResult instanceof Promise) {
+                launchResult.asCallback(callbackHandler);
+              }
+              else if (false !== launchResult) {
+                callbackHandler();
               }
             } else {
               throw "NO_LAUNCH_FUNCTION";
             }
           } else if ("SessionEndedRequest" === requestType) {
             if (typeof self.sessionEndedFunc == "function") {
-              if (false !== self.sessionEndedFunc(request, response)) {
-                response.send();
+              var sessionEndedResult = self.sessionEndedFunc(request, response, callbackHandler);
+              if (sessionEndedResult instanceof Promise) {
+                sessionEndedResult.asCallback(callbackHandler);
+              }
+              else if (false !== sessionEndedResult) {
+                callbackHandler();
               }
             }
           } else if (requestType && 0 === requestType.indexOf("AudioPlayer.")) {
             var event = requestType.slice(12);
             var eventHandlerObject = self.audioPlayerEventHandlers[event];
             if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
-              if (false !== eventHandlerObject["function"](request, response)) {
-                response.send();
+              var eventHandlerResult = eventHandlerObject["function"](request, response, callbackHandler);
+              if (eventHandlerObject instanceof Promise) {
+                eventHandlerResult.asCallback(callbackHandler);
+              }
+              else if (false !== eventHandlerResult) {
+                callbackHandler();
               }
             } else {
               response.send();
@@ -413,19 +467,7 @@ alexa.app = function(name, endpoint) {
           }
         }
       } catch (e) {
-        if (typeof self.error == "function") {
-          self.error(e, request, response);
-        } else if (typeof e == "string" && self.messages[e]) {
-          response.say(self.messages[e]);
-          response.send(e);
-        }
-        if (!response.resolved) {
-          if (e.message) {
-            response.fail("Unhandled exception: " + e.message + ".", e);
-          } else {
-            response.fail("Unhandled exception.", e);
-          }
-        }
+        handleError(e);
       }
     });
   };

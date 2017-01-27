@@ -7,6 +7,10 @@ env:
 globals:
   require: false
   module: false
+  describe: true
+  context: true
+  beforeEach: true
+  it: true
 rules:
   semi: 2
   no-console: 0
