@@ -495,18 +495,36 @@ app.error = function(exception, request, response) {
 
 ## Asynchronous Intent Handler
 
-If an intent handler will return a response later, it must return `false`. This tells the alexa-app library not to send the response automatically. In this case, the handler function must manually call `response.send()` to finish the response.
+If an intent or other request handler will return a response later, it must return ether `false` or a `Promise` (object with a `.then` function). This tells the alexa-app library not to send the response automatically.
+
+A callback is also passed to the handler. When this callback is called with no first argument, the response will be sent. If something is passed to the first argument, it is treated as an error.
+
+If you return a Promise from the handler, you do not need to call the callback. If the Promise resolves, the response will be sent. If it is rejected, it is treated as an error.
 
 ```javascript
-app.intent("checkStatus", function(request, response) {
+app.intent("checkStatus", function(request, response, callback) {
   http.get("http://server.com/status.html", function(rc) {
     // this is async and will run after the http call returns
+    // you can send an error to the callback
+    if (rc.statusText >= 400) {
+        return callback(new Error("Bad request"));
+    }
+
     response.say(rc.statusText);
-    // must call send to end the original request
-    response.send();
+    // call the callback to send the response
+    callback();
   });
   // return false immediately so alexa-app doesn't send the response
   return false;
+});
+
+app.intent("checkStatus", function(request, response) {
+  // `getAsync` returns a Promise in this example. When
+  // returning a Promise, the response is sent after it
+  // resolves. If rejected, it is treated as an error.
+  return http.getAsync("http://server.com/status.html").then(function (rc) {
+    response.say(rc.statusText);
+  });
 });
 ```
 
