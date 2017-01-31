@@ -11,7 +11,7 @@ describe("Alexa", function() {
   var Alexa = require("../index");
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
@@ -21,7 +21,7 @@ describe("Alexa", function() {
       context("intent handler with shouldEndSession = false", function() {
         var reqObject;
 
-        beforeEach(() => {
+        beforeEach(function() {
           var intentHandler = function(req, res) {
             res.say("message").shouldEndSession(false);
             res.session("foo", true);

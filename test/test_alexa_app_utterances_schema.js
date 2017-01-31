@@ -8,12 +8,12 @@ describe("Alexa", function() {
   var Alexa = require("../index");
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
     describe("#utterances", function() {
-      beforeEach(() => {
+      beforeEach(function() {
         testApp.intent("testIntentTwo", {
           "slots": {
             "NAME": "LITERAL",
