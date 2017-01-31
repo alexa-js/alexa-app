@@ -12,12 +12,12 @@ describe("Alexa", function() {
 
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
     describe("#schema", function() {
-      beforeEach(() => {
+      beforeEach(function() {
         testApp.intent("testIntentTwo", {
           "slots": {
             "MyCustomSlotType": "CUSTOMTYPE",
