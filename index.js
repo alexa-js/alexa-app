@@ -185,6 +185,10 @@ alexa.request = function(json) {
       return null;
     }
   };
+  this.isAudioPlayer = function() {
+    var requestType = this.type();
+    return (requestType && 0 === requestType.indexOf("AudioPlayer."));
+  };
 
   this.userId = null;
   this.applicationId = null;
@@ -351,8 +355,12 @@ alexa.app = function(name, endpoint) {
         if (typeof self.error == "function") {
           self.error(e, request, response);
         } else if (typeof e == "string" && self.messages[e]) {
-          response.say(self.messages[e]);
-          response.send(e);
+          if (!request.isAudioPlayer()) {
+            response.say(self.messages[e]);
+            response.send(e);
+          } else {
+            response.fail(self.messages[e]);
+          }
         }
         if (!response.resolved) {
           if (e.message) {
@@ -448,7 +456,7 @@ alexa.app = function(name, endpoint) {
                 callbackHandler();
               }
             }
-          } else if (requestType && 0 === requestType.indexOf("AudioPlayer.")) {
+          } else if (request.isAudioPlayer()) {
             var event = requestType.slice(12);
             var eventHandlerObject = self.audioPlayerEventHandlers[event];
             if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
