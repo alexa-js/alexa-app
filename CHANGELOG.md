@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 2.4.1 (Next)
-* [#139](https://github.com/alexa-js/alexa-app/pull/141): Fail the response on exception in case of AudioPlayer request - [@fremail](https://github.com/fremail).
+* [#141](https://github.com/alexa-js/alexa-app/pull/141): Fail the response on exception in case of AudioPlayer request - [@fremail](https://github.com/fremail).
 * [#139](https://github.com/alexa-js/alexa-app/pull/139): Compatibility with Node.js v0.12 - v7 - [@tejashah88](https://github.com/tejashah88).
 * [#125](https://github.com/alexa-js/alexa-app/pull/125): Force new when instantiating alexa.app - [@OpenDog](https://github.com/OpenDog).
 * [#119](https://github.com/alexa-js/alexa-app/pull/119): Moved to the [alexa-js organization](https://github.com/alexa-js) - [@dblock](https://github.com/dblock).
