@@ -13,40 +13,40 @@ describe("Alexa", function () {
 
   describe("app", function () {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
     describe("request", function () {
 
       context("without an audioPlayer intent", function () {
-        context("AudioPlayer.PlaybackFinished", () => {
+        context("AudioPlayer.PlaybackFinished", function() {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_finished.json"); })
+          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_finished.json"); })
 
-          it("should succeed and return empty object ", () => {
+          it("should succeed and return empty object ", function() {
             return testApp.request(mockRequest)
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
-        context("AudioPlayer.PlaybackFailed", () => {
+        context("AudioPlayer.PlaybackFailed", function() {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_failed.json"); })
+          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_failed.json"); })
 
-          it("should succeed and return empty object ", () => {
+          it("should succeed and return empty object ", function() {
             return testApp.request(mockRequest)
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
-        context("AudioPlayer.PlaybackNearlyFinished", () => {
+        context("AudioPlayer.PlaybackNearlyFinished", function() {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_nearly_finished.json"); })
+          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_nearly_finished.json"); })
 
-          it("should succeed and return empty object ", () => {
+          it("should succeed and return empty object ", function() {
             return testApp.request(mockRequest)
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
@@ -54,22 +54,22 @@ describe("Alexa", function () {
         });
 
 
-        context("AudioPlayer.PlaybackStarted", () => {
+        context("AudioPlayer.PlaybackStarted", function() {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_started.json"); })
+          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_started.json"); })
 
-          it("should succeed and return empty object ", () => {
+          it("should succeed and return empty object ", function() {
             return testApp.request(mockRequest)
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
-        context("AudioPlayer.PlaybackStopped", () => {
+        context("AudioPlayer.PlaybackStopped", function() {
           var mockRequest;
-          beforeEach(() => { mockRequest = mockHelper.load("audio_player_events/playback_stopped.json"); })
+          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_stopped.json"); })
 
-          it("should succeed and return empty object ", () => {
+          it("should succeed and return empty object ", function() {
             return testApp.request(mockRequest)
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");

@@ -12,7 +12,7 @@ describe("Alexa", function() {
 
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
@@ -22,7 +22,7 @@ describe("Alexa", function() {
       context("with schema", function() {
         var schema = { schema: "yes" };
 
-        beforeEach(() => {
+        beforeEach(function() {
           testApp.intent("airportInfoIntent", schema, func);
         });
 
@@ -40,7 +40,7 @@ describe("Alexa", function() {
       });
 
       context("without schema", function() {
-        beforeEach(() => {
+        beforeEach(function() {
           testApp.intent("airportInfoIntent", func);
         });
 

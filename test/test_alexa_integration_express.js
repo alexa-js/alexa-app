@@ -24,7 +24,7 @@ describe("Alexa", function() {
     var testServer;
     var testApp;
 
-    beforeEach(() => {
+    beforeEach(function() {
       app = express();
       app.use(bodyParser.json());
       app.set('views', path.join(__dirname, 'views'));
@@ -33,12 +33,12 @@ describe("Alexa", function() {
       testServer = app.listen(3000);
     });
 
-    afterEach(() => {
+    afterEach(function() {
       testServer.close();
     });
 
     context("#express with default options", function() {
-      beforeEach(() => {
+      beforeEach(function() {
         testApp.express(app, '/')
       });
 
@@ -72,7 +72,7 @@ describe("Alexa", function() {
     });
 
     context("#express with debug set to true", function() {
-      beforeEach(() => {
+      beforeEach(function() {
         testApp.express(app, '/', true)
       });
 
@@ -86,7 +86,7 @@ describe("Alexa", function() {
     });
 
     context("#express with debug set to false", function() {
-      beforeEach(() => {
+      beforeEach(function() {
         testApp.express(app, '/', false)
       });
 

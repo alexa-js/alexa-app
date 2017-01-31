@@ -13,7 +13,7 @@ describe("Alexa", function() {
 
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
@@ -24,7 +24,7 @@ describe("Alexa", function() {
         describe("defaults", function() {
           var subject;
 
-          beforeEach(() => {
+          beforeEach(function() {
             subject = testApp.request(mockRequest);
           })
 
@@ -46,7 +46,7 @@ describe("Alexa", function() {
           context("with no intent handler", function() {
             var subject;
 
-            beforeEach(() => {
+            beforeEach(function() {
               subject = testApp.request(mockRequest);
             })
 
@@ -67,7 +67,7 @@ describe("Alexa", function() {
           context("with a matching intent handler", function() {
             var expectedMessage = "tubular!";
 
-            beforeEach(() => {
+            beforeEach(function() {
               var intentHandler = function(req, res) {
                 res.say(expectedMessage);
                 return true;

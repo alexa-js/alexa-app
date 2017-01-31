@@ -12,7 +12,7 @@ describe("Alexa", function() {
 
   describe("app", function() {
     var testApp;
-    beforeEach(() => {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
