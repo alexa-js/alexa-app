@@ -36,7 +36,7 @@ describe("Alexa", function() {
         });
 
         it("reponds with expected context applicationId", function() {
-          return testApp.request(mockRequest).then((response) => {
+          return testApp.request(mockRequest).then(function(response) {
             expect(reqObject.context).to
               .have.deep.property(
                 "System.application.applicationId",
@@ -299,7 +299,7 @@ describe("Alexa", function() {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
-          return testApp.request(mockRequest).then(() => expect(returnedAttributeValue).to.not.be.undefined);
+          return testApp.request(mockRequest).then(function() { expect(returnedAttributeValue).to.not.be.undefined; });
         });
       });
     });
@@ -315,7 +315,7 @@ describe("Alexa", function() {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
-          return testApp.request(mockRequest).then(() => expect(returnedAttributeValue).to.be.undefined);
+          return testApp.request(mockRequest).then(function() { expect(returnedAttributeValue).to.be.undefined; });
         });
       });
     });
