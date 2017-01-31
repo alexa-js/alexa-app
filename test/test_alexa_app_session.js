@@ -278,12 +278,13 @@ describe("Alexa", function() {
       context("request without session", function() {
         var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-        it("session.clear() should not throw", function() {
+        it("session.clear() should fail the app", function() {
           testApp.pre = function(req, res, type) {
             req.getSession().clear();
           };
 
-          return testApp.request(mockRequest);
+          var subject = testApp.request(mockRequest);
+          return expect(subject).to.eventually.be.rejectedWith(testApp.messages.NO_SESSION);
         });
       });
     });
@@ -292,14 +293,15 @@ describe("Alexa", function() {
       context("request without session", function() {
         var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-        it("session.get(key) should throw if attribute is not present", function() {
+        it("session.get(key) should fail the app", function() {
           var returnedAttributeValue = "overridden";
 
           testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
-          return testApp.request(mockRequest).then(() => expect(returnedAttributeValue).to.not.be.undefined);
+          var subject = testApp.request(mockRequest);
+          return expect(subject).to.eventually.be.rejectedWith(testApp.messages.NO_SESSION);
         });
       });
     });
@@ -380,40 +382,30 @@ describe("Alexa", function() {
 
       context("request without session", function() {
         context("trying to get session variable", function() {
-          describe("outputSpeech", function() {
-            it("responds with NO_SESSION message", function() {
-              testApp.pre = function(req, res, type) {
-                req.getSession().get("foo");
-              };
+          it("it fails with NO_SESSION message", function() {
+            testApp.pre = function(req, res, type) {
+              req.getSession().get("foo");
+            };
 
-              var subject = testApp.request(mockRequest).then(function(response) {
-                return response.response.outputSpeech;
-              });
-
-              return expect(subject).to.eventually.become({
-                ssml: "<speak>" + testApp.messages.NO_SESSION + "</speak>",
-                type: "SSML"
-              });
+            var subject = testApp.request(mockRequest).then(function(response) {
+              return response;
             });
+
+            return expect(subject).to.eventually.be.rejectedWith(testApp.messages.NO_SESSION);
           });
         });
 
         context("trying to set session variable", function() {
-          describe("outputSpeech", function() {
-            it("responds with NO_SESSION message", function() {
-              testApp.pre = function(req, res, type) {
-                req.getSession().set("foo", "bar");
-              };
+          it("it fails with NO_SESSION message", function() {
+            testApp.pre = function(req, res, type) {
+              req.getSession().set("foo", "bar");
+            };
 
-              var subject = testApp.request(mockRequest).then(function(response) {
-                return response.response.outputSpeech;
-              });
-
-              return expect(subject).to.eventually.become({
-                ssml: "<speak>" + testApp.messages.NO_SESSION + "</speak>",
-                type: "SSML"
-              });
+            var subject = testApp.request(mockRequest).then(function(response) {
+              return response.response.outputSpeech;
             });
+
+            return expect(subject).to.eventually.be.rejectedWith(testApp.messages.NO_SESSION);
           });
 
         });
