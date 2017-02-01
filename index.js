@@ -563,7 +563,7 @@ alexa.app = function(name, endpoint) {
       enableDebug = false;
     }
 
-    console.log('attaching to endpoint', endpoint)
+    console.log('attaching to endpoint', endpoint);
     // attach the express router to the express app
     express.use(endpoint, router);
 
