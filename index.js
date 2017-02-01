@@ -554,23 +554,23 @@ alexa.app = function(name) {
   // @return ? TODO: not sure what this returns
   this.express = function(options) {
     if (!options.expressApp) {
-      throw new Error("You must specify an express instance to attach to.")
+      throw new Error("You must specify an express instance to attach to.");
     }
 
     if (!options.router) {
-      throw new Error("You must specify an express router to attach.")
+      throw new Error("You must specify an express router to attach.");
     }
 
     var defaults = {
       endpoint: self.name,
       checkCert: true,
       debug: false
-    }
+    };
 
-    options = Object.assign(defaults, options)
+    options = Object.assign(defaults, options);
 
     var endpoint = "/" + options.endpoint;
-    var router = options.router
+    var router = options.router;
 
     options.expressApp.use(endpoint, router);
 
