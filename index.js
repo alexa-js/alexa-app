@@ -4,6 +4,7 @@ var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
+var verifierMiddleware = require("alexa-verifier-middleware");
 
 alexa.response = function(session) {
   var self = this;
@@ -544,10 +545,33 @@ alexa.app = function(name, endpoint) {
     return self.handler;
   };
 
-  // A utility method to bootstrap alexa endpoints into express automatically
-  this.express = function(express, path, enableDebug) {
+  // A utility method to bootstrap alexa endpoints into an express router
+  //
+  // @param object express the express app to attach to
+  // @param router express router instance to attach to the express app
+  // @param string path the endpoint to attach the router (e.g., /alexa)
+  // @param bool certCheck when true, applies alexa certificate checking (default true)
+  // @param bool enableDebug when true, sets up the route to handle GET requests (default false)
+  // @return ? TODO: not sure what this returns
+  this.express = function(express, router, path, certCheck, enableDebug) {
     var endpoint = (path || "/") + (self.endpoint || self.name);
-    express.post(endpoint, function(req, res) {
+
+    if (typeof certCheck === "undefined" || certCheck === null) {
+      certCheck = true;
+    }
+
+    if (typeof enableDebug === "undefined" || enableDebug === null) {
+      enableDebug = false;
+    }
+
+    // attach the express router to the express app
+    express_app.use(endpoint, router);
+
+    // install the alexa-verifier-middleware
+    router.use(verifierMiddleware({ strictHeaderCheck: certCheck }));
+
+    // this attaches POST /<endpoint>
+    router.post("/", function(req, res) {
       self.request(req.body).then(function(response) {
         res.json(response);
       }, function() {
@@ -558,7 +582,7 @@ alexa.app = function(name, endpoint) {
       enableDebug = true;
     }
     if (enableDebug) {
-      express.get(endpoint, function(req, res) {
+      router.get("/", function(req, res) {
         res.render("test", {
           "json": self,
           "schema": self.schema(),

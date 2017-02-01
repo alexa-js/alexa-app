@@ -623,7 +623,6 @@ All named apps can be found in the `alexa.apps` object, keyed by name. The value
 
 Generally, an alexa-app module can be used inside a stand-alone Node.js app, within an HTTPS server or within an AWS Lambda function. The library only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
 
-If you don't use AWS Lambda and host an Alexa skill on your own webserver, you will need to validate that requests come from Alexa. This validation is *not* provided by this module. For more details on how to handle alexa request validation, look at [alexa-verifier](https://github.com/alexa-js/alexa-verifier) which provides the necessary code.
 
 ### Development
 
