@@ -575,7 +575,7 @@ alexa.app = function(name) {
     options.expressApp.use(endpoint, router);
 
     if (options.checkCert) {
-      options.router.use(verifierMiddleware({ strictHeaderCheck: checkCert }));
+      options.router.use(verifierMiddleware({ strictHeaderCheck: true }));
     }
 
     // exposes POST /<endpoint> route
