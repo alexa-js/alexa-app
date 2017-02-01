@@ -555,15 +555,14 @@ app.launch(function(request,response) {
   response.say("Hello World");
 });
 
-// this call defines a post() and optionally a get() handler in express, mapped to the alexa-app
-// express_app: the express app instance to map to
-//        path: the path prefix to map to
-// enableDebug: when false, don't map a GET handler, default is true
-//              debugging GET requests call express' render() method using 'test'
-app.express(express_app, "/echo/", false);
+// ALWAYS setup the alexa app and attach it to express before anything else.
+app.express(express_app, express.Router(), "/echo/");
 
-// now POST calls to /echo/sample in express will be handled by the app.request() function
+// now POST calls to /echo in express will be handled by the app.request() function
 // GET calls will not be handled
+
+// from here on, you can setup any other express routes or middlewares as normal
+
 ```
 
 ## Customizing Default Error Messages
