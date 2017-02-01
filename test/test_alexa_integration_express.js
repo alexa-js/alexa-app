@@ -39,7 +39,7 @@ describe("Alexa", function() {
 
     context("#express with default options", function() {
       beforeEach(function() {
-        testApp.express(app, express.Router())
+        testApp.express(app, express.Router(), false)
       });
 
       it("returns a response for a valid request", function() {
@@ -73,7 +73,7 @@ describe("Alexa", function() {
 
     context("#express with debug set to true", function() {
       beforeEach(function() {
-        testApp.express(app, , express.Router(), false, true)
+        testApp.express(app, express.Router(), false, true)
       });
 
       it("dumps debug schema", function() {
