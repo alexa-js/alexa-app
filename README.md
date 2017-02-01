@@ -555,15 +555,14 @@ app.launch(function(request,response) {
   response.say("Hello World");
 });
 
-// this call defines a post() and optionally a get() handler in express, mapped to the alexa-app
-// express_app: the express app instance to map to
-//        path: the path prefix to map to
-// enableDebug: when false, don't map a GET handler, default is true
-//              debugging GET requests call express' render() method using 'test'
-app.express(express_app, "/echo/", false);
+// ALWAYS setup the alexa app and attach it to express before anything else.
+app.express({ expressApp: express_app, router: express.Router() });
 
-// now POST calls to /echo/sample in express will be handled by the app.request() function
+// now POST calls to /sample in express will be handled by the app.request() function
 // GET calls will not be handled
+
+// from here on, you can setup any other express routes or middlewares as normal
+
 ```
 
 ## Customizing Default Error Messages
@@ -623,7 +622,6 @@ All named apps can be found in the `alexa.apps` object, keyed by name. The value
 
 Generally, an alexa-app module can be used inside a stand-alone Node.js app, within an HTTPS server or within an AWS Lambda function. The library only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
 
-If you don't use AWS Lambda and host an Alexa skill on your own webserver, you will need to validate that requests come from Alexa. This validation is *not* provided by this module. For more details on how to handle alexa request validation, look at [alexa-verifier](https://github.com/alexa-js/alexa-verifier) which provides the necessary code.
 
 ### Development
 

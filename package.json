@@ -27,7 +27,9 @@
   "license": "MIT",
   "dependencies": {
     "alexa-utterances": "^0.2.0",
+    "alexa-verifier-middleware": "^0.1.9",
     "bluebird": "^2.10.2",
+    "lodash.defaults": "^4.2.0",
     "numbered": "^1.0.0"
   },
   "devDependencies": {

@@ -4,6 +4,8 @@ var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
+var defaults = require("lodash.defaults");
+var verifierMiddleware = require("alexa-verifier-middleware");
 
 alexa.response = function(session) {
   var self = this;
@@ -178,12 +180,11 @@ alexa.request = function(json) {
     }
   };
   this.type = function() {
-    try {
-      return this.data.request.type;
-    } catch (e) {
-      console.error("missing type", e);
-      return null;
+    if (!(this.data && this.data.request && this.data.request.type)) {
+      console.error("missing request type:", this.data);
+      return;
     }
+    return this.data.request.type;
   };
   this.isAudioPlayer = function() {
     var requestType = this.type();
@@ -277,7 +278,7 @@ alexa.session = function(session) {
 
 alexa.apps = {};
 
-alexa.app = function(name, endpoint) {
+alexa.app = function(name) {
   if (!(this instanceof alexa.app)) {
       throw new Error("Function must be called with the new keyword");
   }
@@ -313,7 +314,6 @@ alexa.app = function(name, endpoint) {
   this.pre = function(/*request, response, type*/) {};
   this.post = function(/*request, response, type*/) {};
 
-  this.endpoint = endpoint;
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
   this.dictionary = {};
   this.intents = {};
@@ -544,21 +544,48 @@ alexa.app = function(name, endpoint) {
     return self.handler;
   };
 
-  // A utility method to bootstrap alexa endpoints into express automatically
-  this.express = function(express, path, enableDebug) {
-    var endpoint = (path || "/") + (self.endpoint || self.name);
-    express.post(endpoint, function(req, res) {
+  // attach Alexa endpoint to an express router
+  //
+  // @param object options.expressApp the express instance to attach to
+  // @param router options.express router instance to attach to the express app
+  // @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
+  // @param bool options.checkCert when true, applies Alexa certificate checking (default true)
+  // @param bool options.debug when true, sets up the route to handle GET requests (default false)
+  // @throws Error when router or expressApp options are not specified
+  // @return ? TODO: not sure what this returns
+  this.express = function(options) {
+    if (!options.expressApp) {
+      throw new Error("You must specify an express instance to attach to.");
+    }
+
+    if (!options.router) {
+      throw new Error("You must specify an express router to attach.");
+    }
+
+    var defaultOptions = { endpoint: self.name, checkCert: true, debug: false };
+
+    options = defaults(options, defaultOptions);
+
+    var endpoint = "/" + options.endpoint;
+    var router = options.router;
+
+    options.expressApp.use(endpoint, router);
+
+    if (options.checkCert) {
+      options.router.use(verifierMiddleware({ strictHeaderCheck: true }));
+    }
+
+    // exposes POST /<endpoint> route
+    router.post("/", function(req, res) {
       self.request(req.body).then(function(response) {
         res.json(response);
       }, function() {
         res.status(500).send("Server Error");
       });
     });
-    if (typeof enableDebug != "boolean") {
-      enableDebug = true;
-    }
-    if (enableDebug) {
-      express.get(endpoint, function(req, res) {
+
+    if (options.debug) {
+      router.get("/", function(req, res) {
         res.render("test", {
           "json": self,
           "schema": self.schema(),
