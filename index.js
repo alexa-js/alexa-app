@@ -4,7 +4,7 @@ var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
-var defaults = require("lodash.defaults")
+var defaults = require("lodash.defaults");
 var verifierMiddleware = require("alexa-verifier-middleware");
 
 alexa.response = function(session) {
@@ -563,7 +563,7 @@ alexa.app = function(name) {
     }
 
     var defaultOptions = { endpoint: self.name, checkCert: true, debug: false };
-    
+
     options = defaults(options, defaultOptions);
 
     var endpoint = "/" + options.endpoint;
