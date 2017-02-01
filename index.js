@@ -565,7 +565,7 @@ alexa.app = function(name, endpoint) {
     }
 
     // attach the express router to the express app
-    express_app.use(endpoint, router);
+    express.use(endpoint, router);
 
     // install the alexa-verifier-middleware
     router.use(verifierMiddleware({ strictHeaderCheck: certCheck }));
