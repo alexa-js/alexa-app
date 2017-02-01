@@ -39,7 +39,7 @@ describe("Alexa", function() {
 
     context("#express with default options", function() {
       beforeEach(function() {
-        testApp.express(app, express.Router(), false)
+        testApp.express({ expressApp: app, router: express.Router(), checkCert: false });
       });
 
       it("returns a response for a valid request", function() {
@@ -71,7 +71,7 @@ describe("Alexa", function() {
 
     context("#express with debug set to true", function() {
       beforeEach(function() {
-        testApp.express(app, express.Router(), false, true)
+        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, enableDebug: true });
       });
 
       it("dumps debug schema", function() {
@@ -85,7 +85,7 @@ describe("Alexa", function() {
 
     context("#express with debug set to false", function() {
       beforeEach(function() {
-        testApp.express(app, express.Router(), false, false)
+        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, enableDebug: false });
       });
 
       it("cannot dump debug schema", function() {

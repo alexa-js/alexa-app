@@ -556,7 +556,7 @@ app.launch(function(request,response) {
 });
 
 // ALWAYS setup the alexa app and attach it to express before anything else.
-app.express(express_app, express.Router());
+app.express({ expressApp: express_app, router: express.Router() });
 
 // now POST calls to /sample in express will be handled by the app.request() function
 // GET calls will not be handled

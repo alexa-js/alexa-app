@@ -9,16 +9,20 @@ var app = express();
 // ALWAYS setup the alexa app and attach it to express before anything else.
 var alexaApp = new alexa.app("test");
 
-// checkCert verifies requests come from amazon alexa. Must be enabled for production.
-// you can disable this if you're running a dev environment and want to POST things
-// to test behavior. enabled by default.
-var checkCert = false
+alexaApp.express({
+  expressApp: app,
+  router: express.Router(),
 
-// enableDebug sets up a GET route when set to true. This is handy for testing in 
-// development, but not recommended for production. disabled by default
-var enableDebug = true
+  // checkCert verifies requests come from amazon alexa. Must be enabled for production.
+  // you can disable this if you're running a dev environment and want to POST things
+  // to test behavior. enabled by default.
+  checkCert: false,
 
-alexaApp.express(app, express.Router(), checkCert, enableDebug);
+  // enableDebug sets up a GET route when set to true. This is handy for testing in 
+  // development, but not recommended for production. disabled by default
+  enableDebug: true
+});
+
 
 // now POST calls to /test in express will be handled by the app.request() function
 
