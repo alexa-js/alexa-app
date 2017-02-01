@@ -62,12 +62,10 @@ describe("Alexa", function() {
           });
       });
 
-      it("dumps debug schema", function() {
+      it("does not dump debug schema", function() {
         return request(testServer)
           .get('/testApp')
-          .expect(200).then(function(response) {
-            expect(response.text).to.startWith('{"name":"testApp"')
-          });
+          .expect(404);
       });
     });
 
