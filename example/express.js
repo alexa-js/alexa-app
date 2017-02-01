@@ -13,14 +13,14 @@ alexaApp.express({
   expressApp: app,
   router: express.Router(),
 
-  // checkCert verifies requests come from amazon alexa. Must be enabled for production.
-  // you can disable this if you're running a dev environment and want to POST things
-  // to test behavior. enabled by default.
+  // verifies requests come from amazon alexa. Must be enabled for production.
+  // You can disable this if you're running a dev environment and want to POST
+  // things to test behavior. enabled by default.
   checkCert: false,
 
-  // enableDebug sets up a GET route when set to true. This is handy for testing in 
+  // sets up a GET route when set to true. This is handy for testing in 
   // development, but not recommended for production. disabled by default
-  enableDebug: true
+  debug: true
 });
 
 

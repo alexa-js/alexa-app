@@ -549,7 +549,7 @@ alexa.app = function(name) {
   // @param router options.express router instance to attach to the express app
   // @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
   // @param bool options.checkCert when true, applies Alexa certificate checking (default true)
-  // @param bool options.enableDebug when true, sets up the route to handle GET requests (default false)
+  // @param bool options.debug when true, sets up the route to handle GET requests (default false)
   // @throws Error when router or expressApp options are not specified
   // @return ? TODO: not sure what this returns
   this.express = function(options) {
@@ -564,7 +564,7 @@ alexa.app = function(name) {
     var defaults = {
       endpoint: self.name,
       checkCert: true,
-      enableDebug: false
+      debug: false
     }
 
     options = Object.assign(defaults, options)
@@ -587,7 +587,7 @@ alexa.app = function(name) {
       });
     });
 
-    if (options.enableDebug) {
+    if (options.debug) {
       router.get("/", function(req, res) {
         res.render("test", {
           "json": self,
