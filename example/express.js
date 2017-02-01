@@ -17,9 +17,13 @@ var checkCert = false
 // enableDebug sets up a GET route when set to true. This is handy for testing in 
 // development, but not recommended for production. disabled by default
 var enableDebug = true
-alexaApp.express(app, express.Router(), "/echo/", checkCert, enableDebug);
 
-// here you can setup any other express routes or middlewares as normal
+alexaApp.express(app, express.Router(), checkCert, enableDebug);
+
+// now POST calls to /test in express will be handled by the app.request() function
+
+
+// from here on you can setup any other express routes or middlewares as normal
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
@@ -43,4 +47,4 @@ alexaApp.intent("nameIntent", {
 );
 
 app.listen(PORT);
-console.log("Listening on port " + PORT + ", try http://localhost:" + PORT + "/echo/test");
+console.log("Listening on port " + PORT + ", try http://localhost:" + PORT + "/test");

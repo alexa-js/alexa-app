@@ -549,12 +549,11 @@ alexa.app = function(name, endpoint) {
   //
   // @param object express the express app to attach to
   // @param router express router instance to attach to the express app
-  // @param string path the endpoint to attach the router (e.g., /alexa)
   // @param bool certCheck when true, applies alexa certificate checking (default true)
   // @param bool enableDebug when true, sets up the route to handle GET requests (default false)
   // @return ? TODO: not sure what this returns
-  this.express = function(express, router, path, certCheck, enableDebug) {
-    var endpoint = (path || "/") + (self.endpoint || self.name);
+  this.express = function(express, router, certCheck, enableDebug) {
+    var endpoint = "/" + ( self.endpoint || self.name);
 
     if (typeof certCheck === "undefined" || certCheck === null) {
       certCheck = true;
@@ -564,7 +563,7 @@ alexa.app = function(name, endpoint) {
       enableDebug = false;
     }
 
-    console.log('attaching to endpoint', endpoint, 'flags:', certCheck, enableDebug)
+    console.log('attaching to endpoint', endpoint)
     // attach the express router to the express app
     express.use(endpoint, router);
 
