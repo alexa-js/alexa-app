@@ -571,6 +571,16 @@ alexa.app = function(name) {
 
     options.expressApp.use(endpoint, router);
 
+    if (options.debug) {
+      router.get("/", function(req, res) {
+        res.render("test", {
+          "json": self,
+          "schema": self.schema(),
+          "utterances": self.utterances()
+        });
+      });
+    }
+
     if (options.checkCert) {
       options.router.use(verifierMiddleware({ strictHeaderCheck: true }));
     }
@@ -584,15 +594,6 @@ alexa.app = function(name) {
       });
     });
 
-    if (options.debug) {
-      router.get("/", function(req, res) {
-        res.render("test", {
-          "json": self,
-          "schema": self.schema(),
-          "utterances": self.utterances()
-        });
-      });
-    }
   };
 
   // Add the app to the global list of named apps
