@@ -540,7 +540,7 @@ alexa.app = function(name) {
   };
 
   // For backwards compatibility
-  this.lambda = function() {
+  this.attachToLambda = function() {
     return self.handler;
   };
 
@@ -553,7 +553,7 @@ alexa.app = function(name) {
   // @param bool options.debug when true, sets up the route to handle GET requests (default false)
   // @throws Error when router or expressApp options are not specified
   // @return ? TODO: not sure what this returns
-  this.express = function(options) {
+  this.attachToExpress = function(options) {
     if (!options.expressApp) {
       throw new Error("You must specify an express instance to attach to.");
     }

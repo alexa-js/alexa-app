@@ -49,7 +49,7 @@ describe("Alexa", function() {
 
     describe("#lambda", function() {
       it("returns the default handler", function() {
-        expect(testApp.lambda()).to.equal(testApp.handler);
+        expect(testApp.attachToLambda()).to.equal(testApp.handler);
       });
     });
   });

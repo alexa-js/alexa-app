@@ -9,7 +9,7 @@ var app = express();
 // ALWAYS setup the alexa app and attach it to express before anything else.
 var alexaApp = new alexa.app("test");
 
-alexaApp.express({
+alexaApp.attachToExpress({
   expressApp: app,
   router: express.Router(),
 
