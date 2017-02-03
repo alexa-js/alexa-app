@@ -56,8 +56,6 @@ describe("Alexa", function() {
 
     });
 
-
-
     context("#express with default options", function() {
       beforeEach(function() {
         testApp.express({ expressApp: app, router: express.Router(), checkCert: false });
@@ -92,7 +90,20 @@ describe("Alexa", function() {
 
     context("#express with debug set to true", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, debug: true });
+        testApp.intent("myIntent", {
+          "slots": {
+            "NAME": "LITERAL",
+            "AGE": "NUMBER"
+          },
+          "utterances": ["my name is bob"]
+        });
+
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: false,
+          debug: true
+        });
       });
 
       it("dumps debug schema", function() {
@@ -100,6 +111,24 @@ describe("Alexa", function() {
           .get('/testApp')
           .expect(200).then(function(response) {
             expect(response.text).to.startWith('{"name":"testApp"')
+          });
+      });
+
+      it("returns debug schema", function() {
+        return request(testServer)
+          .get('/testApp?schema')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.include('"intent": "myIntent"')
+          });
+      });
+
+      it("returns debug utterances", function() {
+        return request(testServer)
+          .get('/testApp?utterances')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.include('my name is bob')
           });
       });
     });

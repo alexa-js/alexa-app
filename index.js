@@ -29,7 +29,7 @@ alexa.response = function(session) {
     }
     return this;
   };
-  this.clear = function(/*str*/) {
+  this.clear = function( /*str*/ ) {
     this.response.response.outputSpeech = {
       "type": "SSML",
       "ssml": SSML.fromStr("")
@@ -51,7 +51,7 @@ alexa.response = function(session) {
     return this;
   };
   this.card = function(oCard) {
-    if (2 == arguments.length) {  //backwards compat
+    if (2 == arguments.length) { // backwards compat
       oCard = {
         type: "Simple",
         title: arguments[0],
@@ -70,7 +70,7 @@ alexa.response = function(session) {
       case 'Standard':
         requiredAttrs.push('text');
         clenseAttrs.push('text');
-        if (('image' in oCard) && ( !('smallImageUrl' in oCard['image']) && !('largeImageUrl' in oCard['image']) )) {
+        if (('image' in oCard) && (!('smallImageUrl' in oCard['image']) && !('largeImageUrl' in oCard['image']))) {
           console.error('If card.image is defined, must specify at least smallImageUrl or largeImageUrl');
           return this;
         }
@@ -136,14 +136,14 @@ alexa.response = function(session) {
     };
     return this.audioPlayerPlay(playBehavior, audioItem);
   };
-  this.audioPlayerStop = function () {
+  this.audioPlayerStop = function() {
     var audioPlayerDirective = {
       "type": "AudioPlayer.Stop"
     };
     self.response.response.directives.push(audioPlayerDirective);
     return this;
   };
-  this.audioPlayerClearQueue = function (clearBehavior) {
+  this.audioPlayerClearQueue = function(clearBehavior) {
     var audioPlayerDirective = {
       "type": "AudioPlayer.ClearQueue",
       "clearBehavior": clearBehavior || "CLEAR_ALL"
@@ -280,7 +280,7 @@ alexa.apps = {};
 
 alexa.app = function(name) {
   if (!(this instanceof alexa.app)) {
-      throw new Error("Function must be called with the new keyword");
+    throw new Error("Function must be called with the new keyword");
   }
 
   var self = this;
@@ -311,8 +311,8 @@ alexa.app = function(name) {
   this.error = null;
 
   // pre/post hooks to be run on every request
-  this.pre = function(/*request, response, type*/) {};
-  this.post = function(/*request, response, type*/) {};
+  this.pre = function( /*request, response, type*/ ) {};
+  this.post = function( /*request, response, type*/ ) {};
 
   // A mapping of keywords to arrays of possible values, for expansion of sample utterances
   this.dictionary = {};
@@ -351,7 +351,7 @@ alexa.app = function(name) {
       var response = new alexa.response(request.getSession());
 
       // Error handling when a request fails in any way
-      var handleError = function (e) {
+      var handleError = function(e) {
         if (typeof self.error == "function") {
           self.error(e, request, response);
         } else if (typeof e == "string" && self.messages[e]) {
@@ -376,7 +376,7 @@ alexa.app = function(name) {
       var callbackHandlerCalled = false;
       // Sends the request or handles an error if an error is passed in
       // to the callback.
-      var callbackHandler = function (e) {
+      var callbackHandler = function(e) {
         if (callbackHandlerCalled) {
           console.warn("Response has already been sent");
           return;
@@ -385,8 +385,7 @@ alexa.app = function(name) {
 
         if (e) {
           handleError(e);
-        }
-        else {
+        } else {
           response.send();
         }
       };
@@ -427,8 +426,7 @@ alexa.app = function(name) {
               var intentResult = self.intents[intent]["function"](request, response, callbackHandler);
               if (intentResult && intentResult.then) {
                 Promise.resolve(intentResult).asCallback(callbackHandler);
-              }
-              else if (false !== intentResult) {
+              } else if (false !== intentResult) {
                 callbackHandler();
               }
             } else {
@@ -439,8 +437,7 @@ alexa.app = function(name) {
               var launchResult = self.launchFunc(request, response, callbackHandler);
               if (launchResult && launchResult.then) {
                 Promise.resolve(launchResult).asCallback(callbackHandler);
-              }
-              else if (false !== launchResult) {
+              } else if (false !== launchResult) {
                 callbackHandler();
               }
             } else {
@@ -451,8 +448,7 @@ alexa.app = function(name) {
               var sessionEndedResult = self.sessionEndedFunc(request, response, callbackHandler);
               if (sessionEndedResult && sessionEndedResult.then) {
                 Promise.resolve(sessionEndedResult).asCallback(callbackHandler);
-              }
-              else if (false !== sessionEndedResult) {
+              } else if (false !== sessionEndedResult) {
                 callbackHandler();
               }
             }
@@ -463,8 +459,7 @@ alexa.app = function(name) {
               var eventHandlerResult = eventHandlerObject["function"](request, response, callbackHandler);
               if (eventHandlerObject && eventHandlerObject.then) {
                 Promise.resolve(eventHandlerResult).asCallback(callbackHandler);
-              }
-              else if (false !== eventHandlerResult) {
+              } else if (false !== eventHandlerResult) {
                 callbackHandler();
               }
             } else {
@@ -483,8 +478,9 @@ alexa.app = function(name) {
   // Extract the schema and generate a schema JSON object
   this.schema = function() {
     var schema = {
-      "intents": []
-    }, intentName, intent, key;
+        "intents": []
+      },
+      intentName, intent, key;
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       var intentSchema = {
@@ -573,11 +569,17 @@ alexa.app = function(name) {
 
     if (options.debug) {
       options.router.get("/", function(req, res) {
-        res.render("test", {
-          "json": self,
-          "schema": self.schema(),
-          "utterances": self.utterances()
-        });
+        if (typeof req.query['schema'] != "undefined") {
+          res.set('Content-Type', 'text/plain').send(self.schema());
+        } else if (typeof req.query['utterances'] != "undefined") {
+          res.set('Content-Type', 'text/plain').send(self.utterances());
+        } else {
+          res.render("test", {
+            "app": self,
+            "schema": self.schema(),
+            "utterances": self.utterances()
+          });
+        }
       });
     }
 
