@@ -307,7 +307,7 @@ alexa.app = function(name) {
   // use a minimal set of utterances or the full cartesian product?
   this.exhaustiveUtterances = false;
 
-  // A catch-all error handler - do nothing by default
+  // A catch-all error handler do nothing by default
   this.error = null;
 
   // pre/post hooks to be run on every request
@@ -547,6 +547,8 @@ alexa.app = function(name) {
   // @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
   // @param bool options.checkCert when true, applies Alexa certificate checking (default true)
   // @param bool options.debug when true, sets up the route to handle GET requests (default false)
+  // @param preRequest options.preRequest function to execute before every POST request
+  // @param postRequest options.postRequest function to execute after every POST
   // @throws Error when router or expressApp options are not specified
   // @return ? TODO: not sure what this returns
   this.express = function(options) {
@@ -589,11 +591,28 @@ alexa.app = function(name) {
 
     // exposes POST /<endpoint> route
     router.post("/", function(req, res) {
-      self.request(req.body).then(function(response) {
-        res.json(response);
-      }, function() {
-        res.status(500).send("Server Error");
-      });
+      var json = req.body,
+        response_json;
+      // preRequest and postRequest may return altered request JSON, or undefined, or a Promise
+      Promise.resolve(typeof options.preRequest == "function" ? options.preRequest(json, req, res) : json)
+        .then(function(json_new) {
+          if (json_new) {
+            json = json_new;
+          }
+          return json;
+        })
+        .then(self.request)
+        .then(function(app_response_json) {
+          response_json = app_response_json;
+          return Promise.resolve(typeof options.postRequest == "function" ? options.postRequest(app_response_json, req, res) : app_response_json)
+        })
+        .then(function(response_json_new) {
+          response_json = response_json_new || response_json;
+          res.json(response_json).send();
+        })
+        .catch(function() {
+          res.status(500).send("Server Error");
+        });
     });
 
   };

@@ -144,5 +144,34 @@ describe("Alexa", function() {
           .expect(404);
       });
     });
+
+    context("#express with pre and post functions", function() {
+      var fired = {};
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+
+      beforeEach(function() {
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: false,
+          preRequest: function(json, request, response) {
+            fired.preRequest = json;
+          },
+          postRequest: function(json, request, response) {
+            fired.postRequest = json;
+          }
+        });
+      });
+
+      it("invokes pre and post functions", function() {
+        return request(testServer)
+          .post('/testApp')
+          .send(mockRequest)
+          .expect(200).then(function() {
+            expect(fired.preRequest).to.eql(mockRequest);
+            expect(fired.postRequest.response.outputSpeech.type).to.equal("SSML");
+          });
+      });
+    });
   });
 });
