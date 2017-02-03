@@ -1,7 +1,6 @@
 var express = require("express");
-var alexa = require("../index.js");
+var alexa = require("alexa-app");
 var bodyParser = require("body-parser");
-
 
 var PORT = process.env.port || 8080;
 var app = express();
@@ -18,20 +17,17 @@ alexaApp.express({
   // things to test behavior. enabled by default.
   checkCert: false,
 
-  // sets up a GET route when set to true. This is handy for testing in 
+  // sets up a GET route when set to true. This is handy for testing in
   // development, but not recommended for production. disabled by default
   debug: true
 });
 
-
 // now POST calls to /test in express will be handled by the app.request() function
-
 
 // from here on you can setup any other express routes or middlewares as normal
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
-
 
 alexaApp.launch(function(request, response) {
   response.say("You launched the app!");
