@@ -572,7 +572,7 @@ alexa.app = function(name) {
     options.expressApp.use(endpoint, router);
 
     if (options.debug) {
-      router.get("/", function(req, res) {
+      options.router.get("/", function(req, res) {
         res.render("test", {
           "json": self,
           "schema": self.schema(),
