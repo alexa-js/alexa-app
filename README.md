@@ -540,7 +540,7 @@ For backwards compatibility, or if you wish to change the Handler mapping to som
 var app = new alexa.app("sample");
 app.intent( ... );
 // connect the alexa-app to AWS Lambda
-exports.handler = app.lambda();
+exports.handler = app.attachToLambda();
 ```
 
 ## Connect to Express
@@ -556,7 +556,8 @@ app.launch(function(request,response) {
 });
 
 // ALWAYS setup the alexa app and attach it to express before anything else.
-app.express({ expressApp: express_app, router: express.Router() });
+// this ensures alexa routes have their own isolated middlewares.
+app.attachToExpress({ expressApp: express_app, router: express.Router() });
 
 // now POST calls to /sample in express will be handled by the app.request() function
 // GET calls will not be handled

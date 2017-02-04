@@ -10,5 +10,4 @@ app.launch(function(request, response) {
   return false;
 });
 
-// connect to lambda
-exports.handler = app.lambda();
+exports.handler = app.attachToLambda();
