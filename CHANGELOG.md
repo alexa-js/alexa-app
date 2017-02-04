@@ -1,6 +1,9 @@
 ## Changelog
 
 ### 2.4.1 (Next)
+
+* [#150](https://github.com/alexa-js/alexa-app/pull/150): Added `preRequest` and `postRequest` to express integration - [@dblock](https://github.com/dblock).
+* [#150](https://github.com/alexa-js/alexa-app/pull/150): Dump schema and utterances in debug mode - [@dblock](https://github.com/dblock).
 * [#141](https://github.com/alexa-js/alexa-app/pull/141): Fail the response on exception in case of AudioPlayer request - [@fremail](https://github.com/fremail).
 * [#139](https://github.com/alexa-js/alexa-app/pull/139): Compatibility with Node.js v0.12 - v7 - [@tejashah88](https://github.com/tejashah88).
 * [#125](https://github.com/alexa-js/alexa-app/pull/125): Force new when instantiating alexa.app - [@OpenDog](https://github.com/OpenDog).

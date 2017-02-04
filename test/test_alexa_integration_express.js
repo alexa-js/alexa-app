@@ -56,8 +56,6 @@ describe("Alexa", function() {
 
     });
 
-
-
     context("#express with default options", function() {
       beforeEach(function() {
         testApp.express({ expressApp: app, router: express.Router(), checkCert: false });
@@ -92,7 +90,20 @@ describe("Alexa", function() {
 
     context("#express with debug set to true", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, debug: true });
+        testApp.intent("myIntent", {
+          "slots": {
+            "NAME": "LITERAL",
+            "AGE": "NUMBER"
+          },
+          "utterances": ["my name is bob"]
+        });
+
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: false,
+          debug: true
+        });
       });
 
       it("dumps debug schema", function() {
@@ -100,6 +111,24 @@ describe("Alexa", function() {
           .get('/testApp')
           .expect(200).then(function(response) {
             expect(response.text).to.startWith('{"name":"testApp"')
+          });
+      });
+
+      it("returns debug schema", function() {
+        return request(testServer)
+          .get('/testApp?schema')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.eq(testApp.schema());
+          });
+      });
+
+      it("returns debug utterances", function() {
+        return request(testServer)
+          .get('/testApp?utterances')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.eq(testApp.utterances());
           });
       });
     });
@@ -113,6 +142,66 @@ describe("Alexa", function() {
         return request(testServer)
           .get('/testApp')
           .expect(404);
+      });
+    });
+
+    context("#express with pre and post functions", function() {
+      var fired = {};
+      var mockRequest = mockHelper.load("intent_request_airport_info.json");
+
+      beforeEach(function() {
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: false,
+          preRequest: function(json, request, response) {
+            fired.preRequest = json;
+          },
+          postRequest: function(json, request, response) {
+            fired.postRequest = json;
+          }
+        });
+      });
+
+      it("invokes pre and post functions", function() {
+        return request(testServer)
+          .post('/testApp')
+          .send(mockRequest)
+          .expect(200).then(function() {
+            expect(fired.preRequest).to.eql(mockRequest);
+            expect(fired.postRequest.response.outputSpeech.type).to.equal("SSML");
+          });
+      });
+    });
+
+    context("#express with checkCert=true", function() {
+      beforeEach(function() {
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: true,
+          debug: false
+        });
+      });
+
+      it("requires a cert header", function() {
+        return request(testServer)
+          .post('/testApp')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("The signaturecertchainurl HTTP request header is invalid!");
+          });
+      });
+
+      it("checks cert header", function() {
+        return request(testServer)
+          .post('/testApp')
+          .set('signaturecertchainurl', 'dummy')
+          .set('signature', 'dummy')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("signature is not base64 encoded");
+          });
       });
     });
   });
