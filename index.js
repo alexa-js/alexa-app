@@ -604,13 +604,14 @@ alexa.app = function(name) {
         .then(self.request)
         .then(function(app_response_json) {
           response_json = app_response_json;
-          return Promise.resolve(typeof options.postRequest == "function" ? options.postRequest(app_response_json, req, res) : app_response_json)
+          return Promise.resolve(typeof options.postRequest == "function" ? options.postRequest(app_response_json, req, res) : app_response_json);
         })
         .then(function(response_json_new) {
           response_json = response_json_new || response_json;
           res.json(response_json).send();
         })
-        .catch(function() {
+        .catch(function(err) {
+          console.error(err);
           res.status(500).send("Server Error");
         });
     });
