@@ -162,6 +162,7 @@ alexa.response = function(session) {
     }
     return this;
   };
+
   // @deprecated
   this.clearSession = function(key) {
     this.sessionObject.clear(key);
@@ -256,9 +257,9 @@ alexa.session = function(session) {
       "attributes": session.attributes,
       "application": session.application
     };
-    // Persist all the session attributes across requests.
-    // The Alexa API doesn't think session variables should persist for the entire
-    // duration of the session, but I do.
+    // persist all the session attributes across requests
+    // the Alexa API doesn't think session variables should persist for the entire
+    // duration of the session, but I do
     this.attributes = session.attributes || {};
     this.sessionId = session.sessionId;
   } else {
@@ -270,7 +271,7 @@ alexa.session = function(session) {
     this.sessionId = null;
   }
   this.getAttributes = function() {
-    // Deep clone attributes so direct updates to objects are not set in the
+    // deep clone attributes so direct updates to objects are not set in the
     // session unless `.set` is called explicitly
     return JSON.parse(JSON.stringify(this.attributes));
   };
@@ -286,35 +287,35 @@ alexa.app = function(name) {
   var self = this;
   this.name = name;
   this.messages = {
-    // When an intent was passed in that the application was not configured to handle
+    // when an intent was passed in that the application was not configured to handle
     "NO_INTENT_FOUND": "Sorry, the application didn't know what to do with that intent",
-    // When an AudioPlayer event was passed in that the application was not configured to handle
+    // when an AudioPlayer event was passed in that the application was not configured to handle
     "NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND": "Sorry, the application didn't know what to do with that AudioPlayer event",
-    // When the app was used with 'open' or 'launch' but no launch handler was defined
+    // when the app was used with 'open' or 'launch' but no launch handler was defined
     "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
-    // When a request type was not recognized
+    // when a request type was not recognized
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
-    // When a request and response don't contain session object
+    // when a request and response don't contain session object
     // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
     "NO_SESSION": "This request doesn't support session attributes",
-    // If some other exception happens
+    // if some other exception happens
     "GENERIC_ERROR": "Sorry, the application encountered an error"
   };
 
-  // Persist session variables from every request into every response?
+  // persist session variables from every request into every response
   this.persistentSession = true;
 
-  // use a minimal set of utterances or the full cartesian product?
+  // use a minimal set of utterances or the full cartesian product
   this.exhaustiveUtterances = false;
 
-  // A catch-all error handler do nothing by default
+  // a catch-all error handler do nothing by default
   this.error = null;
 
   // pre/post hooks to be run on every request
   this.pre = function( /*request, response, type*/ ) {};
   this.post = function( /*request, response, type*/ ) {};
 
-  // A mapping of keywords to arrays of possible values, for expansion of sample utterances
+  // a mapping of keywords to arrays of possible values, for expansion of sample utterances
   this.dictionary = {};
   this.intents = {};
   this.intent = function(intentName, schema, func) {
@@ -350,7 +351,7 @@ alexa.app = function(name) {
       var request = new alexa.request(request_json);
       var response = new alexa.response(request.getSession());
 
-      // Error handling when a request fails in any way
+      // error handling when a request fails in any way
       var handleError = function(e) {
         if (typeof self.error == "function") {
           self.error(e, request, response);
@@ -371,11 +372,9 @@ alexa.app = function(name) {
         }
       };
 
-      // Prevent callback handler (request resolution) from being called
-      // multiple times
+      // prevent callback handler (request resolution) from being called multiple times
       var callbackHandlerCalled = false;
-      // Sends the request or handles an error if an error is passed in
-      // to the callback.
+      // sends the request or handles an error if an error is passed in to the callback
       var callbackHandler = function(e) {
         if (callbackHandlerCalled) {
           console.warn("Response has already been sent");
@@ -391,7 +390,7 @@ alexa.app = function(name) {
       };
 
       var postExecuted = false;
-      // Attach Promise resolve/reject functions to the response object
+      // attach Promise resolve/reject functions to the response object
       response.send = function(exception) {
         response.prepare();
         if (typeof self.post == "function" && !postExecuted) {
@@ -475,7 +474,7 @@ alexa.app = function(name) {
     });
   };
 
-  // Extract the schema and generate a schema JSON object
+  // extract the schema and generate a schema JSON object
   this.schema = function() {
     var schema = {
         "intents": []
@@ -502,7 +501,7 @@ alexa.app = function(name) {
     return JSON.stringify(schema, null, 3);
   };
 
-  // Generate a list of sample utterances
+  // generate a list of sample utterances
   this.utterances = function() {
     var intentName,
       intent,
@@ -524,7 +523,7 @@ alexa.app = function(name) {
     return out;
   };
 
-  // A built-in handler for AWS Lambda
+  // a built-in handler for AWS Lambda
   this.handler = function(event, context) {
     self.request(event)
       .then(function(response) {
@@ -535,7 +534,7 @@ alexa.app = function(name) {
       });
   };
 
-  // For backwards compatibility
+  // for backwards compatibility
   this.lambda = function() {
     return self.handler;
   };
@@ -543,14 +542,14 @@ alexa.app = function(name) {
   // attach Alexa endpoint to an express router
   //
   // @param object options.expressApp the express instance to attach to
-  // @param router options.express router instance to attach to the express app
+  // @param router options.router router instance to attach to the express app
   // @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
   // @param bool options.checkCert when true, applies Alexa certificate checking (default true)
   // @param bool options.debug when true, sets up the route to handle GET requests (default false)
-  // @param preRequest options.preRequest function to execute before every POST request
-  // @param postRequest options.postRequest function to execute after every POST
+  // @param function options.preRequest function to execute before every POST
+  // @param function options.postRequest function to execute after every POST
   // @throws Error when router or expressApp options are not specified
-  // @return ? TODO: not sure what this returns
+  // @returns this
   this.express = function(options) {
     if (!options.expressApp) {
       throw new Error("You must specify an express instance to attach to.");
@@ -618,7 +617,7 @@ alexa.app = function(name) {
 
   };
 
-  // Add the app to the global list of named apps
+  // add the app to the global list of named apps
   if (name) {
     alexa.apps[name] = self;
   }
