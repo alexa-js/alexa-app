@@ -12,6 +12,8 @@ A Node module to simplify development of Alexa apps (Skills) using Node.js.
 npm install alexa-app --save
 ```
 
+Node.js 0.12 or later is required.
+
 # Stable Release
 
 You're reading the documentation for the next release of alexa-app, which should be 2.4.1. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.4.0](https://github.com/alexa-js/alexa-app/blob/v2.4.0/README.md).
