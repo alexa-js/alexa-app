@@ -26,7 +26,6 @@ describe("Alexa", function() {
 
     beforeEach(function() {
       app = express();
-      app.use(bodyParser.json());
       app.set('views', path.join(__dirname, 'views'));
       app.set('view engine', 'ejs');
       testApp = new Alexa.app("testApp");
@@ -198,6 +197,20 @@ describe("Alexa", function() {
           .post('/testApp')
           .set('signaturecertchainurl', 'dummy')
           .set('signature', 'dummy')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("signature is not base64 encoded");
+          });
+      });
+
+
+      it("checks cert header with data", function() {
+        var mockRequest = mockHelper.load("intent_request_airport_info.json");
+        return request(testServer)
+          .post('/testApp')
+          .set('signaturecertchainurl', 'dummy')
+          .set('signature', 'dummy')
+          .send(mockRequest)
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
             expect(res.body.reason).to.equal("signature is not base64 encoded");
