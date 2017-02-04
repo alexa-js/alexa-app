@@ -1,6 +1,32 @@
 # Upgrading Alexa-app
 
-### Upgrading to >= 2.4.1
+### Upgrading to >= 2.5.0
+
+#### Changes in express integration
+
+The interface for mounting alexa-app with Express.js has changed from taking the app, path and debug option to receiving an object.
+
+Before:
+
+```javascript
+app.express(express_app, "/echo/", false);
+```
+
+After:
+
+```javascript
+app.express({
+  expressApp: express_app,
+  router: express.Router(),
+  endpoint: "/echo/",
+  checkCert: true,
+  debug: false,
+  preRequest: function(request_json, req, res) { },
+  postRequest: function(response_json, req, res) { }
+});
+```
+
+See [#144](https://github.com/alexa-js/alexa-app/pull/144) and [#150](https://github.com/alexa-js/alexa-app/pull/150) for more information.
 
 #### Changed session object behavior
 

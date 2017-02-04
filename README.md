@@ -555,15 +555,24 @@ app.launch(function(request,response) {
   response.say("Hello World");
 });
 
-// ALWAYS setup the alexa app and attach it to express before anything else.
+// setup the alexa app and attach it to express before anything else
 app.express({ expressApp: express_app, router: express.Router() });
 
 // now POST calls to /sample in express will be handled by the app.request() function
 // GET calls will not be handled
 
-// from here on, you can setup any other express routes or middlewares as normal
-
+// from here on, you can setup any other express routes or middleware as normal
 ```
+
+The `express` function accepts the following parameters.
+
+* _expressApp_: the express instance to attach to
+* _router_: router instance to attach to the express app
+* _endpoint_: the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
+* _checkCert_: when true, applies Alexa certificate checking (default: true)
+* _debug_: when true, sets up the route to handle GET requests (default: false)
+* _preRequest_: function to execute before every POST
+* _postRequest_: function to execute after every POST
 
 ## Customizing Default Error Messages
 
