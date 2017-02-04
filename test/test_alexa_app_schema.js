@@ -36,9 +36,9 @@ describe("Alexa", function() {
       });
 
       it("generates the expected schema", function() {
-        var expected = JSON.stringify(mockHelper.load("expected_intent_schema.json"));
-        var subject = JSON.stringify(JSON.parse(testApp.schema()));
-        expect(subject).to.eq(expected);
+        var expected = mockHelper.load("expected_intent_schema.json");
+        var subject = JSON.parse(testApp.schema());
+        expect(subject).to.eql(expected);
       });
     });
   });

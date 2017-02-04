@@ -119,7 +119,7 @@ describe("Alexa", function() {
           .get('/testApp?schema')
           .expect(200).then(function(response) {
             expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
-            expect(response.text).to.include('"intent": "myIntent"')
+            expect(response.text).to.eq(testApp.schema());
           });
       });
 
@@ -128,7 +128,7 @@ describe("Alexa", function() {
           .get('/testApp?utterances')
           .expect(200).then(function(response) {
             expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
-            expect(response.text).to.include('my name is bob')
+            expect(response.text).to.eq(testApp.utterances());
           });
       });
     });
