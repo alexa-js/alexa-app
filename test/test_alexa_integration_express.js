@@ -173,5 +173,36 @@ describe("Alexa", function() {
           });
       });
     });
+
+    context("#express with checkCert=true", function() {
+      beforeEach(function() {
+        testApp.express({
+          expressApp: app,
+          router: express.Router(),
+          checkCert: true,
+          debug: false
+        });
+      });
+
+      it("requires a cert header", function() {
+        return request(testServer)
+          .post('/testApp')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("The signaturecertchainurl HTTP request header is invalid!");
+          });
+      });
+
+      it("checks cert header", function() {
+        return request(testServer)
+          .post('/testApp')
+          .set('signaturecertchainurl', 'dummy')
+          .set('signature', 'dummy')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("signature is not base64 encoded");
+          });
+      });
+    });
   });
 });
