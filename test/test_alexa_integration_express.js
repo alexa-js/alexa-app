@@ -173,13 +173,13 @@ describe("Alexa", function() {
       });
     });
 
-    context("#express with checkCert=true", function() {
+    context("#express with debug and checkCert=true", function() {
       beforeEach(function() {
         testApp.express({
           expressApp: app,
           router: express.Router(),
           checkCert: true,
-          debug: false
+          debug: true
         });
       });
 
@@ -214,6 +214,15 @@ describe("Alexa", function() {
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
             expect(res.body.reason).to.equal("signature is not base64 encoded");
+          });
+      });
+
+      it("does not check cert on GET and returns debug schema", function() {
+        return request(testServer)
+          .get('/testApp?schema')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.eq(testApp.schema());
           });
       });
     });
