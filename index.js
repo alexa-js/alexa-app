@@ -6,6 +6,7 @@ var SSML = require("./to-ssml");
 var alexa = {};
 var defaults = require("lodash.defaults");
 var verifierMiddleware = require("alexa-verifier-middleware");
+var bodyParser = require('body-parser');
 
 alexa.response = function(session) {
   var self = this;
@@ -586,6 +587,8 @@ alexa.app = function(name) {
 
     if (options.checkCert) {
       options.router.use(verifierMiddleware({ strictHeaderCheck: true }));
+    } else {
+      options.router.use(bodyParser.json());
     }
 
     // exposes POST /<endpoint> route

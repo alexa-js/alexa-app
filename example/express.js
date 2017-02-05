@@ -1,6 +1,5 @@
 var express = require("express");
 var alexa = require("alexa-app");
-var bodyParser = require("body-parser");
 
 var PORT = process.env.port || 8080;
 var app = express();
@@ -25,8 +24,6 @@ alexaApp.express({
 // now POST calls to /test in express will be handled by the app.request() function
 
 // from here on you can setup any other express routes or middlewares as normal
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.set("view engine", "ejs");
 
 alexaApp.launch(function(request, response) {
