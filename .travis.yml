@@ -1,39 +1,32 @@
----
 language: node_js
 
 sudo: false
 
+matrix:
+  include:
+    - node_js: 0.12
+      script:
+        - npm run-script danger
+        - npm run-script lint
+        - npm run-script test-with-coverage
+      after_script:
+        - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
 node_js:
-- '0.12'
-- '1'
-- '2'
-- '3'
-- '4'
-- '5'
-- '6'
-- '7'
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
 
 cache:
   directories:
     - node_modules
-    - bower_components
 
 before_install:
-  - "npm config set spin false"
-
-install:
-  - npm install
-
-#before_script:
-  #- cp .env.example .env
-
-script:
-  - "npm run-script danger"
-  - "npm run-script lint"
-  - "npm run-script test-travis"
-
-after_script:
-  - "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  - npm config set spin false
 
 notifications:
   email: false
