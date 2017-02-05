@@ -37,6 +37,19 @@ describe("Alexa", function() {
             version: "1.0"
           });
         });
+
+        it("returns a response without a defined sessionEnded function", function() {
+          var subject = testApp.request(mockRequest);
+
+          return expect(subject).to.eventually.become({
+            response: {
+              directives: [],
+              shouldEndSession: true
+            },
+            sessionAttributes: {},
+            version: "1.0"
+          });
+        });
       });
     });
   });

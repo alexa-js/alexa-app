@@ -451,6 +451,8 @@ alexa.app = function(name) {
               } else if (false !== sessionEndedResult) {
                 callbackHandler();
               }
+            } else {
+              response.send();
             }
           } else if (request.isAudioPlayer()) {
             var event = requestType.slice(12);
