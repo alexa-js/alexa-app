@@ -2,7 +2,7 @@
 
 ### 2.5.0 (Next)
 
-* [#152](https://github.com/alexa-js/alexa-app/issues/152): Mount a JSON body-parser after verifier middleware in express integration - [@dblock](https://github.com/dblock).
+* [#152](https://github.com/alexa-js/alexa-app/issues/152): Mounted a JSON body-parser after verifier middleware and removed `bodyParser.urlencoded` in Express integration - [@dblock](https://github.com/dblock).
 * [#150](https://github.com/alexa-js/alexa-app/pull/150): Added `preRequest` and `postRequest` to express integration - [@dblock](https://github.com/dblock).
 * [#150](https://github.com/alexa-js/alexa-app/pull/150): Dump schema and utterances in debug mode - [@dblock](https://github.com/dblock).
 * [#144](https://github.com/alexa-js/alexa-app/pull/144): Simplified and refactored the `express` interface - [@mreinstein](https://github.com/mreinstein).

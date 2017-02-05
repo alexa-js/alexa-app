@@ -2,7 +2,7 @@
 
 ### Upgrading to >= 2.5.0
 
-#### Changes in express integration
+#### Changes in Express integration interface
 
 The interface for mounting alexa-app with Express.js has changed from taking the app, path and debug option to receiving an object.
 
@@ -27,6 +27,14 @@ app.express({
 ```
 
 See [#144](https://github.com/alexa-js/alexa-app/pull/144) and [#150](https://github.com/alexa-js/alexa-app/pull/150) for more information.
+
+#### Changes in body-parsers
+
+The `.urlencoded` body-parser has been removed.
+
+The `.json` body-parser is only mounted when `checkCert: false`, because `verifier-middleware` acts as a body-parser as well.
+
+See [#155](https://github.com/alexa-js/alexa-app/pull/155) for more information.
 
 #### Changed session object behavior
 
