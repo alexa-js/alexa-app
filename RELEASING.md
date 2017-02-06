@@ -54,7 +54,7 @@ git tag v2.4.0
 Release.
 
 ```
-$ npm release
+$ npm publish
 ```
 
 Push.

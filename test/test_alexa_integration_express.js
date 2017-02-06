@@ -12,7 +12,7 @@ chai.config.includeStack = true;
 var mockHelper = require("./helpers/mock_helper");
 var sinon = require("sinon");
 var express = require('express');
-var request = require("supertest-as-promised");
+var request = require("supertest");
 var bodyParser = require('body-parser');
 var path = require('path');
 

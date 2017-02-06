@@ -1,6 +1,6 @@
 ## Changelog
 
-### 2.5.0 (Next)
+### 3.0.0 (February 6, 2017)
 
 * [#152](https://github.com/alexa-js/alexa-app/issues/152): Mounted a JSON body-parser after verifier middleware and removed `bodyParser.urlencoded` in Express integration - [@dblock](https://github.com/dblock).
 * [#150](https://github.com/alexa-js/alexa-app/pull/150): Added `preRequest` and `postRequest` to express integration - [@dblock](https://github.com/dblock).
@@ -13,7 +13,6 @@
 * [#118](https://github.com/matt-kruse/alexa-app/pull/118), [#117](https://github.com/matt-kruse/alexa-app/issues/117): Prevent updating session attributes directly - [@ajcrites](https://github.com/ajcrites).
 * [#133](https://github.com/matt-kruse/alexa-app/pull/133), [#71](https://github.com/matt-kruse/alexa-app/issues/71): Support asynchronous patterns in request handlers - [@ajcrites](https://github.com/ajcrites).
 * [#159](https://github.com/alexa-js/alexa-app/pull/159), [#157](https://github.com/alexa-js/alexa-app/issues/157): Fixed `SessionEndedRequest` hangs without a defined `sessionEndedFunc` - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 2.4.0 (January 5, 2017)
 

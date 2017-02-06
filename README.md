@@ -16,7 +16,7 @@ Node.js 0.12 or later is required.
 
 # Stable Release
 
-You're reading the documentation for the next release of alexa-app, which should be 2.4.1. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [2.4.0](https://github.com/alexa-js/alexa-app/blob/v2.4.0/README.md).
+You're reading the documentation for the stable release of alexa-app, 3.0.0. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version.
 
 # Summary
 
