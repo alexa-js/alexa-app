@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.0.1 (Next)
+
+* Your contribution here.
+
 ### 3.0.0 (February 6, 2017)
 
 * [#152](https://github.com/alexa-js/alexa-app/issues/152): Mounted a JSON body-parser after verifier middleware and removed `bodyParser.urlencoded` in Express integration - [@dblock](https://github.com/dblock).

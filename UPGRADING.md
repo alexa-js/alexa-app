@@ -1,6 +1,6 @@
 # Upgrading Alexa-app
 
-### Upgrading to >= 2.5.0
+### Upgrading to >= 3.0.0
 
 #### Changes in Express integration interface
 
