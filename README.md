@@ -106,7 +106,7 @@ response.linkAccount()
 // skill supports stream(String url, String token, String expectedPreviousToken, Integer offsetInMilliseconds)
 response.audioPlayerPlayStream(String playBehavior, Object stream)
 
-// stop playing audio strem (send AudioPlayer.Stop directive)
+// stop playing audio stream (send AudioPlayer.Stop directive)
 response.audioPlayerStop()
 
 // clear audio player queue (send AudioPlayer.ClearQueue directive)
