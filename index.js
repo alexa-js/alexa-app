@@ -486,17 +486,15 @@ alexa.app = function(name) {
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       var intentSchema = {
-        "intent": intent.name,
-        "slots": []
+        "intent": intent.name
       };
-      if (intent.schema) {
-        if (intent.schema.slots) {
-          for (key in intent.schema.slots) {
-            intentSchema.slots.push({
-              "name": key,
-              "type": intent.schema.slots[key]
-            });
-          }
+      if (intent.schema && intent.schema.slots && Object.keys(intent.schema.slots).length > 0) {
+        intentSchema["slots"] = [];
+        for (key in intent.schema.slots) {
+          intentSchema.slots.push({
+            "name": key,
+            "type": intent.schema.slots[key]
+          });
         }
       }
       schema.intents.push(intentSchema);
