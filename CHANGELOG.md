@@ -2,6 +2,7 @@
 
 ### 3.0.1 (Next)
 
+* [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 3.0.0 (February 6, 2017)
