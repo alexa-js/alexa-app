@@ -4,6 +4,7 @@
 
 * [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
+* [#134](https://github.com/alexa-js/alexa-app/pull/134): Adding deprecation notices for plan to use Promises for async functionality - [ajcrites](https://github.com/ajcrites).
 * Your contribution here.
 
 ### 3.0.0 (February 6, 2017)
