@@ -1,42 +1,37 @@
 # alexa-app
 
+A Node module to simplify the development of Alexa skills (applications.)
+
 [![NPM](https://img.shields.io/npm/v/alexa-app.svg)](https://www.npmjs.com/package/alexa-app/)
 [![Build Status](https://travis-ci.org/alexa-js/alexa-app.svg?branch=master)](https://travis-ci.org/alexa-js/alexa-app)
 [![Coverage Status](https://coveralls.io/repos/github/alexa-js/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/alexa-js/alexa-app?branch=master)
 
-A Node module to simplify development of Alexa apps (Skills) using Node.js.
+This module parses HTTP JSON requests from the Alexa platform and builds the JSON response that consumed by an Alexa-compatible device, such as the Echo.
 
-# Installation
+It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
 
-```bash
-npm install alexa-app --save
-```
+The intent schema definition and sample utterances are included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
 
-Node.js 0.12 or later is required.
+This module provides a way to host a standalone web service for an Alexa skill. If you're looking for a full-fledged application server 
+or the ability to host multiple skills, check out [alexa-app-server](https://github.com/alexa-js/alexa-app-server).
 
-# Stable Release
 
-You're reading the documentation for the next release of alexa-app. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.0.0](https://github.com/alexa-js/alexa-app/tree/v3.0.0).
+### Features
 
-# Summary
+- simplified handling of requests and generating responses
+- support for asynchronous handlers
+- easy connection into AWS Lambda or Node.js Express, etc.
+- auto-generation of intent schema and sample utterances
+- support for session data
+- comprehensive test suite
 
-The alexa-app module does the dirty work of interpreting the JSON request from the Alexa platform and building the JSON response that can be spoken on an Alexa-compatible device, such as the Echo. It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
 
-The intent schema definition and sample utterances can be included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
+### AWS Lambda Example
 
-# Features
-
-- Simplified handling of requests and generating responses
-- Support for asynchronous handlers
-- Easy connection into AWS Lambda or Node.js Express, etc.
-- Auto-generation of intent schema and sample utterances
-- Convenience handling of session data
-- Support for testing
-
-# Example Usage
+Amazon skills that use alexa-app have a built-in `handler` method to handle calls from AWS Lambda.
+You need to make sure that the Handler is set to `index.handler`, which is the default value.
 
 ```javascript
-var alexa = require("alexa-app");
 var app = new alexa.app("sample");
 
 app.intent("number", {
@@ -48,15 +43,62 @@ app.intent("number", {
     response.say("You asked for the number " + number);
   }
 );
+
+// connect the alexa-app to AWS Lambda
+exports.handler = app.lambda();
 ```
 
-See the [example](example) directory for a sample implementation.
+For backwards compatibility, or if you wish to change the Handler mapping to something other than index.handler, you can use the lambda() function.
 
-# API
+A full lambda example is available [here](example/lambda.js).
 
-Apps ("skills") define handlers for launch, intent, and session end, just like normal Alexa development. The alexa-app module provides a layer around this functionality that simplifies the interaction. Each handler gets passed a request and response object, which are custom for this module.
 
-## request
+### Express Example
+
+```javascript
+var express = require("express");
+var alexa = require("alexa-app");
+var express_app = express();
+
+var app = new alexa.app("sample");
+
+app.intent("number", {
+    "slots": { "number": "NUMBER" },
+    "utterances": ["say the number {1-100|number}"]
+  },
+  function(request, response) {
+    var number = request.slot("number");
+    response.say("You asked for the number " + number);
+  }
+);
+
+// setup the alexa app and attach it to express before anything else
+app.express({ expressApp: express_app, router: express.Router() });
+
+// now POST calls to /sample in express will be handled by the app.request() function
+// GET calls will not be handled
+
+// from here on, you can setup any other express routes or middleware as normal
+```
+
+The express function accepts the following parameters.
+
+* `expressApp` the express instance to attach to
+* `router` router instance to attach to the express app
+* `endpoint` the path to attach the router to (e.g., passing `'mine'` attaches to `/mine`)
+* `checkCert` when true, applies Alexa certificate checking _(default: true)_
+* `debug` when true, sets up the route to handle GET requests _(default: false)_
+* `preRequest` function to execute before every POST
+* `postRequest` function to execute after every POST
+
+A full express example is available [here](example/express.js).
+
+
+### API
+
+Skills define handlers for launch, intent, and session end, just like normal Alexa development. The alexa-app module provides a layer around this functionality that simplifies the interaction. Each handler gets passed a request and response object, which are custom for this module.
+
+#### request
 
 ```javascript
 // return the type of request received (LaunchRequest, IntentRequest, SessionEndedRequest)
@@ -78,7 +120,8 @@ request.context
 request.data
 ```
 
-## response
+
+### response
 
 The response JSON object is automatically built for you. All you need to do is tell it what you want to output.
 
@@ -131,7 +174,8 @@ response.fail(String message)
 response.say("OK").send()
 ```
 
-## session
+
+### session
 ```javascript
 // check if you can use session (read or write)
 Boolean request.hasSession()
@@ -154,11 +198,12 @@ String session.get(String attributeName)
 session.details = { ... }
 ```
 
-# Request Handlers
+
+## Request Handlers
 
 Your app can define a single handler for the `Launch` event and the `SessionEnded` event, and multiple intent handlers.
 
-## LaunchRequest
+### LaunchRequest
 
 ```javascript
 app.launch(function(request, response) {
@@ -167,9 +212,13 @@ app.launch(function(request, response) {
 });
 ```
 
-## IntentRequest
 
-Define the handler for multiple intents using multiple calls to `intent()`. Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false`. See example further below.
+### IntentRequest
+
+Define the handler for multiple intents using multiple calls to `intent()`. 
+Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. 
+Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false`. 
+See example further below.
 
 ```javascript
 app.intent("live", {
@@ -189,7 +238,8 @@ app.intent("vacation", function(request, response) {
 });
 ```
 
-## SessionEndRequest
+
+### SessionEndRequest
 
 ```javascript
 app.sessionEnded(function(request, response) {
@@ -199,7 +249,8 @@ app.sessionEnded(function(request, response) {
 });
 ```
 
-## AudioPlayer Event Request
+
+### AudioPlayer Event Request
 
 Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false.
 
@@ -247,11 +298,13 @@ app.audioPlayer("PlaybackFinished", function(request, response) {
 });
 ```
 
-# Execute Code On Every Request
+
+## Execute Code On Every Request
 
 In addition to specific event handlers, you can define functions that will run on every request.
 
-## pre()
+
+### pre()
 
 Executed before any event handlers. This is useful to setup new sessions, validate the `applicationId`, or do any other kind of validations.
 
@@ -266,7 +319,8 @@ app.pre = function(request, response, type) {
 
 Note that the `post()` method still gets called, even if the `pre()` function calls `send()` or `fail()`. The post method can always override anything done before it.
 
-## post()
+
+### post()
 
 The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
 
@@ -279,11 +333,13 @@ app.post = function(request, response, type, exception) {
 };
 ```
 
-# Schema and Utterances
+
+## Schema and Utterances
 
 The alexa-app module makes it easy to define your intent schema and generate many sample utterances. Optionally pass your schema definition along with your intent handler, and extract the generated content using the `schema()` and `utterances()` functions on your app.
 
-## Schema Syntax
+
+### Schema Syntax
 
 Pass an object with two properties: slots and utterances.
 
@@ -301,11 +357,13 @@ app.intent("sampleIntent", {
 );
 ```
 
-### slots
+
+#### slots
 
 The slots object is a simple `name: type` mapping. The type must be one of Amazon's [built-in slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference), such as `AMAZON.DATE` or `AMAZON.NUMBER`.
 
-### custom slot types
+
+#### custom slot types
 
 [Custom slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interaction-model-reference#Custom Slot Type Syntax) are supported via the following syntax.
 
@@ -331,66 +389,18 @@ sampleIntent     airport status for {CustomSlotName}
 
 Note that the "CustomSlotType" type values must be specified in the Skill Interface's Interaction Model for the custom slot type to function correctly.
 
-### utterances
 
-The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded. Any number of sample utterances may be passed in the utterances array. Below are some sample utterances macros and what they will be expanded to.
+#### utterances
 
-#### Multiple Options mapped to a Slot
+The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded.
+Any number of sample utterances may be passed in the utterances array. 
 
-```javascript
-"my favorite color is {red|green|blue|NAME}"
-=>
-"my favorite color is {red|NAME}"
-"my favorite color is {green|NAME}"
-"my favorite color is {blue|NAME}"
-```
+This module internally uses [alexa-utterances](https://github.com/alexa-js/alexa-utterances)
+to expand these convenient strings into a format that alexa understands. Read the documentation there for a
+thorough set of examples on how to use this.
 
-#### Generate Multiple Versions of Static Text
 
-This lets you define multiple ways to say a phrase, but combined into a single sample utterance.
-
-```javascript
-"{what is the|what's the|check the} status"
-=>
-"what is the status"
-"what's the status"
-"check the status"
-```
-
-#### Auto-Generated Number Ranges
-
-When capturing a numeric slot value, it's helpful to generate many sample utterances with different number values.
-
-```javascript
-"buy {2-5|NUMBER} items"
-=>
-"buy {two|NUMBER} items"
-"buy {three|NUMBER} items"
-"buy {four|NUMBER} items"
-"buy {five|NUMBER} items"
-```
-
-Number ranges can also increment in steps.
-
-```javascript
-"buy {5-20 by 5|NUMBER} items"
-=>
-"buy {five|NUMBER} items"
-"buy {ten|NUMBER} items"
-"buy {fifteen|NUMBER} items"
-"buy {twenty|NUMBER} items"
-```
-
-#### Optional Words
-
-```javascript
-"what is your {favorite |}color"
-=>
-"what is your color"
-"what is your favorite color"
-```
-
-#### Using a Dictionary
+##### Using a Dictionary
 
 Several intents may use the same list of possible values, so you want to define them in one place, not in each intent schema. Use the app's dictionary.
 
@@ -401,7 +411,8 @@ app.dictionary = {"colors":["red","green","blue"]};
 "I like {colors|COLOR}"
 ```
 
-## Generating Schema and Utterances Output
+
+### Generating Schema and Utterances Output
 
 To get the generated content out of your app, call the `schema()` and `utterances()` functions. See [example/express.js](example/express.js) for one way to output this data.
 
@@ -436,7 +447,8 @@ WhatsMyColorIntent tell me my favorite color
 WhatsMyColorIntent tell me what my favorite color is
 ```
 
-# Cards
+
+## Cards
 
 The `response.card(Object card)` method allows you to send [Home Cards](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app) on the Alexa app, the companion app available for Fire OS, Android, iOS, and desktop web browsers.
 
@@ -446,7 +458,8 @@ Card's do not support SSML
 
 If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
 
-## Card Examples
+
+### Card Examples
 
 Display text only, aka [Simple](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app#Creating%20a%20Basic%20Home%20Card%20to%20Display%20Text).
 
@@ -474,7 +487,8 @@ response.card({
 });
 ```
 
-# Error Handling
+
+## Error Handling
 
 Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
 
@@ -493,9 +507,8 @@ app.error = function(exception, request, response) {
 };
 ```
 
-# Examples
 
-## Asynchronous Intent Handler
+## Asynchronous Intent Handler Example 
 
 If an intent or other request handler will return a response later, it must return ether `false` or a `Promise` (object with a `.then` function). This tells the alexa-app library not to send the response automatically.
 
@@ -530,53 +543,8 @@ app.intent("checkStatus", function(request, response) {
 });
 ```
 
-## Connect to AWS Lambda
 
-Amazon has documentation on how to setup your Alexa app to run in AWS Lambda.
-
-Apps built using alexa-app have a built-in "handler" method to handle calls from AWS Lambda. You don't need to do anything different to make them work within Lambda, other than to setup the Lambda Function correctly and make sure that the Handler is set to "index.handler", which is the default value.
-
-For backwards compatibility, or if you wish to change the Handler mapping to something other than index.handler, you can use the lambda() function. See [example/lambda.js](example/lambda.js).
-
-```javascript
-var app = new alexa.app("sample");
-app.intent( ... );
-// connect the alexa-app to AWS Lambda
-exports.handler = app.lambda();
-```
-
-## Connect to Express
-
-```javascript
-var express = require("express");
-var alexa = require("alexa-app");
-var express_app = express();
-
-var app = new alexa.app("sample");
-app.launch(function(request,response) {
-  response.say("Hello World");
-});
-
-// setup the alexa app and attach it to express before anything else
-app.express({ expressApp: express_app, router: express.Router() });
-
-// now POST calls to /sample in express will be handled by the app.request() function
-// GET calls will not be handled
-
-// from here on, you can setup any other express routes or middleware as normal
-```
-
-The `express` function accepts the following parameters.
-
-* _expressApp_: the express instance to attach to
-* _router_: router instance to attach to the express app
-* _endpoint_: the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
-* _checkCert_: when true, applies Alexa certificate checking (default: true)
-* _debug_: when true, sets up the route to handle GET requests (default: false)
-* _preRequest_: function to execute before every POST
-* _postRequest_: function to execute after every POST
-
-## Customizing Default Error Messages
+### Customizing Default Error Messages
 
 ```javascript
 app.messages.NO_INTENT_FOUND = "Why you called dat intent? I don't know bout dat";
@@ -584,7 +552,8 @@ app.messages.NO_INTENT_FOUND = "Why you called dat intent? I don't know bout dat
 
 See the code for default messages you can override.
 
-## Read/write session data
+
+### Read/write session data
 
 ```javascript
 app.launch(function(request, response) {
@@ -615,7 +584,8 @@ var app = new alexa.app("test");
 app.persistentSession = false;
 ```
 
-## Define a custom endpoint name for an app
+
+### Define a custom endpoint name for an app
 
 When mapped to express, the default endpoint for each app is the name of the app. You can customize this using the second parameter to the `app()` method.
 
@@ -623,26 +593,10 @@ When mapped to express, the default endpoint for each app is the name of the app
 var app = new alexa.app("hello", "myEndpointName");
 ```
 
-## Accessing All Defined Apps
-
 All named apps can be found in the `alexa.apps` object, keyed by name. The value is the app itself.
 
-## Hosting
 
-### Production
-
-Generally, an alexa-app module can be used inside a stand-alone Node.js app, within an HTTPS server or within an AWS Lambda function. The library only cares about JSON in and JSON out. It is agnostic about the environment that is using it, but it provides some convenience methods to hook into common environments.
-
-
-### Development
-
-Use the [alexa-app-server](https://github.com/alexa-js/alexa-app-server) module in combination with alexa-app as a container for multiple alexa-app skills using Node.js and Express. It lets you run and debug your apps locally, and can also be used as a full production server for your apps.
-
-# History
-
-See [CHANGELOG](CHANGELOG.md) for details.
-
-# License
+## License
 
 Copyright (c) 2016 Matt Kruse
 
