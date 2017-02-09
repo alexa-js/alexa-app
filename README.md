@@ -6,6 +6,12 @@ A Node module to simplify the development of Alexa skills (applications.)
 [![Build Status](https://travis-ci.org/alexa-js/alexa-app.svg?branch=master)](https://travis-ci.org/alexa-js/alexa-app)
 [![Coverage Status](https://coveralls.io/repos/github/alexa-js/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/alexa-js/alexa-app?branch=master)
 
+### Stable Release
+
+You're reading the documentation for the next release of alexa-app. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.0.0](https://github.com/alexa-js/alexa-app/tree/v3.0.0).
+
+### Introduction
+
 This module parses HTTP JSON requests from the Alexa platform and builds the JSON response that consumed by an Alexa-compatible device, such as the Echo.
 
 It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.
@@ -598,6 +604,6 @@ All named apps can be found in the `alexa.apps` object, keyed by name. The value
 
 ## License
 
-Copyright (c) 2016 Matt Kruse
+Copyright (c) 2016-2017 Matt Kruse
 
 MIT License, see [LICENSE](LICENSE.md) for details.
