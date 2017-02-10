@@ -6,6 +6,7 @@ var mockHelper = require("./helpers/mock_helper");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
+var Promise = require("bluebird");
 
 
 describe("Alexa", function () {
@@ -217,11 +218,14 @@ describe("Alexa", function () {
             var playBehavior = "ENQUEUE";
 
             testApp.audioPlayer("PlaybackFinished", function(request, response) {
-              setTimeout(function() {
-                response.audioPlayerPlayStream(playBehavior, stream);
-                response.send();
-              }, 0);
-              return false;
+              return new Promise(function(resolve) {
+                setTimeout(function() {
+                  response.audioPlayerPlayStream(playBehavior, stream);
+                  resolve();
+                }, 0);
+              }).then(function() {
+                return response.send();
+              });
             });
 
             var subject = testApp.request(mockRequest).then(function(response) {

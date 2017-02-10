@@ -357,7 +357,7 @@ alexa.app = function(name) {
     var response = new alexa.response(request.getSession());
     var postExecuted = false;
     var requestType = request.type();
-    var prePromise = Promise.resolve();
+    var promiseChain = Promise.resolve();
 
     // attach Promise resolve/reject functions to the response object
     response.send = function(exception) {
@@ -370,8 +370,8 @@ alexa.app = function(name) {
       return postPromise.then(function() {
         if (!response.resolved) {
           response.resolved = true;
-          return response.response;
         }
+        return response.response;
       });
     };
     response.fail = function(msg, exception) {
@@ -386,13 +386,20 @@ alexa.app = function(name) {
           response.resolved = true;
           throw msg;
         }
+        // propagate successful response if it's already been resolved
+        return response.response;
       });
     };
 
-    if (typeof self.pre == "function") {
-      prePromise = Promise.resolve(self.pre(request, response, requestType));
-    }
-    return prePromise.then(function() {
+    return promiseChain.then(function () {
+      // Call to `.pre` can also throw, so we wrap it in a promise here to
+      // propagate errors to the error handler
+      var prePromise = Promise.resolve();
+      if (typeof self.pre == "function") {
+        prePromise = Promise.resolve(self.pre(request, response, requestType));
+      }
+      return prePromise;
+    }).then(function () {
       if (!response.resolved) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
@@ -407,8 +414,10 @@ alexa.app = function(name) {
           } else {
             throw "NO_LAUNCH_FUNCTION";
           }
-        } else if ("SessionEndedRequest" === requestType && typeof self.sessionEndedFunc == "function") {
-          return Promise.resolve(self.sessionEndedFunc(request, response));
+        } else if ("SessionEndedRequest" === requestType) {
+          if (typeof self.sessionEndedFunc == "function") {
+            return Promise.resolve(self.sessionEndedFunc(request, response));
+          }
         } else if (request.isAudioPlayer()) {
           var event = requestType.slice(12);
           var eventHandlerObject = self.audioPlayerEventHandlers[event];
