@@ -42,7 +42,7 @@ var app = new alexa.app("sample");
 
 app.intent("number", {
     "slots": { "number": "NUMBER" },
-    "utterances": ["say the number {1-100|number}"]
+    "utterances": ["say the number {-|number}"]
   },
   function(request, response) {
     var number = request.slot("number");
@@ -70,7 +70,7 @@ var app = new alexa.app("sample");
 
 app.intent("number", {
     "slots": { "number": "NUMBER" },
-    "utterances": ["say the number {1-100|number}"]
+    "utterances": ["say the number {-|number}"]
   },
   function(request, response) {
     var number = request.slot("number");
@@ -356,7 +356,7 @@ app.intent("sampleIntent", {
       "AGE": "AMAZON.NUMBER"
     },
     "utterances": [
-      "my {name is|name's} {NAME} and {I am|I'm} {1-100|AGE}{ years old|}"
+      "my {name is|name's} {NAME} and {I am|I'm} {-|AGE}{ years old|}"
     ]
   },
   function(request, response) { ... }
