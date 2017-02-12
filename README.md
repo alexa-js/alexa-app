@@ -41,7 +41,7 @@ You need to make sure that the Handler is set to `index.handler`, which is the d
 var app = new alexa.app("sample");
 
 app.intent("number", {
-    "slots": { "number": "NUMBER" },
+    "slots": { "number": "AMAZON.NUMBER" },
     "utterances": ["say the number {-|number}"]
   },
   function(request, response) {
@@ -69,7 +69,7 @@ var express_app = express();
 var app = new alexa.app("sample");
 
 app.intent("number", {
-    "slots": { "number": "NUMBER" },
+    "slots": { "number": "AMAZON.NUMBER" },
     "utterances": ["say the number {-|number}"]
   },
   function(request, response) {
