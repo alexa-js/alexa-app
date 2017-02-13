@@ -564,7 +564,7 @@ alexa.app = function(name) {
       throw new Error("You must specify an express app or an express router to attach to.");
     }
 
-    var defaultOptions = { endpoint: self.name, checkCert: true, debug: false };
+    var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
 
     options = defaults(options, defaultOptions);
 

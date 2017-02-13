@@ -37,19 +37,11 @@ describe("Alexa", function() {
     });
 
     context("#express fails when missing required field", function() {
-      it("throws error on missing express app", function() {
+      it("throws error on missing express app and express router", function() {
         try {
-          testApp.express({ router: express.Router() });
+          testApp.express({});
         } catch (er) {
-          return expect(er.message).to.eq("You must specify an express instance to attach to.")
-        }
-      });
-
-      it("throws error on missing express router", function() {
-        try {
-          testApp.express({ expressApp: app });
-        } catch (er) {
-          return expect(er.message).to.eq("You must specify an express router to attach.")
+          return expect(er.message).to.eq("You must specify an express app or an express router to attach to.")
         }
       });
 
@@ -57,7 +49,7 @@ describe("Alexa", function() {
 
     context("#express with default options", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false });
+        testApp.express({ expressApp: app, checkCert: false });
       });
 
       it("returns a response for a valid request", function() {
