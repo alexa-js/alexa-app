@@ -2,6 +2,7 @@
 
 ### 3.0.1 (Next)
 
+* [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
