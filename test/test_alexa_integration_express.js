@@ -188,7 +188,7 @@ describe("Alexa", function() {
           .post('/testApp')
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
-            expect(res.body.reason).to.equal("The signaturecertchainurl HTTP request header is invalid!");
+            expect(res.body.reason).to.equal("signature is not base64 encoded");
           });
       });
 
@@ -202,7 +202,6 @@ describe("Alexa", function() {
             expect(res.body.reason).to.equal("signature is not base64 encoded");
           });
       });
-
 
       it("checks cert header with data", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
