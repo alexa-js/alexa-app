@@ -1,5 +1,44 @@
 # Upgrading Alexa-app
 
+### Upgrading to >= 4.0.0
+
+#### Changes to Asynchronous Support
+
+Support for asynchronous `pre` and `post` as well as all handlers such as the intent and launch handlers is now done through promises. This allows `pre` and `post` to be asynchronous.
+
+You can no longer make these handlers asynchronous by using `return false`. A callback is no longer taken as an argument to these handlers. Instead if you want your handler to be asynchronous you may return a promise.
+
+`response.send` and `response.fail` now return promises. If you call either, you must return them in order to continue the promise chain for any asynchronous functionality. If you return a promise but do not explicitly call `response.send` it will be called automatically when the returned promise resolves. If you want to trigger a failure, `return response.fail(error)` and `throw error` have the same effect.
+
+Before:
+```javascript
+app.intent("tellme", (request, response) => {
+  http.get(url, rc => {
+    if (rc.statusText >= 400) {
+      response.fail();
+    } else {
+      response.send(rc.body);
+    }
+  });
+
+  return false;
+});
+```
+
+After:
+```javascript
+app.intent("tellme", (request, response) => {
+  // `getAsync` returns a Promise in this example
+  return http.getAsync(url).then(rc => {
+    if (rc.statusText >= 400) {
+      return response.fail();
+    } else {
+      return response.send(rc.body);
+    }
+  });
+});
+```
+
 ### Upgrading to >= 3.0.0
 
 #### Changes in Express integration interface

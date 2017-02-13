@@ -429,7 +429,7 @@ alexa.app = function(name) {
               } else if (false !== intentResult) {
                 callbackHandler();
               } else {
-                console.warn("NOTE: using `return false` for async intent requests is deprecated and will not work after the next major version");
+                console.trace("NOTE: using `return false` for async intent requests is deprecated and will not work after the next major version");
               }
             } else {
               throw "NO_INTENT_FOUND";
@@ -442,7 +442,7 @@ alexa.app = function(name) {
               } else if (false !== launchResult) {
                 callbackHandler();
               } else {
-                console.warn("NOTE: using `return false` for async launch requests is deprecated and will not work after the next major version");
+                console.trace("NOTE: using `return false` for async launch requests is deprecated and will not work after the next major version");
               }
             } else {
               throw "NO_LAUNCH_FUNCTION";
@@ -455,7 +455,7 @@ alexa.app = function(name) {
               } else if (false !== sessionEndedResult) {
                 callbackHandler();
               } else {
-                console.warn("NOTE: using `return false` for async session ended requests is deprecated and will not work after the next major version");
+                console.trace("NOTE: using `return false` for async session ended requests is deprecated and will not work after the next major version");
               }
             } else {
               response.send();
@@ -470,7 +470,7 @@ alexa.app = function(name) {
               } else if (false !== eventHandlerResult) {
                 callbackHandler();
               } else {
-                console.warn("NOTE: using `return false` for async audio player requests is deprecated and will not work after the next major version");
+                console.trace("NOTE: using `return false` for async audio player requests is deprecated and will not work after the next major version");
               }
             } else {
               response.send();
