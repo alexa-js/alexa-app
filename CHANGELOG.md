@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.0.2 (February 13, 2017)
+* [#176](https://github.com/alexa-js/alexa-app/pull/176): Added flexibility to attach alexa-app to express app or router - [@bgjehu](https://github.com/bgjehu).
+
 ### 3.0.1 (Next)
 
 * [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
