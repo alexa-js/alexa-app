@@ -8,7 +8,7 @@ Support for asynchronous `pre` and `post` as well as all handlers such as the in
 
 You can no longer make these handlers asynchronous by using `return false`. A callback is no longer taken as an argument to these handlers. Instead if you want your handler to be asynchronous you may return a promise.
 
-`response.send` and `response.fail` now return promises. If you call either, you must return them in order to continue the promise chain for any asynchronous functionality. If you return a promise but do not explicitly call `response.send` it will be called automatically when the returned promise resolves. If you want to trigger a failure, `return response.fail(error)` and `throw error` have the same effect.
+`response.send` and `response.fail` now return promises. If you call either, you must return them in order to continue the promise chain for any asynchronous functionality. If you return a promise but do not explicitly call `response.send` it will be called automatically when the returned promise resolves. If you want to trigger a failure, `return response.fail(error)` and `throw error` have the same effect. If a promise returned from a handler is rejected it will be treated as if you had called explicit failure as well.
 
 Before:
 ```javascript

@@ -18,7 +18,7 @@ It provides a DSL for defining intents, convenience methods to more easily build
 
 The intent schema definition and sample utterances are included in your application's definition, making it very simple to generate hundreds (or thousands!) of sample utterances with a few lines.
 
-This module provides a way to host a standalone web service for an Alexa skill. If you're looking for a full-fledged application server 
+This module provides a way to host a standalone web service for an Alexa skill. If you're looking for a full-fledged application server
 or the ability to host multiple skills, check out [alexa-app-server](https://github.com/alexa-js/alexa-app-server).
 
 
@@ -167,21 +167,25 @@ response.audioPlayerClearQueue([ String clearBehavior ])
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
 
-// send the response to the Alexa device (success)
-// this is not required for synchronous handlers
-// you must call this from asynchronous handlers
-response.send()
+// send the response to the Alexa device (success) immediately
+// this returns a promise that you must return to continue the
+// promise chain. Calling this is optional in most cases as it
+// will be called automatically when the handler promise chain
+// resolves, but you can call it and return its value in the
+// chain to send the response immediately. You can also use it
+// to send a response from `post` after failure.
+async response.send()
 
 // trigger a response failure
 // the internal promise containing the response will be rejected, and should be handled by the calling environment
 // instead of the Alexa response being returned, the failure message will be passed
-// response.fail() should not be called in an uncontrolled calling environment (e.g. Lambda) otherwise the Echo
-// will verbally response with "There was a problem with the requested skill's response." and the error will be written to
-// the console log (accessible via CloudWatch).
-response.fail(String message)
+// similar to `response.send()`, you must return the value returned from this call to continue the promise chain
+// this is equivalent to calling `throw message` in handlers
+// *NOTE:* this does not generate a response compatible with Alexa, so when calling it explicitly you may want to handle the response with `.error` or `.post`
+async response.fail(String message)
 
 // calls to response can be chained together
-response.say("OK").send()
+return response.say("OK").send()
 ```
 
 
@@ -225,12 +229,10 @@ app.launch(function(request, response) {
 
 ### IntentRequest
 
-Define the handler for multiple intents using multiple calls to `intent()`. 
-Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. 
-Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false` (**deprecated**) or a `Promise`. 
+Define the handler for multiple intents using multiple calls to `intent()`.
+Intent schema and sample utterances can also be passed to `intent()`, which is detailed below.
+Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return a Promise. The response will be sent when the promise is resolved and fail when the promise is rejected.
 See example further below.
-
-**Note:** Using `return false` to signify an asynchronous intent handler function is deprecated and will be removed in the next major version. Instead, return a `Promise`.
 
 ```javascript
 app.intent("live", {
@@ -264,7 +266,7 @@ app.sessionEnded(function(request, response) {
 
 ### AudioPlayer Event Request
 
-Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false (**deprecated**) or a Promise.
+Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return a Promise.
 
 You can define handlers for the following events:
 
@@ -305,7 +307,6 @@ app.audioPlayer("PlaybackFinished", function(request, response) {
       "offsetInMilliseconds": 0
     };
     response.audioPlayerPlayStream("ENQUEUE", stream);
-    response.send();
   });
 });
 ```
@@ -319,13 +320,24 @@ In addition to specific event handlers, you can define functions that will run o
 ### pre()
 
 Executed before any event handlers. This is useful to setup new sessions, validate the `applicationId`, or do any other kind of validations.
+You can perform asynchronous functionality in `pre` by returning a Promise.
 
 ```javascript
 app.pre = function(request, response, type) {
   if (request.applicationId != "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe") {
     // fail ungracefully
-    response.fail("Invalid applicationId");
+    throw "Invalid applicationId";
+    // `return response.fail("Invalid applicationId")` will also work
   }
+};
+
+// Asynchronous
+app.pre = function(request, response, type) {
+  return db.getApplicationId().then(function(appId) {
+    if (request.applicationId != appId) {
+      throw new Error("Invalid applicationId");
+    }
+  });
 };
 ```
 
@@ -334,13 +346,15 @@ Note that the `post()` method still gets called, even if the `pre()` function ca
 
 ### post()
 
-The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `response.fail()` into a `respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
+The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `return response.fail()` into a `return respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
+
+You can perform asynchronous functionality in `pre` by returning a Promise similar to `pre` or any of the handlers.
 
 ```javascript
 app.post = function(request, response, type, exception) {
   if (exception) {
     // always turn an exception into a successful response
-    response.clear().say("An error occured: " + exception).send();
+    return response.clear().say("An error occured: " + exception).send();
   }
 };
 ```
@@ -405,7 +419,7 @@ Note that the "CustomSlotType" type values must be specified in the Skill Interf
 #### utterances
 
 The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded.
-Any number of sample utterances may be passed in the utterances array. 
+Any number of sample utterances may be passed in the utterances array.
 
 This module internally uses [alexa-utterances](https://github.com/alexa-js/alexa-utterances)
 to expand these convenient strings into a format that alexa understands. Read the documentation there for a
@@ -466,7 +480,7 @@ The `response.card(Object card)` method allows you to send [Home Cards](https://
 
 The full specification for the `card` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object).
 
-Card's do not support SSML
+Cards do not support SSML
 
 If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
 
@@ -502,36 +516,33 @@ response.card({
 
 ## Error Handling
 
-Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
-The generic error handler, below, will automatically resolve the promise (request) with `response.send()` if it does not occur in the error handler.
-`response.fail(message, exception)` should only be called from a controlled calling environment, e.g. your own server, not AWS Lambda.
+When handler functions throw exceptions, they will trigger a rejection in the promise chain. If the response has not already been sent, `.post` will be triggered which will allow you to force a successful response. If `post` does not alter the response, then a failed response will be sent. You can use this to throw an exception to or call `return response.fail("message")` to force a failure, but this *does not* generate a response compatible with Alexa.
+
+The `.error` handler method will capture any errors in the chain. The default behavior of `.error` is to trigger `response.send` if the response has not already been sent, but you can force or continue failure by returning a rejected promise or `throw`ing inside the error handler. Returning a promise allows you to do asynchronous operations in the error handler.
+
+Ideally, you should catch errors in your handlers and respond with an appropriate output to the user. Any exceptions can be handled by a generic error handler which you can define for your app. If you want error handling to be asynchronous, it must return a promise.
+
 ```javascript
 app.error = function(exception, request, response) {
   response.say("Sorry, something bad happened");
 };
 ```
 
-If you do want exceptions to bubble out to the caller (and potentially cause Express to crash, for example), you can throw the exception.
+If you do want exceptions to bubble out to the caller (and potentially cause Express to crash, for example), you can throw the exception from the error handler.
 
 ```javascript
 app.error = function(exception, request, response) {
-  console.log(exception);
+  console.error(exception);
   throw exception;
 };
 ```
 
 
-## Asynchronous Intent Handler Example 
+## Asynchronous Handlers Example 
 
-If an intent or other request handler will return a response later, it must return either `false` (**deprecated**) or a `Promise` (object with a `.then` function). This tells the alexa-app library not to send the response automatically.
+If an intent or other request handler (including `pre` and `post`, but *not* `error`) will return a response later, it must a `Promise`. This tells the alexa-app library not to send the response automatically.
 
-**Note:** Using `return false` to signify an asynchronous intent handler function is deprecated and will be removed in the next major version. Instead, return a `Promise`.
-
-A callback is also passed to the handler. When this callback is called with no first argument, the response will be sent. If something is passed to the first argument, it is treated as an error.
-
-**Note:** Using the callback is also deprecated and will be removed in the next major version. Instead, use promises.
-
-If you return a Promise from the handler, you do not need to call the callback. If the Promise resolves, the response will be sent. If it is rejected, it is treated as an error.
+If the Promise resolves, the response will be sent. If it is rejected, it is treated as an error.
 
 ```javascript
 app.intent("checkStatus", function(request, response) {
@@ -542,23 +553,28 @@ app.intent("checkStatus", function(request, response) {
     response.say(rc.statusText);
   });
 });
+```
 
-// **NOTE** this example is deprecated and will not work
-// after the next major version
-app.intent("checkStatus", function(request, response, callback) {
-  http.get("http://server.com/status.html", function(rc) {
-    // this is async and will run after the http call returns
-    // you can send an error to the callback
-    if (rc.statusText >= 400) {
-        return callback(new Error("Bad request"));
+If you want to respond immediately, you can use `return response.send()` to complete the respones. Using `throw msg` or `return response.fail(msg)` will trigger immediate failure. **Note:** `.post` is still run once after `response.send()` or `response.fail()` are called.
+
+```javascript
+app.intent("checkStatus", function(request, response) {
+  if (currentStatus == "bad") {
+    return response.fail("bad status");
+  }
+  else if (currentStatus == "good") {
+    response.say("good status");
+    return response.send();
+  }
+
+  return http.getAsync("http://server.com/status.html").then(function (rc) {
+    if (rc.body == "bad") {
+      throw "bad status";
     }
-
-    response.say(rc.statusText);
-    // call the callback to send the response
-    callback();
+    response.say("good status");
+    // return `response.send` to continue the promise chain
+    return response.send();
   });
-  // return false immediately so alexa-app doesn't send the response
-  return false;
 });
 ```
 
