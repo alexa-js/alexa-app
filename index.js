@@ -428,6 +428,8 @@ alexa.app = function(name) {
                 Promise.resolve(intentResult).asCallback(callbackHandler);
               } else if (false !== intentResult) {
                 callbackHandler();
+              } else {
+                console.trace("NOTE: using `return false` for async intent requests is deprecated and will not work after the next major version");
               }
             } else {
               throw "NO_INTENT_FOUND";
@@ -439,6 +441,8 @@ alexa.app = function(name) {
                 Promise.resolve(launchResult).asCallback(callbackHandler);
               } else if (false !== launchResult) {
                 callbackHandler();
+              } else {
+                console.trace("NOTE: using `return false` for async launch requests is deprecated and will not work after the next major version");
               }
             } else {
               throw "NO_LAUNCH_FUNCTION";
@@ -450,6 +454,8 @@ alexa.app = function(name) {
                 Promise.resolve(sessionEndedResult).asCallback(callbackHandler);
               } else if (false !== sessionEndedResult) {
                 callbackHandler();
+              } else {
+                console.trace("NOTE: using `return false` for async session ended requests is deprecated and will not work after the next major version");
               }
             } else {
               response.send();
@@ -463,6 +469,8 @@ alexa.app = function(name) {
                 Promise.resolve(eventHandlerResult).asCallback(callbackHandler);
               } else if (false !== eventHandlerResult) {
                 callbackHandler();
+              } else {
+                console.trace("NOTE: using `return false` for async audio player requests is deprecated and will not work after the next major version");
               }
             } else {
               response.send();

@@ -223,8 +223,10 @@ app.launch(function(request, response) {
 
 Define the handler for multiple intents using multiple calls to `intent()`. 
 Intent schema and sample utterances can also be passed to `intent()`, which is detailed below. 
-Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false`. 
+Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return `false` (**deprecated**) or a `Promise`. 
 See example further below.
+
+**Note:** Using `return false` to signify an asynchronous intent handler function is deprecated and will be removed in the next major version. Instead, return a `Promise`.
 
 ```javascript
 app.intent("live", {
@@ -258,7 +260,7 @@ app.sessionEnded(function(request, response) {
 
 ### AudioPlayer Event Request
 
-Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false.
+Define the handler for multiple events using multiple calls to `audioPlayer()`. You can define only one handler per event. Event handlers that don't return an immediate response (because they do some asynchronous operation) must return false (**deprecated**) or a Promise.
 
 You can define handlers for the following events:
 
@@ -290,7 +292,8 @@ See an example of asynchronous response below.
 ```javascript
 app.audioPlayer("PlaybackFinished", function(request, response) {
   // async response
-  getNextSongFromDB(function(url, token) {
+  return getNextSongFromDBAsync()
+  .then(function(url, token) {
     var stream = {
       "url": url,
       "token": token,
@@ -300,7 +303,6 @@ app.audioPlayer("PlaybackFinished", function(request, response) {
     response.audioPlayerPlayStream("ENQUEUE", stream);
     response.send();
   });
-  return false;
 });
 ```
 
@@ -516,13 +518,28 @@ app.error = function(exception, request, response) {
 
 ## Asynchronous Intent Handler Example 
 
-If an intent or other request handler will return a response later, it must return ether `false` or a `Promise` (object with a `.then` function). This tells the alexa-app library not to send the response automatically.
+If an intent or other request handler will return a response later, it must return either `false` (**deprecated**) or a `Promise` (object with a `.then` function). This tells the alexa-app library not to send the response automatically.
+
+**Note:** Using `return false` to signify an asynchronous intent handler function is deprecated and will be removed in the next major version. Instead, return a `Promise`.
 
 A callback is also passed to the handler. When this callback is called with no first argument, the response will be sent. If something is passed to the first argument, it is treated as an error.
+
+**Note:** Using the callback is also deprecated and will be removed in the next major version. Instead, use promises.
 
 If you return a Promise from the handler, you do not need to call the callback. If the Promise resolves, the response will be sent. If it is rejected, it is treated as an error.
 
 ```javascript
+app.intent("checkStatus", function(request, response) {
+  // `getAsync` returns a Promise in this example. When
+  // returning a Promise, the response is sent after it
+  // resolves. If rejected, it is treated as an error.
+  return http.getAsync("http://server.com/status.html").then(function (rc) {
+    response.say(rc.statusText);
+  });
+});
+
+// **NOTE** this example is deprecated and will not work
+// after the next major version
 app.intent("checkStatus", function(request, response, callback) {
   http.get("http://server.com/status.html", function(rc) {
     // this is async and will run after the http call returns
@@ -538,17 +555,7 @@ app.intent("checkStatus", function(request, response, callback) {
   // return false immediately so alexa-app doesn't send the response
   return false;
 });
-
-app.intent("checkStatus", function(request, response) {
-  // `getAsync` returns a Promise in this example. When
-  // returning a Promise, the response is sent after it
-  // resolves. If rejected, it is treated as an error.
-  return http.getAsync("http://server.com/status.html").then(function (rc) {
-    response.say(rc.statusText);
-  });
-});
 ```
-
 
 ### Customizing Default Error Messages
 
