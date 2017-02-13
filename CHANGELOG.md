@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 4.0.0 (Next)
+* [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here.
 
 ### 3.1.0 (February 13, 2017)
