@@ -44,7 +44,6 @@ describe("Alexa", function() {
           return expect(er.message).to.eq("You must specify an express app or an express router to attach to.")
         }
       });
-
     });
 
     context("#express with default options", function() {
@@ -126,7 +125,9 @@ describe("Alexa", function() {
 
     context("#express with debug set to false", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, debug: false });
+        var router = express.Router();
+        testApp.express({ router: router, checkCert: false, debug: false });
+        app.use(router);
       });
 
       it("cannot dump debug schema", function() {
