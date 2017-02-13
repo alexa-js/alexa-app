@@ -1,13 +1,13 @@
 ## Changelog
 
-### 3.0.2 (February 13, 2017)
+### 4.0.0 (Next)
+* Your contribution here.
+
+### 3.1.0 (February 13, 2017)
+
 * [#176](https://github.com/alexa-js/alexa-app/pull/176): Added flexibility to attach alexa-app to express app or router - [@bgjehu](https://github.com/bgjehu).
-
-### 3.0.1 (Next)
-
 * [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
 * [#134](https://github.com/alexa-js/alexa-app/pull/134): Adding deprecation notices for plan to use Promises for async functionality - [ajcrites](https://github.com/ajcrites).
-* Your contribution here.
 
 ### 3.0.0 (February 6, 2017)
 
