@@ -183,6 +183,15 @@ describe("Alexa", function() {
         });
       });
 
+      it("requires a cert header", function() {
+        return request(testServer)
+          .post('/testApp')
+          .expect(401).then(function(res) {
+            expect(res.body.status).to.equal("failure");
+            expect(res.body.reason).to.equal("signature is not base64 encoded");
+          });
+      });
+
       it("checks cert header", function() {
         return request(testServer)
           .post('/testApp')
