@@ -2,6 +2,7 @@
 
 ### 4.0.0 (Next)
 * [#176](https://github.com/alexa-js/alexa-app/pull/176): Added flexibility to attach alexa-app to express app or router - [@bgjehu](https://github.com/bgjehu).
+* [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here.
 
 ### 3.1.0 (February 13, 2017)

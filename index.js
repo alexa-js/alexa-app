@@ -5,7 +5,7 @@ var AlexaUtterances = require("alexa-utterances");
 var SSML = require("./to-ssml");
 var alexa = {};
 var defaults = require("lodash.defaults");
-var verifierMiddleware = require("alexa-verifier-middleware");
+var verifier = require("alexa-verifier-middleware");
 var bodyParser = require('body-parser');
 
 alexa.response = function(session) {
@@ -589,7 +589,7 @@ alexa.app = function(name) {
     }
 
     if (options.checkCert) {
-      target.use(verifierMiddleware({ strictHeaderCheck: true }));
+      target.use(verifier);
     } else {
       target.use(bodyParser.json());
     }

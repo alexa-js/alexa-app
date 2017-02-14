@@ -17,7 +17,7 @@
     "lint": "eslint index.js;",
     "coverage": "istanbul cover _mocha -- -R spec",
     "test": "./node_modules/.bin/mocha",
-    "test-with-coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
+    "test-with-coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*.js",
     "danger": "./node_modules/.bin/danger"
   },
   "repository": {
@@ -30,7 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "alexa-utterances": "^0.2.0",
-    "alexa-verifier-middleware": "^0.1.9",
+    "alexa-verifier-middleware": "^0.2.1",
     "bluebird": "^2.10.2",
     "lodash.defaults": "^4.2.0",
     "numbered": "^1.0.0",
