@@ -46,6 +46,22 @@ describe("Alexa", function() {
       });
     });
 
+    context("#express warns when redundant param is passed", function() {
+        it("warns on given both params 'expressApp' and 'router'", function() {
+          var bkp = console.warn.bind();
+          console.warn = sinon.spy();
+          testApp.express({expressApp: app, router: express.Router()});
+          var warnings = [
+              "Since alexa-app@4.0.0, you are no longer required to pass both 'expressApp' and 'router'.",
+              "When both passed, 'alexa-app' would be attached to 'expressApp' instance."
+          ];
+          warnings.map(function (warning) {
+              expect(console.warn).to.have.been.calledWith(warning);
+          });
+          console.warn = bkp;
+        });
+    });
+
     context("#express with default options", function() {
       beforeEach(function() {
         testApp.express({ expressApp: app, checkCert: false });

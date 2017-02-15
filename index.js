@@ -565,6 +565,11 @@ alexa.app = function(name) {
       throw new Error("You must specify an express app or an express router to attach to.");
     }
 
+    if (options.expressApp && options.router) {
+      console.warn("Since alexa-app@4.0.0, you are no longer required to pass both 'expressApp' and 'router'.");
+      console.warn("When both passed, 'alexa-app' would be attached to 'expressApp' instance.");
+    }
+
     var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
 
     options = defaults(options, defaultOptions);
