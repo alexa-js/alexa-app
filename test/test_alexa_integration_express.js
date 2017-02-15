@@ -51,13 +51,8 @@ describe("Alexa", function() {
           var bkp = console.warn.bind();
           console.warn = sinon.spy();
           testApp.express({expressApp: app, router: express.Router()});
-          var warnings = [
-              "Since alexa-app@4.0.0, you are no longer required to pass both 'expressApp' and 'router'.",
-              "When both passed, 'alexa-app' would be attached to 'expressApp' instance."
-          ];
-          warnings.map(function (warning) {
-              expect(console.warn).to.have.been.calledWith(warning);
-          });
+          var warning = "Both 'expressApp' and 'router' are specified, attaching to 'expressApp' only.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
+          expect(console.warn).to.have.been.calledWithExactly(warning);
           console.warn = bkp;
         });
     });

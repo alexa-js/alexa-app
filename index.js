@@ -566,8 +566,7 @@ alexa.app = function(name) {
     }
 
     if (options.expressApp && options.router) {
-      console.warn("Since alexa-app@4.0.0, you are no longer required to pass both 'expressApp' and 'router'.");
-      console.warn("When both passed, 'alexa-app' would be attached to 'expressApp' instance.");
+      console.warn("Both 'expressApp' and 'router' are specified, attaching to 'expressApp' only.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md");
     }
 
     var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
