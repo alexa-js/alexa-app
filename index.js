@@ -7,7 +7,7 @@ var alexa = {};
 var defaults = require("lodash.defaults");
 var verifier = require("alexa-verifier-middleware");
 var bodyParser = require('body-parser');
-var util = require('./utils');
+var utils = require('./utils');
 
 alexa.response = function(session) {
   var self = this;
@@ -570,7 +570,7 @@ alexa.app = function(name) {
     options = defaults(options, defaultOptions);
 
     // In ExpressJS, user specifies their paths without the '/' prefix
-    var endpoint = util.normalizeApiPath(options.endpoint);
+    var endpoint = utils.normalizeApiPath(options.endpoint);
     var target = options.expressApp || options.router;
 
     if (options.debug) {
