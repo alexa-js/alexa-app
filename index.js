@@ -357,8 +357,9 @@ alexa.app = function(name) {
       var handleError = function(e) {
         if (typeof self.error == "function") {
           self.error(e, request, response);
-          if (!response.resolved)
-            response.send();
+          if (!response.resolved) {
+              response.send();
+          }
         } else if (typeof e == "string" && self.messages[e]) {
           if (!request.isAudioPlayer()) {
             response.say(self.messages[e]);
@@ -368,13 +369,13 @@ alexa.app = function(name) {
           }
         }
         if (!response.resolved) {
-            if (e.message) {
-              response.fail("Unhandled exception: " + e.message + ".", e);
-            } else if (typeof e == "string") {
-              response.fail("Unhandled exception: " + e + ".", e);
-            } else {
-              response.fail("Unhandled exception.", e);
-            }
+          if (e.message) {
+            response.fail("Unhandled exception: " + e.message + ".", e);
+          } else if (typeof e == "string") {
+            response.fail("Unhandled exception: " + e + ".", e);
+          } else {
+            response.fail("Unhandled exception.", e);
+          }
         }
       };
 
