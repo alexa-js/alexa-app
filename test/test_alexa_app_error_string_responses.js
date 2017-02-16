@@ -48,16 +48,16 @@ describe("Alexa", function() {
         });
 
         it('fails with unhandled message: "Unhandled exception."', function() {
-            var intentHandler = function(req, res) {
-                res.say(expectedMessage);
-                throw new Error();
-            };
+          var intentHandler = function(req, res) {
+            res.say(expectedMessage);
+            throw new Error();
+          };
 
-            testApp.intent("airportInfoIntent", {}, intentHandler);
-            var subject = testApp.request(mockRequest).then(function(response) {
-                return response.response.outputSpeech;
-            });
-            return expect(subject).to.eventually.be.rejectedWith("Unhandled exception.");
+          testApp.intent("airportInfoIntent", {}, intentHandler);
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.response.outputSpeech;
+          });
+          return expect(subject).to.eventually.be.rejectedWith("Unhandled exception.");
         });
 
         it('fails with handled message: app.messages[e].', function() {
