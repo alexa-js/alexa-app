@@ -565,17 +565,19 @@ alexa.app = function(name) {
       throw new Error("You must specify an express app or an express router to attach to.");
     }
 
-    if (options.expressApp && options.router) {
-      console.warn("Both 'expressApp' and 'router' are specified, attaching to 'expressApp' only.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md");
-    }
-
     var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
 
     options = defaults(options, defaultOptions);
 
     // In ExpressJS, user specifies their paths without the '/' prefix
-    var endpoint = utils.normalizeApiPath(options.endpoint);
-    var target = options.expressApp || options.router;
+    var deprecated = options.expressApp && options.router;
+    var endpoint = deprecated ? '/' : utils.normalizeApiPath(options.endpoint);
+    var target = deprecated ? options.router : (options.expressApp || options.router);
+
+    if (deprecated) {
+      options.expressApp.use(utils.normalizeApiPath(options.endpoint), options.router);
+      console.warn("Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md");
+    }
 
     if (options.debug) {
       target.get(endpoint, function(req, res) {
@@ -594,9 +596,9 @@ alexa.app = function(name) {
     }
 
     if (options.checkCert) {
-      target.use(verifier);
+      target.use(endpoint, verifier);
     } else {
-      target.use(bodyParser.json());
+      target.use(endpoint, bodyParser.json());
     }
 
     // exposes POST /<endpoint> route

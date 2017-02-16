@@ -51,7 +51,7 @@ describe("Alexa", function() {
           var bkp = console.warn.bind();
           console.warn = sinon.spy();
           testApp.express({expressApp: app, router: express.Router()});
-          var warning = "Both 'expressApp' and 'router' are specified, attaching to 'expressApp' only.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
+          var warning = "Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
           expect(console.warn).to.have.been.calledWithExactly(warning);
           console.warn = bkp;
         });

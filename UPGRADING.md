@@ -41,7 +41,7 @@ app.intent("tellme", (request, response) => {
 
 #### Changes to ExpressJS Support
 
-After changes, `alexa.express()` no longer requires both `expressApp` and `router` to be passes in. Instead, just pass in either an express app or router. And alexa-app would be bind to it.
+Express.js integration via `app.express()` now requires one of `expresApp` or `router`. When using a router, it will no longer be automatically mounted inside the express app and you may need to implement that outside of this call.
 
 ##### Use default endpoint
 

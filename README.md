@@ -97,7 +97,7 @@ The express function accepts the following parameters.
 * `preRequest` function to execute before every POST
 * `postRequest` function to execute after every POST
 
-Either `expressApp` or `router` has to be specified so that alexa-app could be attached to.
+Either `expressApp` or `router` is required.
 A full express example is available [here](example/express.js).
 
 
