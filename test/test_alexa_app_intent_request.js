@@ -350,6 +350,26 @@ describe("Alexa", function() {
               });
             });
           });
+
+          context("with a manipulated intent request", function() {
+            it("retrieves default slot value due to missing intent", function() {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
+                  delete req.data.request.intent; // remove intent from request
+                  res.say(req.slot("InvalidSlotName", "default value"));
+                  return true;
+                });
+
+                var subject = testApp.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>default value</speak>",
+                  type: "SSML"
+                });
+            });
+          });
         });
       });
     });

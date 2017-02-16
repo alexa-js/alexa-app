@@ -5,6 +5,10 @@
 * [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here.
 
+### 3.1.2 (February 16, 2017)
+
+* [#184](https://github.com/alexa-js/alexa-app/pull/184): Implement slot defaults without exception, add test - [@rickwargo](https://github.com/rickwargo).
+
 ### 3.1.0 (February 13, 2017)
 
 * [#162](https://github.com/alexa-js/alexa-app/issues/162): Fix: do not generate empty slots in schema - [@dblock](https://github.com/dblock).
