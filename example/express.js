@@ -9,7 +9,6 @@ var alexaApp = new alexa.app("test");
 
 alexaApp.express({
   expressApp: app,
-  router: express.Router(),
 
   // verifies requests come from amazon alexa. Must be enabled for production.
   // You can disable this if you're running a dev environment and want to POST

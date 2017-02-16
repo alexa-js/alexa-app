@@ -39,6 +39,48 @@ app.intent("tellme", (request, response) => {
 });
 ```
 
+#### Changes to ExpressJS Support
+
+Express.js integration via `app.express()` now requires one of `expresApp` or `router`. When using a router, it will no longer be automatically mounted inside the express app and you may need to implement that outside of this call.
+
+##### Use default endpoint
+
+before:
+```javascript
+var express_app = express();
+var app = new alexa.app("sample");
+app.express({ expressApp: express_app, router: express.Router() });
+// now POST calls to /sample in express will be handled by the app.request() function
+```
+
+after:
+```javascript
+var express_app = express();
+var app = new alexa.app("sample");
+app.express({ expressApp: express_app });
+// now POST calls to /sample in express will be handled by the app.request() function
+```
+
+##### Use specified endpoint
+
+before:
+```javascript
+var express_app = express();
+var app = new alexa.app("sample");
+app.express({ expressApp: express_app, router: express.Router(), endpoint: 'api/alexa' });
+// now POST calls to /api/alexa in express will be handled by the app.request() function
+```
+
+after:
+```javascript
+var express_app = express();
+var apiRouter = express.Router();
+var app = new alexa.app("sample");
+app.express({ router: apiRouter, endpoint: '/alexa' });
+express_app.use('/api', apiRouter);
+// now POST calls to /api/alexa in express will be handled by the app.request() function
+```
+
 ### Upgrading to >= 3.0.0
 
 #### Changes in Express integration interface

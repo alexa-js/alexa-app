@@ -37,27 +37,29 @@ describe("Alexa", function() {
     });
 
     context("#express fails when missing required field", function() {
-      it("throws error on missing express app", function() {
+      it("throws error on missing express app and express router", function() {
         try {
-          testApp.express({ router: express.Router() });
+          testApp.express({});
         } catch (er) {
-          return expect(er.message).to.eq("You must specify an express instance to attach to.")
+          return expect(er.message).to.eq("You must specify an express app or an express router to attach to.")
         }
       });
+    });
 
-      it("throws error on missing express router", function() {
-        try {
-          testApp.express({ expressApp: app });
-        } catch (er) {
-          return expect(er.message).to.eq("You must specify an express router to attach.")
-        }
-      });
-
+    context("#express warns when redundant param is passed", function() {
+        it("warns on given both params 'expressApp' and 'router'", function() {
+          var bkp = console.warn.bind();
+          console.warn = sinon.spy();
+          testApp.express({expressApp: app, router: express.Router()});
+          var warning = "Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
+          expect(console.warn).to.have.been.calledWithExactly(warning);
+          console.warn = bkp;
+        });
     });
 
     context("#express with default options", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false });
+        testApp.express({ expressApp: app, checkCert: false });
       });
 
       it("returns a response for a valid request", function() {
@@ -134,7 +136,9 @@ describe("Alexa", function() {
 
     context("#express with debug set to false", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, router: express.Router(), checkCert: false, debug: false });
+        var router = express.Router();
+        testApp.express({ router: router, checkCert: false, debug: false });
+        app.use(router);
       });
 
       it("cannot dump debug schema", function() {

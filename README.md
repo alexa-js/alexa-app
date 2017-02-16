@@ -79,7 +79,7 @@ app.intent("number", {
 );
 
 // setup the alexa app and attach it to express before anything else
-app.express({ expressApp: express_app, router: express.Router() });
+app.express({ expressApp: express_app });
 
 // now POST calls to /sample in express will be handled by the app.request() function
 // GET calls will not be handled
@@ -89,14 +89,15 @@ app.express({ expressApp: express_app, router: express.Router() });
 
 The express function accepts the following parameters.
 
-* `expressApp` the express instance to attach to
-* `router` router instance to attach to the express app
-* `endpoint` the path to attach the router to (e.g., passing `'mine'` attaches to `/mine`)
+* `expressApp` the express app instance to attach to
+* `router` the express router instance to attach to
+* `endpoint` the path to attach the express app or router to (e.g., passing `'mine'` attaches to `/mine`)
 * `checkCert` when true, applies Alexa certificate checking _(default: true)_
 * `debug` when true, sets up the route to handle GET requests _(default: false)_
 * `preRequest` function to execute before every POST
 * `postRequest` function to execute after every POST
 
+Either `expressApp` or `router` is required.
 A full express example is available [here](example/express.js).
 
 

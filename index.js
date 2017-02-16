@@ -7,6 +7,7 @@ var alexa = {};
 var defaults = require("lodash.defaults");
 var verifier = require("alexa-verifier-middleware");
 var bodyParser = require('body-parser');
+var utils = require('./utils');
 
 alexa.response = function(session) {
   var self = this;
@@ -560,25 +561,26 @@ alexa.app = function(name) {
   // @throws Error when router or expressApp options are not specified
   // @returns this
   this.express = function(options) {
-    if (!options.expressApp) {
-      throw new Error("You must specify an express instance to attach to.");
+    if (!options.expressApp && !options.router) {
+      throw new Error("You must specify an express app or an express router to attach to.");
     }
 
-    if (!options.router) {
-      throw new Error("You must specify an express router to attach.");
-    }
-
-    var defaultOptions = { endpoint: self.name, checkCert: true, debug: false };
+    var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
 
     options = defaults(options, defaultOptions);
 
-    var endpoint = "/" + options.endpoint;
-    var router = options.router;
+    // In ExpressJS, user specifies their paths without the '/' prefix
+    var deprecated = options.expressApp && options.router;
+    var endpoint = deprecated ? '/' : utils.normalizeApiPath(options.endpoint);
+    var target = deprecated ? options.router : (options.expressApp || options.router);
 
-    options.expressApp.use(endpoint, router);
+    if (deprecated) {
+      options.expressApp.use(utils.normalizeApiPath(options.endpoint), options.router);
+      console.warn("Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md");
+    }
 
     if (options.debug) {
-      options.router.get("/", function(req, res) {
+      target.get(endpoint, function(req, res) {
         if (typeof req.query['schema'] != "undefined") {
           res.set('Content-Type', 'text/plain').send(self.schema());
         } else if (typeof req.query['utterances'] != "undefined") {
@@ -594,13 +596,13 @@ alexa.app = function(name) {
     }
 
     if (options.checkCert) {
-      options.router.use(verifier);
+      target.use(endpoint, verifier);
     } else {
-      options.router.use(bodyParser.json());
+      target.use(endpoint, bodyParser.json());
     }
 
     // exposes POST /<endpoint> route
-    router.post("/", function(req, res) {
+    target.post(endpoint, function(req, res) {
       var json = req.body,
         response_json;
       // preRequest and postRequest may return altered request JSON, or undefined, or a Promise
