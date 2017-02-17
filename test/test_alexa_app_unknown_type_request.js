@@ -11,15 +11,15 @@ describe("Alexa", function() {
   var Alexa = require("../index");
 
   describe("app", function() {
-    var testApp;
-    beforeEach(function() {
-      testApp = new Alexa.app("testApp");
-    });
-
     describe("unknown type #request", function() {
       describe("response", function() {
 
         var mockRequest = mockHelper.load("unknown_type_request.json");
+
+        var testApp;
+        beforeEach(function() {
+          testApp = new Alexa.app("testApp");
+        });
 
         it("invokes a globally defined error function that throws an error", function() {
           testApp.error = function(e, request, response) {
@@ -88,7 +88,6 @@ describe("Alexa", function() {
         });
 
         it("fails with not a valid request", function() {
-          testApp.error = undefined; // may be defined in other tests, must unset
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });
