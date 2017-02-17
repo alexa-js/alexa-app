@@ -43,6 +43,8 @@ app.intent("tellme", (request, response) => {
 
 Express.js integration via `app.express()` now requires one of `expresApp` or `router`. When using a router, it will no longer be automatically mounted inside the express app and you may need to implement that outside of this call.
 
+The old usage of passing both `expressApp` and `router` is deprecated.
+
 ##### Use default endpoint
 
 before:
