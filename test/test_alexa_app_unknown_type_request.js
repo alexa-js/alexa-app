@@ -11,32 +11,80 @@ describe("Alexa", function() {
   var Alexa = require("../index");
 
   describe("app", function() {
-    var testApp;
-    beforeEach(function() {
-      testApp = new Alexa.app("testApp");
-    });
-
     describe("unknown type #request", function() {
       describe("response", function() {
 
         var mockRequest = mockHelper.load("unknown_type_request.json");
 
-        it("invokes a globally defined error function", function() {
+        var testApp;
+        beforeEach(function() {
+          testApp = new Alexa.app("testApp");
+        });
+
+        it("invokes a globally defined error function that throws an error", function() {
           testApp.error = function(e, request, response) {
             throw "foobar";
           };
 
-          var subject = testApp.request(mockRequest);
-          return expect(subject).to.be.rejectedWith("foobar");
+          var subject = testApp.request(mockRequest).then(function(response) {
+              return response.response;
+          });
+          return expect(subject).to.eventually.be.rejectedWith("foobar");
         });
 
-        it("defaults to unhandled exception", function() {
+        it("swallows uncaught errors without a message in the globally defined error function", function() {
           testApp.error = function(e, request, response) {
             // don't handle
           };
 
-          var subject = testApp.request(mockRequest);
-          return expect(subject).to.be.rejectedWith("Unhandled exception.");
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.response;
+          });
+          return expect(subject).to.eventually.become({
+            directives: [],
+            shouldEndSession: true
+          });
+        });
+
+        it("responds with a spoken message for uncaught errors in the globally defined error function", function() {
+          testApp.error = function(e, request, response) {
+            response.say("Sorry, something bad happened");
+          };
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.response.outputSpeech;
+          });
+          return expect(subject).to.eventually.become({
+            ssml: "<speak>Sorry, something bad happened</speak>",
+            type: "SSML"
+          });
+        });
+
+        it("responds with a spoken message for uncaught errors in the globally defined error function and resolves", function() {
+          testApp.error = function(e, request, response) {
+            response.say("Sorry, something bad happened");
+            response.send();
+          };
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.response.outputSpeech;
+          });
+          return expect(subject).to.eventually.become({
+            ssml: "<speak>Sorry, something bad happened</speak>",
+            type: "SSML"
+          });
+        });
+
+        it("responds with a spoken message for uncaught errors in the globally defined error function and fails", function() {
+          testApp.error = function(e, request, response) {
+            response.say("Sorry, something bad happened");
+            response.fail(e);
+          };
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.response.outputSpeech;
+          });
+          return expect(subject).to.eventually.be.rejectedWith("INVALID_REQUEST_TYPE");
         });
 
         it("fails with not a valid request", function() {

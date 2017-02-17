@@ -175,6 +175,9 @@ response.send()
 // trigger a response failure
 // the internal promise containing the response will be rejected, and should be handled by the calling environment
 // instead of the Alexa response being returned, the failure message will be passed
+// response.fail() should not be called in an uncontrolled calling environment (e.g. Lambda) otherwise the Echo
+// will verbally response with "There was a problem with the requested skill's response." and the error will be written to
+// the console log (accessible via CloudWatch).
 response.fail(String message)
 
 // calls to response can be chained together
@@ -500,7 +503,8 @@ response.card({
 ## Error Handling
 
 Handler functions should not throw exceptions. Ideally, you should catch errors in your handlers using try/catch and respond with an appropriate output to the user. If exceptions do leak out of handlers, they will be thrown by default. Any exceptions can be handled by a generic error handler which you can define for your app. Error handlers cannot be asynchronous.
-
+The generic error handler, below, will automatically resolve the promise (request) with `response.send()` if it does not occur in the error handler.
+`response.fail(message, exception)` should only be called from a controlled calling environment, e.g. your own server, not AWS Lambda.
 ```javascript
 app.error = function(exception, request, response) {
   response.say("Sorry, something bad happened");
