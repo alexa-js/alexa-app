@@ -176,7 +176,11 @@ alexa.request = function(json) {
   this.data = json;
   this.slot = function(slotName, defaultValue) {
     try {
-      return this.data.request.intent.slots[slotName].value;
+      if (this.data.request.intent.slots && slotName in this.data.request.intent.slots) {
+        return this.data.request.intent.slots[slotName].value;
+      } else {
+        return defaultValue;
+      }
     } catch (e) {
       console.error("missing intent in request: " + slotName, e);
       return defaultValue;
