@@ -5,12 +5,12 @@
 * [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enfore strict header checking - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here.
 
-### 3.1.2 (February 16, 2017)
+### 3.1.3 (February 16, 2017)
 
 * [#182](https://github.com/alexa-js/alexa-app/issues/182): Fix: user-defined error handler should automatically resolve unresolved responses, update README to reflect behavior - [@rickwargo](https://github.com/rickwargo).
 * [#183](https://github.com/alexa-js/alexa-app/pull/183): Add tests for error handler resolution and error messages - [@rickwargo](https://github.com/ajcrites).
 
-### 3.1.1 (February 16, 2017)
+### 3.1.2 (February 16, 2017)
 
 * [#184](https://github.com/alexa-js/alexa-app/pull/184): Implement slot defaults without exception, add test - [@rickwargo](https://github.com/rickwargo).
 
