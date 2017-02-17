@@ -434,7 +434,15 @@ alexa.app = function(name) {
     })
     .catch(function(e) {
       if (typeof self.error == "function") {
-        return self.error(e, request, response);
+        // Default behavior of any error handler is to send a response
+        return Promise.resolve(self.error(e, request, response)).then(function() {
+            if (!response.resolved) {
+                response.resolved = true;
+                return response.send();
+            }
+            // propagate successful response if it's already been resolved
+            return response.response;
+        });
       } else if (typeof e == "string" && self.messages[e]) {
         if (!request.isAudioPlayer()) {
           response.say(self.messages[e]);
