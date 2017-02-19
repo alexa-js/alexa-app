@@ -2,7 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 chai.config.includeStack = true;
-var normalizeApiPath = require("../normalize-api-path");
+var normalizeApiPath = require("../lib/normalize-api-path");
 
 describe("Utils", function() {
 

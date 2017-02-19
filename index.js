@@ -2,12 +2,12 @@
 
 var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
-var SSML = require("./to-ssml");
+var SSML = require("./lib/to-ssml");
 var alexa = {};
 var defaults = require("lodash.defaults");
 var verifier = require("alexa-verifier-middleware");
 var bodyParser = require('body-parser');
-var normalizeApiPath = require('./normalize-api-path');
+var normalizeApiPath = require('./lib/normalize-api-path');
 
 alexa.response = function(session) {
   var self = this;

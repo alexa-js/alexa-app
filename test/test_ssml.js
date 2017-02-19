@@ -2,7 +2,7 @@
 
 var chai = require('chai'),
   should = require('chai').should(),
-  SSML = require('../to-ssml');
+  SSML = require('../lib/to-ssml');
 
 var PlainStrings = [
     'This output speech uses SSML.',
