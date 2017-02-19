@@ -2,12 +2,12 @@
 
 var Promise = require("bluebird");
 var AlexaUtterances = require("alexa-utterances");
-var SSML = require("./to-ssml");
+var SSML = require("./lib/to-ssml");
 var alexa = {};
 var defaults = require("lodash.defaults");
 var verifier = require("alexa-verifier-middleware");
 var bodyParser = require('body-parser');
-var utils = require('./utils');
+var normalizeApiPath = require('./lib/normalize-api-path');
 
 alexa.response = function(session) {
   var self = this;
@@ -580,11 +580,11 @@ alexa.app = function(name) {
 
     // In ExpressJS, user specifies their paths without the '/' prefix
     var deprecated = options.expressApp && options.router;
-    var endpoint = deprecated ? '/' : utils.normalizeApiPath(options.endpoint);
+    var endpoint = deprecated ? '/' : normalizeApiPath(options.endpoint);
     var target = deprecated ? options.router : (options.expressApp || options.router);
 
     if (deprecated) {
-      options.expressApp.use(utils.normalizeApiPath(options.endpoint), options.router);
+      options.expressApp.use(normalizeApiPath(options.endpoint), options.router);
       console.warn("Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md");
     }
 
