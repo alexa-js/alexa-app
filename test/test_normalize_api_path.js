@@ -2,7 +2,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 chai.config.includeStack = true;
-var utils = require("../utils");
+var normalizeApiPath = require("../normalize-api-path");
 
 describe("Utils", function() {
 
@@ -23,7 +23,7 @@ describe("Utils", function() {
 
     tests.forEach(function(test) {
       it('correctly normalizes ' + test.original + ' into ' + test.final, function() {
-        expect(utils.normalizeApiPath(test.original)).to.equal(test.final);
+        expect(normalizeApiPath(test.original)).to.equal(test.final);
       });
     });
   });
