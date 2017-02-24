@@ -1,6 +1,9 @@
-## Changelog
+## Changeloj
 
-### 3.2.0 (Next)
+### 4.0.0 (Next)
+* Your contributions here
+
+### 3.2.0 (February 24, 2017)
 
 * [#176](https://github.com/alexa-js/alexa-app/pull/176): Express integration now requires either `expressApp` or `router`, but not both - [@bgjehu](https://github.com/bgjehu).
 * [#174](https://github.com/alexa-js/alexa-app/pull/174): Always enforce strict header checking - [@tejashah88](https://github.com/tejashah88).
