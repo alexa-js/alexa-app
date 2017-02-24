@@ -1,4 +1,4 @@
-## Changeloj
+## Changelog
 
 ### 4.0.0 (Next)
 * Your contributions here
