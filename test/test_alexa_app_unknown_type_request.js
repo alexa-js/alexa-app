@@ -63,7 +63,7 @@ describe("Alexa", function() {
         it("responds with a spoken message for uncaught errors in the globally defined error function and resolves", function() {
           testApp.error = function(e, request, response) {
             response.say("Sorry, something bad happened");
-            response.send();
+            return response.send();
           };
 
           var subject = testApp.request(mockRequest).then(function(response) {
@@ -78,7 +78,7 @@ describe("Alexa", function() {
         it("responds with a spoken message for uncaught errors in the globally defined error function and fails", function() {
           testApp.error = function(e, request, response) {
             response.say("Sorry, something bad happened");
-            response.fail(e);
+            return response.fail(e);
           };
 
           var subject = testApp.request(mockRequest).then(function(response) {

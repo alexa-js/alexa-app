@@ -1,7 +1,9 @@
 ## Changelog
 
 ### 4.0.0 (Next)
-* Your contributions here
+* [#134](https://github.com/alexa-js/alexa-app/issues/134): Asynchronous support purely through Promises and removing `return false`/callback functionality - [@ajcrites](https://github.com/ajcrites).
+* [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
+* Your contribution here.
 
 ### 3.2.0 (February 24, 2017)
 

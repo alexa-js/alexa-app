@@ -280,7 +280,7 @@ describe("Alexa", function() {
 
         it("session.clear() should fail the app", function() {
           testApp.pre = function(req, res, type) {
-            req.getSession().clear();
+            return req.getSession().clear();
           };
 
           var subject = testApp.request(mockRequest);
