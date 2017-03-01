@@ -1,3 +1,38 @@
+## Table of Contents
+* [Stable Release](#stable-release)
+* [Introduction](#introduction)
+* [Features](#features)
+* [Examples](#examples)
+    * [AWS Lambda](#aws-lambda)
+    * [Express](#express)
+* [API](#api)
+    * [request](#request)
+    * [response](#response)
+    * [session](#session)
+* [Request Handlers](#request-handlers)
+    * [LaunchRequest](#launchrequest)
+    * [IntentRequest](#intentrequest)
+    * [SessionEndRequest](#sessionendrequest)
+    * [AudioPlayer Event Request](#audioplayer-event-request)
+* [Execute Code On Every Request](#execute-code-on-every-request)
+    * [pre()](#pre)
+    * [post()](#post)
+* [Schema and Utterances](#schema-and-utterances)
+    * [Schema Syntax](#schema-syntax)
+        * [slots](#slots)
+        * [custom slot types](#custom-slot-types)
+        * [utterances](#utterances)
+            * [Using a Dictionary](#using-a-dictionary)
+    * [Generating Schema and Utterances Output](#generating-schema-and-utterances-output)
+* [Cards](#cards)
+    * [Card Examples](#card-examples)
+* [Error Handling](#error-handling)
+* [Asynchronous Handlers Example](#asynchronous-handlers-example)
+    * [Customizing Default Error Messages](#customizing-default-error-messages)
+    * [Read/write session data](#readwrite-session-data)
+    * [Define a custom endpoint name for an app](#define-a-custom-endpoint-name-for-an-app)
+* [License](#license)
+
 # alexa-app
 
 A Node module to simplify the development of Alexa skills (applications.)
@@ -6,11 +41,11 @@ A Node module to simplify the development of Alexa skills (applications.)
 [![Build Status](https://travis-ci.org/alexa-js/alexa-app.svg?branch=master)](https://travis-ci.org/alexa-js/alexa-app)
 [![Coverage Status](https://coveralls.io/repos/github/alexa-js/alexa-app/badge.svg?branch=master)](https://coveralls.io/github/alexa-js/alexa-app?branch=master)
 
-### Stable Release
+## Stable Release
 
 You're reading the documentation for the next release of alexa-app. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.2.0](https://github.com/alexa-js/alexa-app/tree/v3.2.0).
 
-### Introduction
+## Introduction
 
 This module parses HTTP JSON requests from the Alexa platform and builds the JSON response that consumed by an Alexa-compatible device, such as the Echo.
 
@@ -22,7 +57,7 @@ This module provides a way to host a standalone web service for an Alexa skill. 
 or the ability to host multiple skills, check out [alexa-app-server](https://github.com/alexa-js/alexa-app-server).
 
 
-### Features
+## Features
 
 - simplified handling of requests and generating responses
 - support for asynchronous handlers
@@ -32,7 +67,9 @@ or the ability to host multiple skills, check out [alexa-app-server](https://git
 - comprehensive test suite
 
 
-### AWS Lambda Example
+## Examples
+
+### AWS Lambda
 
 Amazon skills that use alexa-app have a built-in `handler` method to handle calls from AWS Lambda.
 You need to make sure that the Handler is set to `index.handler`, which is the default value.
@@ -59,7 +96,7 @@ For backwards compatibility, or if you wish to change the Handler mapping to som
 A full lambda example is available [here](example/lambda.js).
 
 
-### Express Example
+### Express
 
 ```javascript
 var express = require("express");
@@ -101,11 +138,11 @@ Either `expressApp` or `router` is required.
 A full express example is available [here](example/express.js).
 
 
-### API
+## API
 
 Skills define handlers for launch, intent, and session end, just like normal Alexa development. The alexa-app module provides a layer around this functionality that simplifies the interaction. Each handler gets passed a request and response object, which are custom for this module.
 
-#### request
+### request
 
 ```javascript
 // return the type of request received (LaunchRequest, IntentRequest, SessionEndedRequest)
