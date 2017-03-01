@@ -512,13 +512,13 @@ alexa.app = function(name) {
   };
 
   // a built-in handler for AWS Lambda
-  this.handler = function(event, context) {
+  this.handler = function(event, context, callback) {
     self.request(event)
       .then(function(response) {
-        context.succeed(response);
+        callback(null, response);
       })
       .catch(function(response) {
-        context.fail(response);
+        callback(response);
       });
   };
 
