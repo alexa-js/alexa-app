@@ -5,6 +5,7 @@
 * [Examples](#examples)
     * [AWS Lambda](#aws-lambda)
     * [Express](#express)
+        * [Heroku Quickstart](#heroku-quickstart)
 * [API](#api)
     * [request](#request)
     * [response](#response)
@@ -136,6 +137,13 @@ The express function accepts the following parameters.
 
 Either `expressApp` or `router` is required.
 A full express example is available [here](example/express.js).
+
+
+#### Heroku Quickstart
+
+Want to get started quickly with alexa-app and Heroku? Simply click the button below!
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/tejashah88/alexa-app-example)
 
 
 ## API
