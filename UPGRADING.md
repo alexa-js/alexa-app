@@ -83,6 +83,34 @@ express_app.use('/api', apiRouter);
 // now POST calls to /api/alexa in express will be handled by the app.request() function
 ```
 
+#### Lambda `callback` used by default over `context`
+Since version 4.0.0, the [`callback`](http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html#nodejs-prog-model-handler-callback)
+parameter that the lambda function takes is used to complete
+the request. Prior to 3.0.0, the context object with its
+`success` and `fail` methods were used.
+
+If you want to use the built in lambda functionality, you
+*must* run on NodeJS 4.3.
+
+Also note that the callback will wait for an empty event
+loop before triggering. If your lambda function relies on
+triggering the response before the event loop is empty, you
+must set `context.callbackWaitsForEmptyEventLoop = false`
+to maintain this functionality:
+
+```
+export function handler(event, context, callback) {
+    context.callbackWaitsForEmptyEventLoop = false;
+    alexaAppInstance.request(event)
+        .then(response => {
+            callback(null, response);
+        })
+        .cacth(error => {
+            callback(error);
+        });
+};
+```
+
 ### Upgrading to >= 3.0.0
 
 #### Changes in Express integration interface

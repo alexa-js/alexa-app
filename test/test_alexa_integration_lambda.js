@@ -23,27 +23,27 @@ describe("Alexa", function() {
       it("calls context.succeed on success", function(done) {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-        var context = {
-          succeed: function(response) {
+        var context = {};
+
+        var callback = function(error, response) {
+            expect(error).to.be.null;
             expect(response.version).to.equal("1.0");
             done();
-          },
-          fail: function(response) {}
         };
 
-        testApp.handler(mockRequest, context);
+        testApp.handler(mockRequest, context, callback);
       });
 
       it("calls context.fail on error", function(done) {
-        var context = {
-          fail: function(response) {
+        var context = {};
+
+        var callback = function(error) {
             // TypeError: context.succeed is not a function
-            expect(response).to.be.an.instanceof(TypeError);
+            expect(error).to.be.an.instanceof(Error);
             done();
-          }
         };
 
-        testApp.handler({}, context);
+        testApp.handler({}, context, callback);
       });
     });
 
