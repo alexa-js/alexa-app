@@ -1,0 +1,21 @@
+{
+  "version": "string",
+  "context": {
+    "System": {
+      "application": {},
+      "user": {},
+      "device": {}
+    },
+    "AudioPlayer": {
+      "token": "string",
+      "offsetInMilliseconds": 0,
+      "playerActivity": "string"
+    }
+  },
+  "request": {
+    "type": "PlaybackController.PlayCommandIssued",
+    "requestId": "string",
+    "timestamp": "string",
+    "locale": "string"
+  }
+}

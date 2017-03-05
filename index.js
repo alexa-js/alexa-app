@@ -197,6 +197,10 @@ alexa.request = function(json) {
     var requestType = this.type();
     return (requestType && 0 === requestType.indexOf("AudioPlayer."));
   };
+  this.isPlaybackController = function() {
+    var requestType = this.type();
+    return (requestType && 0 === requestType.indexOf("PlaybackController."));
+  };
 
   this.userId = null;
   this.applicationId = null;
@@ -344,6 +348,13 @@ alexa.app = function(name) {
       "function": func
     };
   };
+  this.playbackControllerEventHandlers = {};
+  this.playbackController = function(eventName, func) {
+    self.playbackControllerEventHandlers[eventName] = {
+      "name": eventName,
+      "function": func
+    };
+  }
   this.launchFunc = null;
   this.launch = function(func) {
     self.launchFunc = func;
@@ -421,6 +432,12 @@ alexa.app = function(name) {
         } else if (request.isAudioPlayer()) {
           var event = requestType.slice(12);
           var eventHandlerObject = self.audioPlayerEventHandlers[event];
+          if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
+            return Promise.resolve(eventHandlerObject["function"](request, response));
+          }
+        } else if (request.isPlaybackController()) {
+          var event = requestType.slice(19);
+          var eventHandlerObject = self.playbackControllerEventHandlers[event];
           if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
             return Promise.resolve(eventHandlerObject["function"](request, response));
           }
