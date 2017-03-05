@@ -354,7 +354,7 @@ alexa.app = function(name) {
       "name": eventName,
       "function": func
     };
-  }
+  };
   this.launchFunc = null;
   this.launch = function(func) {
     self.launchFunc = func;
@@ -436,10 +436,10 @@ alexa.app = function(name) {
             return Promise.resolve(eventHandlerObject["function"](request, response));
           }
         } else if (request.isPlaybackController()) {
-          var event = requestType.slice(19);
-          var eventHandlerObject = self.playbackControllerEventHandlers[event];
-          if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
-            return Promise.resolve(eventHandlerObject["function"](request, response));
+          var playbackControllerEvent = requestType.slice(19);
+          var playbackEventHandlerObject = self.playbackControllerEventHandlers[playbackControllerEvent];
+          if (typeof playbackEventHandlerObject != "undefined" && typeof playbackEventHandlerObject["function"] == "function") {
+            return Promise.resolve(playbackEventHandlerObject["function"](request, response));
           }
         } else {
           throw "INVALID_REQUEST_TYPE";
