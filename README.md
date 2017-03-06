@@ -14,6 +14,7 @@
     * [IntentRequest](#intentrequest)
     * [SessionEndRequest](#sessionendrequest)
     * [AudioPlayer Event Request](#audioplayer-event-request)
+    * [PlaybackController Event Request](#playbackcontroller-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
     * [pre()](#pre)
     * [post()](#post)
@@ -348,6 +349,35 @@ app.audioPlayer("PlaybackFinished", function(request, response) {
 });
 ```
 
+
+### PlaybackController Event Request
+
+PlaybackController events are sent to your skill when the user interacts with player controls on a device. Define multiple handlers for various events by making multiple calls to `playbackController` with each event type.
+
+You can define handlers for the following events:
+
+* PlayCommandIssued
+* PauseCommandIssued
+* NextCommandIssued
+* PreviousCommandIssued
+
+Read more about PlaybackController requests in the [PlaybackController Interface Reference](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-playbackcontroller-interface-reference).
+
+The following example will send a play directive to the device when a user presses the "next" button.
+
+```javascript
+app.playbackController('NextCommandIssued', (request, response) => {
+  var stream = {
+    "url": "https://next-song-url",
+    "token": "some_token",
+    "expectedPreviousToken": "some_previous_token",
+    "offsetInMilliseconds": 0
+  };
+  response.audioPlayerPlayStream("REPLACE_ALL", stream);
+});
+```
+
+Note that some device interactions don't always produce PlaybackController events. See the [PlaybackController Interface Introduction](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-playbackcontroller-interface-reference#introduction) for more details.
 
 ## Execute Code On Every Request
 
