@@ -14,6 +14,7 @@
     * [IntentRequest](#intentrequest)
     * [SessionEndRequest](#sessionendrequest)
     * [AudioPlayer Event Request](#audioplayer-event-request)
+    * [PlaybackController Event Request](#playbackcontroller-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
     * [pre()](#pre)
     * [post()](#post)

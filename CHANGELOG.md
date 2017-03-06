@@ -4,7 +4,7 @@
 * [#134](https://github.com/alexa-js/alexa-app/issues/134): Asynchronous support purely through Promises and removing `return false`/callback functionality - [@ajcrites](https://github.com/ajcrites).
 * [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
 * [#188](https://github.com/alexa-js/alexa-app/issues/188): Use `callback` to complete lambda functions rather than `context`. - [@ajcrites](https://github.com/ajcrites).
-* [#199](https://github.com/alexa-js/alexa-app/issues/199) Add support for `PlaybackController` events
+* [#199](https://github.com/alexa-js/alexa-app/issues/199): Add support for `PlaybackController` events - [@tternes](http://github.com/tternes).
 * Your contribution here.
 
 ### 3.2.0 (February 24, 2017)
