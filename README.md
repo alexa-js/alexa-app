@@ -76,6 +76,7 @@ Amazon skills that use alexa-app have a built-in `handler` method to handle call
 You need to make sure that the Handler is set to `index.handler`, which is the default value.
 
 ```javascript
+var alexa = require("alexa-app");
 var app = new alexa.app("sample");
 
 app.intent("number", {
