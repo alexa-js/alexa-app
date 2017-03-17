@@ -5,6 +5,7 @@
 * [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
 * [#188](https://github.com/alexa-js/alexa-app/issues/188): Use `callback` to complete lambda functions rather than `context`. - [@ajcrites](https://github.com/ajcrites).
 * [#199](https://github.com/alexa-js/alexa-app/issues/199): Add support for `PlaybackController` events - [@tternes](http://github.com/tternes).
+* [#203](https://github.com/alexa-js/alexa-app/issues/203): /utterances: separator fix (tab -> space) - [@jmihalicza](http://github.com/jmihalicza).
 * Your contribution here.
 
 ### 3.2.0 (February 24, 2017)

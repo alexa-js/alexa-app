@@ -520,7 +520,7 @@ alexa.app = function(name) {
             self.dictionary,
             self.exhaustiveUtterances);
           list.forEach(function(utterance) {
-            out += intent.name + "\t" + (utterance.replace(/\s+/g, " ")).trim() + "\n";
+            out += intent.name + " " + (utterance.replace(/\s+/g, " ")).trim() + "\n";
           });
         });
       }
