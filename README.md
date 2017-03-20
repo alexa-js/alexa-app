@@ -44,7 +44,7 @@ A Node module to simplify the development of Alexa skills (applications.)
 
 ## Stable Release
 
-You're reading the documentation for the next release of alexa-app. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [3.2.0](https://github.com/alexa-js/alexa-app/tree/v3.2.0).
+You're reading the documentation for the next release of alexa-app. Please see [CHANGELOG](CHANGELOG.md) and make sure to read [UPGRADING](UPGRADING.md) when upgrading from a previous version. The current stable release is [4.0.0](https://github.com/alexa-js/alexa-app/tree/v4.0.0).
 
 ## Introduction
 
