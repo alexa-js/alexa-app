@@ -1,6 +1,6 @@
 ## Changelog
 
-### 3.0.1 (Next)
+### 4.0.1 (Next)
 
 * [#215](https://github.com/alexa-js/alexa-app/pull/215): Fix Syntax of Session Details to match with Docs - [@danielstieber](https://github.com/danielstieber).
 * Your contribution here.
