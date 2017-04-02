@@ -262,8 +262,10 @@ alexa.session = function(session) {
     this.details = {
       "new": session.new,
       "sessionId": session.sessionId,
-      "userId": session.user.userId,
-      "accessToken": session.user.accessToken || null,
+      "user" : {
+        "userId": session.user.userId,
+        "accessToken": session.user.accessToken || null
+      },
       "attributes": session.attributes,
       "application": session.application
     };
