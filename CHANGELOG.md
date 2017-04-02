@@ -1,5 +1,10 @@
 ## Changelog
 
+### 3.0.1 (Next)
+
+* [#215](https://github.com/alexa-js/alexa-app/pull/215): Fix Syntax of Session Details to match with Docs - [@danielstieber](https://github.com/danielstieber).
+* Your contribution here.
+
 ### 4.0.0 (March 20, 2017)
 * [#134](https://github.com/alexa-js/alexa-app/issues/134): Asynchronous support purely through Promises, removed `return false`/callback support - [@ajcrites](https://github.com/ajcrites).
 * [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
