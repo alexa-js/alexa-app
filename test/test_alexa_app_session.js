@@ -7,22 +7,22 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function () {
+describe("Alexa", function() {
   var Alexa = require("../index");
-  describe("app", function () {
+  describe("app", function() {
     var testApp;
-    beforeEach(function () {
+    beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
-    describe("#request", function () {
+    describe("#request", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-      context("intent handler with shouldEndSession = false", function () {
+      context("intent handler with shouldEndSession = false", function() {
         var reqObject;
 
-        beforeEach(function () {
-          var intentHandler = function (req, res) {
+        beforeEach(function() {
+          var intentHandler = function(req, res) {
             res.say("message").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -35,19 +35,19 @@ describe("Alexa", function () {
           testApp.intent("airportInfoIntent", {}, intentHandler);
         });
 
-        it("reponds with expected context applicationId", function () {
-          return testApp.request(mockRequest).then(function (response) {
+        it("reponds with expected context applicationId", function() {
+          return testApp.request(mockRequest).then(function(response) {
             expect(reqObject.context).to
               .have.deep.property(
-              "System.application.applicationId",
-              "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+                "System.application.applicationId",
+                "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
               );
           });
         });
 
 
-        it("responds with a session object", function () {
-          var subject = testApp.request(mockRequest).then(function (response) {
+        it("responds with a session object", function() {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -61,8 +61,8 @@ describe("Alexa", function () {
           ]);
         });
 
-        it("has a res object with expected properties", function () {
-          var subject = testApp.request(mockRequest).then(function (response) {
+        it("has a res object with expected properties", function() {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return reqObject;
           });
 
@@ -78,14 +78,14 @@ describe("Alexa", function () {
           ]);
         });
 
-        it("does not update session properties without explicit set", function () {
-          testApp.pre = function (req, res, type) {
+        it("does not update session properties without explicit set", function() {
+          testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", { qaz: "woah" });
+            session.set("bar", {qaz: "woah"});
           };
 
-          testApp.intent("airportInfoIntent", {}, function (req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
             var bar = session.get("bar");
@@ -93,7 +93,7 @@ describe("Alexa", function () {
             return true;
           });
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -107,14 +107,14 @@ describe("Alexa", function () {
           ]);
         });
 
-        it("does not update session properties when clearing non-existant attribute", function () {
-          testApp.pre = function (req, res, type) {
+        it("does not update session properties when clearing non-existant attribute", function() {
+          testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", { qaz: "woah" });
+            session.set("bar", {qaz: "woah"});
           };
 
-          testApp.intent("airportInfoIntent", {}, function (req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
             var bar = session.get("bar");
@@ -123,7 +123,7 @@ describe("Alexa", function () {
             return true;
           });
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -137,14 +137,14 @@ describe("Alexa", function () {
           ]);
         });
 
-        it("updates session properties with explicit set", function () {
-          testApp.pre = function (req, res, type) {
+        it("updates session properties with explicit set", function() {
+          testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", { qaz: "woah" });
+            session.set("bar", {qaz: "woah"});
           };
 
-          testApp.intent("airportInfoIntent", {}, function (req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
             var bar = session.get("bar");
@@ -154,7 +154,7 @@ describe("Alexa", function () {
             return true;
           });
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -170,12 +170,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#response", function () {
+    describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-      context("intent handler with shouldEndSession = false", function () {
-        it("responds with an empty session object after clearing session", function () {
-          var intentHandler = function (req, res) {
+      context("intent handler with shouldEndSession = false", function() {
+        it("responds with an empty session object after clearing session", function() {
+          var intentHandler = function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -187,7 +187,7 @@ describe("Alexa", function () {
 
           testApp.intent("airportInfoIntent", {}, intentHandler);
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
           return Promise.all([
@@ -197,12 +197,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#response", function () {
+    describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-      context("intent handler with shouldEndSession = false", function () {
-        it("responds with session object missing a cleared session variable", function () {
-          var intentHandler = function (req, res) {
+      context("intent handler with shouldEndSession = false", function() {
+        it("responds with session object missing a cleared session variable", function() {
+          var intentHandler = function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -214,7 +214,7 @@ describe("Alexa", function () {
 
           testApp.intent("airportInfoIntent", {}, intentHandler);
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -226,12 +226,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#response", function () {
+    describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-      context("intent handler with shouldEndSession = false", function () {
-        it("responds with a copied session object", function () {
-          var intentHandler = function (req, res) {
+      context("intent handler with shouldEndSession = false", function() {
+        it("responds with a copied session object", function() {
+          var intentHandler = function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("bar", {
               qaz: "woah"
@@ -242,7 +242,7 @@ describe("Alexa", function () {
 
           testApp.intent("airportInfoIntent", {}, intentHandler);
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes["foo"];
           });
 
@@ -255,20 +255,20 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#response", function () {
+    describe("#response", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
-      context("intent handler with shouldEndSession = false", function () {
-        it("responds reprompted message on shouldEndSession", function () {
+      context("intent handler with shouldEndSession = false", function() {
+        it("responds reprompted message on shouldEndSession", function() {
           var expectedReprompt = "totally";
 
-          var intentHandler = function (req, res) {
+          var intentHandler = function(req, res) {
             res.say("hi").shouldEndSession(false, expectedReprompt);
             return true;
           };
 
           testApp.intent("airportInfoIntent", {}, intentHandler);
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.reprompt.outputSpeech;
           });
 
@@ -280,19 +280,19 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
+    describe("#request", function() {
       var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-      context("request without session", function () {
-        it("responds with an empty session object", function () {
-          testApp.pre = function (req, res, type) {
+      context("request without session", function() {
+        it("responds with an empty session object", function() {
+          testApp.pre = function(req, res, type) {
             if (req.hasSession()) {
               // unreachable code, because the request doesn't have session
               req.getSession().set("foo", "bar");
             }
           };
 
-          var subject = testApp.request(mockRequest).then(function (response) {
+          var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
           });
 
@@ -304,12 +304,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
-      context("request without session", function () {
+    describe("#request", function() {
+      context("request without session", function() {
         var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-        it("session.clear() should fail the app", function () {
-          testApp.pre = function (req, res, type) {
+        it("session.clear() should fail the app", function() {
+          testApp.pre = function(req, res, type) {
             return req.getSession().clear();
           };
 
@@ -319,14 +319,14 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
-      context("request without session", function () {
+    describe("#request", function() {
+      context("request without session", function() {
         var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-        it("session.get(key) should fail the app", function () {
+        it("session.get(key) should fail the app", function() {
           var returnedAttributeValue = "overridden";
 
-          testApp.pre = function (req, res, type) {
+          testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
@@ -336,39 +336,39 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
-      context("request with session", function () {
+    describe("#request", function() {
+      context("request with session", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-        it("session.get(key) should not throw if attribute is not present", function () {
+        it("session.get(key) should not throw if attribute is not present", function() {
           var returnedAttributeValue = "overridden";
 
-          testApp.pre = function (req, res, type) {
+          testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
-          return testApp.request(mockRequest).then(function () { expect(returnedAttributeValue).to.be.undefined; });
+          return testApp.request(mockRequest).then(function() { expect(returnedAttributeValue).to.be.undefined; });
         });
       });
     });
 
-    describe("#request", function () {
-      context("request with session", function () {
+    describe("#request", function() {
+      context("request with session", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
 
-        it("session.get(key) should not throw if attribute is not present", function () {
+        it("session.get(key) should not throw if attribute is not present", function() {
           var returnedAttributeValue = "overridden";
           var returnedAirportCode = "overridden";
           var returnedAirportCodeBackwardsCompat = "overridden";
 
-          testApp.pre = function (req, res, type) {
+          testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
             returnedAirportCode = req.getSession().get("airportCode");
             returnedAirportCodeBackwardsCompat = req.session("airportCode");
           };
 
           return testApp.request(mockRequest)
-            .then(function () {
+            .then(function() {
               expect(returnedAttributeValue).to.be.undefined;
               expect(returnedAirportCode).to.equal("DAL");
               expect(returnedAirportCodeBackwardsCompat).to.equal("DAL");
@@ -378,12 +378,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
-      context("request with session", function () {
+    describe("#request", function() {
+      context("request with session", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
-        it("session.clear() should not throw", function () {
-          testApp.pre = function (req, res, type) {
+        it("session.clear() should not throw", function() {
+          testApp.pre = function(req, res, type) {
             req.getSession().clear();
           };
 
@@ -393,12 +393,12 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
-      context("request with session and attributes", function () {
+    describe("#request", function() {
+      context("request with session and attributes", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
 
-        it("session.clear() should not throw", function () {
-          testApp.pre = function (req, res, type) {
+        it("session.clear() should not throw", function() {
+          testApp.pre = function(req, res, type) {
             req.getSession().clear();
           };
 
@@ -407,17 +407,17 @@ describe("Alexa", function () {
       });
     });
 
-    describe("#request", function () {
+    describe("#request", function() {
       var mockRequest = mockHelper.load("audio_player_event_request.json");
 
-      context("request without session", function () {
-        context("trying to get session variable", function () {
-          it("it fails with NO_SESSION message", function () {
-            testApp.pre = function (req, res, type) {
+      context("request without session", function() {
+        context("trying to get session variable", function() {
+          it("it fails with NO_SESSION message", function() {
+            testApp.pre = function(req, res, type) {
               req.getSession().get("foo");
             };
 
-            var subject = testApp.request(mockRequest).then(function (response) {
+            var subject = testApp.request(mockRequest).then(function(response) {
               return response;
             });
 
@@ -425,13 +425,13 @@ describe("Alexa", function () {
           });
         });
 
-        context("trying to set session variable", function () {
-          it("it fails with NO_SESSION message", function () {
-            testApp.pre = function (req, res, type) {
+        context("trying to set session variable", function() {
+          it("it fails with NO_SESSION message", function() {
+            testApp.pre = function(req, res, type) {
               req.getSession().set("foo", "bar");
             };
 
-            var subject = testApp.request(mockRequest).then(function (response) {
+            var subject = testApp.request(mockRequest).then(function(response) {
               return response.response.outputSpeech;
             });
 
