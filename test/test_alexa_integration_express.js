@@ -192,7 +192,7 @@ describe("Alexa", function() {
           .post('/testApp')
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
-            expect(res.body.reason).to.equal("signature is not base64 encoded");
+            expect(res.body.reason).to.equal("missing certificate url");
           });
       });
 
@@ -203,7 +203,7 @@ describe("Alexa", function() {
           .set('signature', 'dummy')
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
-            expect(res.body.reason).to.equal("signature is not base64 encoded");
+            expect(res.body.reason).to.equal("missing request (certificate) body");
           });
       });
 
@@ -217,7 +217,7 @@ describe("Alexa", function() {
           .send(mockRequest)
           .expect(401).then(function(res) {
             expect(res.body.status).to.equal("failure");
-            expect(res.body.reason).to.equal("signature is not base64 encoded");
+            expect(res.body.reason).to.equal("invalid signature (not base64 encoded)");
           });
       });
 
