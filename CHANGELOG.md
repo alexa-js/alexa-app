@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.0.1 (Next)
+
+* [#219](https://github.com/alexa-js/alexa-app/pull/219): Preserve session when clearing non-existent attribute - [@adrianba](https://github.com/adrianba).
+
 ### 4.0.0 (March 20, 2017)
 * [#134](https://github.com/alexa-js/alexa-app/issues/134): Asynchronous support purely through Promises, removed `return false`/callback support - [@ajcrites](https://github.com/ajcrites).
 * [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
