@@ -117,8 +117,6 @@ describe("Alexa", function() {
           testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
-            var bar = session.get("bar");
-            bar.qaz = "not woah";
             session.clear("baz");
             return true;
           });
