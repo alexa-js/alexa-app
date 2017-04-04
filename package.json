@@ -5,7 +5,7 @@
   "main": "index.js",
   "author": "Matt Kruse <github@mattkruse.com> (http://mattkruse.com)",
   "engines": {
-    "node": ">=0.12"
+    "node": ">=1"
   },
   "keywords": [
     "amazon",
