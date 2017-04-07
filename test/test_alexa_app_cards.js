@@ -171,6 +171,34 @@ describe("Alexa", function() {
               ]);
             });
 
+            it("responds with ask for permissions concent", function() {
+              var oCard = {
+                  type: "AskForPermissionsConsent",
+                  permissions: ['read::alexa:device:all:address:country_and_postal_code']
+                },
+                expectedCard = JSON.parse(JSON.stringify(oCard));
+
+              intentHandler = function(req, res) {
+                res.say(expectedMessage).card(oCard);
+                return true;
+              };
+              setupIntentHandler(intentHandler);
+              var subject = testApp.request(mockRequest);
+              var alexaResponse = subject.then(function(response) {
+                return response.response.outputSpeech;
+              });
+              var cardResponse = subject.then(function(response) {
+                return response.response.card;
+              });
+              return Promise.all([
+                expect(alexaResponse).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                }),
+                expect(cardResponse).to.eventually.become(expectedCard),
+              ]); 
+            });
+
             it("responds with a speech and no card because it was called with invalid info", function() {
               var oCard = {
                   type: "Standard",

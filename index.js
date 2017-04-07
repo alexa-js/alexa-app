@@ -77,6 +77,9 @@ alexa.response = function(session) {
           return this;
         }
         break;
+      case 'AskForPermissionsConsent':
+        requiredAttrs.push('permissions');
+        break;
       default:
         break;
     }
