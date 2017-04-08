@@ -2,7 +2,7 @@
 
 ### 4.0.1 (Next)
 
-* [#223](https://github.com/alexa-js/alexa-app/issues/223): new card type available, AskForPermissionsConsent - [@ericblade]
+* [#223](https://github.com/alexa-js/alexa-app/issues/223): Added support for `AskForPermissionsConsent` cards - [@ericblade](https://github.com/ericblade).
 * [#219](https://github.com/alexa-js/alexa-app/pull/219): Preserve session when clearing non-existent attribute - [@adrianba](https://github.com/adrianba).
 * [#218](https://github.com/alexa-js/alexa-app/pull/218): Fix cert check test cases - [@adrianba](https://github.com/adrianba). 
 * [#220](https://github.com/alexa-js/alexa-app/pull/220): No longer compatible with Node 0.12 - [@adrianba](https://github.com/adrianba). 
