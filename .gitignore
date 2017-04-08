@@ -46,6 +46,7 @@ Temporary Items
 
 # IDE
 .idea
+.vs
 .vscode
 
 # NPM
