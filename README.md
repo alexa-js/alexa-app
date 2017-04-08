@@ -548,6 +548,8 @@ The `response.card(Object card)` method allows you to send [Home Cards](https://
 
 The full specification for the `card` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object).
 
+The full specification for the permission card can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/device-address-api#sample-response-with-permission-card)
+
 Cards do not support SSML
 
 If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
@@ -578,6 +580,17 @@ response.card({
     smallImageUrl: "https://carfu.com/resources/card-images/race-car-small.png", // required
     largeImageUrl: "https://carfu.com/resources/card-images/race-car-large.png"
   }
+});
+```
+
+Display a card that presents the user to grant information to your skill, aka [AskForPermissionsConsent](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/device-address-api#sample-response-with-permission-card)
+
+If the request was for the country and postal code, then the permissions value in this response will be “read::alexa:device:all:address:country_and_postal_code”.
+
+```javascript
+response.card({
+  type: "AskForPermissionsConsent",
+  permissions: [ "read::alexa:device:all:address" ] // full address
 });
 ```
 
