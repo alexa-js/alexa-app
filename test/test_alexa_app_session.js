@@ -82,6 +82,10 @@ describe("Alexa", function() {
             expect(subject).to.eventually.have.property(
                 "consentToken",
                 null
+            ),
+            expect(subject).to.eventually.have.property(
+                "apiEndpoint",
+                null
             )
           ]);
         });
@@ -488,6 +492,10 @@ describe("Alexa", function() {
             expect(subject).to.eventually.have.property(
                 "consentToken",
                 "Atza|MQEWY...6fnLok"
+            ),
+            expect(subject).to.eventually.have.property(
+                "apiEndpoint",
+                "https://api.amazonalexa.com/"
             )
           ]);
         });

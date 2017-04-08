@@ -39,7 +39,8 @@
       "device": {
         "deviceId": "MyDeviceId",
         "supportedInterfaces": {}
-      }
+      },
+      "apiEndpoint": "https://api.amazonalexa.com/"
     }
   }
 }
