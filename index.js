@@ -208,11 +208,21 @@ alexa.request = function(json) {
   this.userId = null;
   this.applicationId = null;
   this.context = null;
+  this.deviceId = null;
+  this.consentToken = null;
 
   if (this.data.context) {
     this.userId = this.data.context.System.user.userId;
     this.applicationId = this.data.context.System.application.applicationId;
     this.context = this.data.context;
+
+    if (this.data.context.System.device) {
+      this.deviceId = this.data.context.System.device.deviceId;
+    }
+
+    if (this.data.context.System.user.permissions) {
+      this.consentToken = this.data.context.System.user.permissions.consentToken;
+    }
   }
 
   var session = new alexa.session(json.session);

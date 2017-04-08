@@ -74,6 +74,14 @@ describe("Alexa", function() {
             expect(subject).to.eventually.have.property(
               "userId",
               "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+            ),
+            expect(subject).to.eventually.have.property(
+                "deviceId",
+                null
+            ),
+            expect(subject).to.eventually.have.property(
+                "consentToken",
+                null
             )
           ]);
         });
@@ -437,6 +445,53 @@ describe("Alexa", function() {
           });
 
         });
+      });
+    });
+
+    describe("#request", function() {
+      context("request with consent token", function() {
+        var mockRequest = mockHelper.load("intent_request_airport_info_with_consent_token.json");
+        var reqObject;
+
+        beforeEach(function() {
+          var intentHandler = function(req, res) {
+            res.say("message").shouldEndSession(false);
+            res.session("foo", true);
+            res.session("bar", {
+              qaz: "woah"
+            });
+            reqObject = req;
+            return true;
+          };
+
+          testApp.intent("airportInfoIntent", {}, intentHandler);
+        });
+
+        it("has a res object with expected properties", function() {
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return reqObject;
+          });
+
+          return Promise.all([
+            expect(subject).to.eventually.have.property(
+              "applicationId",
+              "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+            ),
+            expect(subject).to.eventually.have.property(
+              "userId",
+              "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+            ),
+            expect(subject).to.eventually.have.property(
+                "deviceId",
+                "MyDeviceId"
+            ),
+            expect(subject).to.eventually.have.property(
+                "consentToken",
+                "Atza|MQEWY...6fnLok"
+            )
+          ]);
+        });
+
       });
     });
   });
