@@ -143,7 +143,7 @@ A full express example is available [here](example/express.js).
 
 Want to get started quickly with alexa-app and Heroku? Simply click the button below!
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/tejashah88/alexa-app-example)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/alexa-js/alexa-app-example)
 
 ## API
 
