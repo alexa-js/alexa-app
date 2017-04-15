@@ -251,6 +251,7 @@ session.set(String attributeName, String attributeValue)
 String session.get(String attributeName)
 
 // session details, as passed by Amazon in the request
+// for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
 session.details = { ... }
 ```
 
