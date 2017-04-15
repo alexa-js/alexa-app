@@ -77,6 +77,9 @@ alexa.response = function(session) {
           return this;
         }
         break;
+      case 'AskForPermissionsConsent':
+        requiredAttrs.push('permissions');
+        break;
       default:
         break;
     }
@@ -253,8 +256,10 @@ alexa.session = function(session) {
       this.attributes[key] = value;
     };
     this.clear = function(key) {
-      if (typeof key == "string" && typeof this.attributes[key] != "undefined") {
-        delete this.attributes[key];
+      if (typeof key == "string") {
+        if (typeof this.attributes[key] != "undefined") {
+          delete this.attributes[key];
+        }
       } else {
         this.attributes = {};
       }

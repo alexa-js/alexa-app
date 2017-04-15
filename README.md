@@ -1,10 +1,12 @@
 ## Table of Contents
+
 * [Stable Release](#stable-release)
 * [Introduction](#introduction)
 * [Features](#features)
 * [Examples](#examples)
     * [AWS Lambda](#aws-lambda)
     * [Express](#express)
+      * [Heroku Quickstart](#heroku-quickstart)
 * [API](#api)
     * [request](#request)
     * [response](#response)
@@ -57,7 +59,6 @@ The intent schema definition and sample utterances are included in your applicat
 This module provides a way to host a standalone web service for an Alexa skill. If you're looking for a full-fledged application server
 or the ability to host multiple skills, check out [alexa-app-server](https://github.com/alexa-js/alexa-app-server).
 
-
 ## Features
 
 - simplified handling of requests and generating responses
@@ -66,7 +67,6 @@ or the ability to host multiple skills, check out [alexa-app-server](https://git
 - auto-generation of intent schema and sample utterances
 - support for session data
 - comprehensive test suite
-
 
 ## Examples
 
@@ -96,7 +96,6 @@ exports.handler = app.lambda();
 For backwards compatibility, or if you wish to change the Handler mapping to something other than index.handler, you can use the lambda() function.
 
 A full lambda example is available [here](example/lambda.js).
-
 
 ### Express
 
@@ -137,8 +136,14 @@ The express function accepts the following parameters.
 * `postRequest` function to execute after every POST
 
 Either `expressApp` or `router` is required.
+
 A full express example is available [here](example/express.js).
 
+#### Heroku Quickstart
+
+Want to get started quickly with alexa-app and Heroku? Simply click the button below!
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/alexa-js/alexa-app-example)
 
 ## API
 
@@ -165,7 +170,6 @@ request.context
 // the raw request JSON object
 request.data
 ```
-
 
 ### response
 
@@ -227,7 +231,6 @@ async response.fail(String message)
 return response.say("OK").send()
 ```
 
-
 ### session
 ```javascript
 // check if you can use session (read or write)
@@ -251,7 +254,6 @@ String session.get(String attributeName)
 session.details = { ... }
 ```
 
-
 ## Request Handlers
 
 Your app can define a single handler for the `Launch` event and the `SessionEnded` event, and multiple intent handlers.
@@ -264,7 +266,6 @@ app.launch(function(request, response) {
   response.card("Hello World", "This is an example card");
 });
 ```
-
 
 ### IntentRequest
 
@@ -291,7 +292,6 @@ app.intent("vacation", function(request, response) {
 });
 ```
 
-
 ### SessionEndRequest
 
 ```javascript
@@ -301,7 +301,6 @@ app.sessionEnded(function(request, response) {
   // no response required
 });
 ```
-
 
 ### AudioPlayer Event Request
 
@@ -350,7 +349,6 @@ app.audioPlayer("PlaybackFinished", function(request, response) {
 });
 ```
 
-
 ### PlaybackController Event Request
 
 PlaybackController events are sent to your skill when the user interacts with player controls on a device. Define multiple handlers for various events by making multiple calls to `playbackController` with each event type.
@@ -384,7 +382,6 @@ Note that some device interactions don't always produce PlaybackController event
 
 In addition to specific event handlers, you can define functions that will run on every request.
 
-
 ### pre()
 
 Executed before any event handlers. This is useful to setup new sessions, validate the `applicationId`, or do any other kind of validations.
@@ -411,7 +408,6 @@ app.pre = function(request, response, type) {
 
 Note that the `post()` method still gets called, even if the `pre()` function calls `send()` or `fail()`. The post method can always override anything done before it.
 
-
 ### post()
 
 The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The `post()` function can change anything about the response. It can even turn a `return response.fail()` into a `return respond.send()` with entirely new content. If `post()` is called after an exception is thrown, the exception itself will be the 4th argument.
@@ -426,7 +422,6 @@ app.post = function(request, response, type, exception) {
   }
 };
 ```
-
 
 ## Schema and Utterances
 
@@ -451,11 +446,9 @@ app.intent("sampleIntent", {
 );
 ```
 
-
 #### slots
 
 The slots object is a simple `name: type` mapping. The type must be one of Amazon's [built-in slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/slot-type-reference), such as `AMAZON.DATE` or `AMAZON.NUMBER`.
-
 
 #### custom slot types
 
@@ -483,7 +476,6 @@ sampleIntent     airport status for {CustomSlotName}
 
 Note that the "CustomSlotType" type values must be specified in the Skill Interface's Interaction Model for the custom slot type to function correctly.
 
-
 #### utterances
 
 The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded.
@@ -492,7 +484,6 @@ Any number of sample utterances may be passed in the utterances array.
 This module internally uses [alexa-utterances](https://github.com/alexa-js/alexa-utterances)
 to expand these convenient strings into a format that alexa understands. Read the documentation there for a
 thorough set of examples on how to use this.
-
 
 ##### Using a Dictionary
 
@@ -504,7 +495,6 @@ app.dictionary = {"colors":["red","green","blue"]};
 "my favorite color is {colors|FAVEORITE_COLOR}"
 "I like {colors|COLOR}"
 ```
-
 
 ### Generating Schema and Utterances Output
 
@@ -541,17 +531,17 @@ WhatsMyColorIntent tell me my favorite color
 WhatsMyColorIntent tell me what my favorite color is
 ```
 
-
 ## Cards
 
 The `response.card(Object card)` method allows you to send [Home Cards](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/providing-home-cards-for-the-amazon-alexa-app) on the Alexa app, the companion app available for Fire OS, Android, iOS, and desktop web browsers.
 
 The full specification for the `card` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object).
 
-Cards do not support SSML
+The full specification for the permission card can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/device-address-api#sample-response-with-permission-card).
+
+Cards do not support SSML.
 
 If you just want to display a card that presents the user to link their account call `response.linkAccount()` as a shortcut.
-
 
 ### Card Examples
 
@@ -581,6 +571,17 @@ response.card({
 });
 ```
 
+Display a card that presents the user to grant information to your skill, aka [AskForPermissionsConsent](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/device-address-api#sample-response-with-permission-card).
+
+If the request was for the country and postal code, then the permissions value in this response will be `read::alexa:device:all:address:country_and_postal_code`.
+
+```javascript
+response.card({
+  type: "AskForPermissionsConsent",
+  permissions: [ "read::alexa:device:all:address" ] // full address
+});
+```
+
 
 ## Error Handling
 
@@ -604,7 +605,6 @@ app.error = function(exception, request, response) {
   throw exception;
 };
 ```
-
 
 ## Asynchronous Handlers Example 
 
@@ -654,7 +654,6 @@ app.messages.NO_INTENT_FOUND = "Why you called dat intent? I don't know bout dat
 
 See the code for default messages you can override.
 
-
 ### Read/write session data
 
 ```javascript
@@ -686,7 +685,6 @@ var app = new alexa.app("test");
 app.persistentSession = false;
 ```
 
-
 ### Define a custom endpoint name for an app
 
 When mapped to express, the default endpoint for each app is the name of the app. You can customize this using the second parameter to the `app()` method.
@@ -696,7 +694,6 @@ var app = new alexa.app("hello", "myEndpointName");
 ```
 
 All named apps can be found in the `alexa.apps` object, keyed by name. The value is the app itself.
-
 
 ## License
 
