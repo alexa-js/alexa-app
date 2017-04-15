@@ -2,7 +2,7 @@
 
 ### 4.0.1 (Next)
 
-* [#215](https://github.com/alexa-js/alexa-app/pull/215): Fixed syntax of session.details to match with session as passed by Alexa. - [@danielstieber](https://github.com/danielstieber).
+* [#215](https://github.com/alexa-js/alexa-app/pull/215): Fixed syntax of session.details to match with session as passed by amazon. - [@danielstieber](https://github.com/danielstieber).
 * Your contribution here.
 
 ### 4.0.0 (March 20, 2017)
