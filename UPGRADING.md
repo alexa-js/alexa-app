@@ -1,5 +1,29 @@
 # Upgrading Alexa-app
 
+### Upgrading to >= 4.0.1
+
+#### Changes session details syntax
+
+The session details will now be filled one-to-one by the given Alexa session information. According to that, the syntax of the user data has slightly changed. UserId and accessToken are now nested inside a user object.
+
+Before:
+```javascript
+// Get userId (marked as deprecated)
+request.getSession().details.userId;
+// Get accessToken (marked as deprecated)
+request.getSession().details.accessToken;
+```
+
+After:
+```javascript
+// Get userId
+request.getSession().details.user.userId;
+// Get accessToken
+request.getSession().details.user.accessToken;
+```
+
+See [#215](https://github.com/alexa-js/alexa-app/pull/215) for more information.
+
 ### Upgrading to >= 4.0.0
 
 #### Changes to Asynchronous Support

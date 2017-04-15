@@ -9,7 +9,9 @@
     "attributes": {},
     "user": {
       "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
-    }
+    },
+    "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2",
+    "accessToken": null
   },
   "request": {
     "type": "IntentRequest",
