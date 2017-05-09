@@ -154,6 +154,13 @@ describe('SSML', function() {
           return SSML.cleanse(input).should.equal(expectedOutput);
         });
 
+        it('should not truncate spaces before periods', function() {
+          var input = '.1, .2, and .3';
+          var expectedOutput = '.1, .2, and .3';
+
+          return SSML.cleanse(input).should.equal(expectedOutput);
+        });
+
       });
     });
   });
