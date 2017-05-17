@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.0.1 (Next)
+### 4.0.1 (May 17, 201y)
 
 * [#236](https://github.com/alexa-js/alexa-app/pull/236): Update `ssml.cleanse` to stop removing spaces before decimals - [@aminimalanimal](https://github.com/aminimalanimal).
 * [#215](https://github.com/alexa-js/alexa-app/pull/215): Fixed `session.details` to match with session in the request object - [@danielstieber](https://github.com/danielstieber).
