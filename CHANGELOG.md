@@ -1,5 +1,8 @@
 ## Changelog
 
+### 4.0.2 (Next)
+* Your contribution here
+
 ### 4.0.1 (May 17, 2017)
 
 * [#236](https://github.com/alexa-js/alexa-app/pull/236): Update `ssml.cleanse` to stop removing spaces before decimals - [@aminimalanimal](https://github.com/aminimalanimal).
