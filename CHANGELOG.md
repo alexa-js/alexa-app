@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.0.1 (May 17, 201y)
+### 4.0.1 (May 17, 2017)
 
 * [#236](https://github.com/alexa-js/alexa-app/pull/236): Update `ssml.cleanse` to stop removing spaces before decimals - [@aminimalanimal](https://github.com/aminimalanimal).
 * [#215](https://github.com/alexa-js/alexa-app/pull/215): Fixed `session.details` to match with session in the request object - [@danielstieber](https://github.com/danielstieber).
@@ -10,6 +10,7 @@
 * [#220](https://github.com/alexa-js/alexa-app/pull/220): No longer compatible with Node 0.12 - [@adrianba](https://github.com/adrianba).
 
 ### 4.0.0 (March 20, 2017)
+
 * [#134](https://github.com/alexa-js/alexa-app/issues/134): Asynchronous support purely through Promises, removed `return false`/callback support - [@ajcrites](https://github.com/ajcrites).
 * [#22](https://github.com/alexa-js/alexa-app/issues/22): Asynchronous support for `pre` and `post` - [@ajcrites](https://github.com/ajcrites).
 * [#188](https://github.com/alexa-js/alexa-app/issues/188): Use `callback` to complete lambda functions rather than `context`. - [@ajcrites](https://github.com/ajcrites).
