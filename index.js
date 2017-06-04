@@ -156,8 +156,13 @@ alexa.response = function(session) {
     this.directive(audioPlayerDirective);
     return this;
   };
-  this.directive = function (directive) {
-    self.response.response.directives.push(directive);
+  // Read & manipulate response directives
+  var directives = new alexa.directives(self.response.response.directives);
+  this.getDirectives = function() {
+    return directives;
+  };
+  this.directive = function(directive) {
+    this.getDirectives().set(directive);
     return this;
   };
 
@@ -176,6 +181,15 @@ alexa.response = function(session) {
   this.clearSession = function(key) {
     this.sessionObject.clear(key);
     return this;
+  };
+};
+
+alexa.directives = function(directives) {
+  // load the alexa response directives information into details
+  this.details = directives;
+
+  this.set = function(directive) {
+    this.details.push(directive);
   };
 };
 
@@ -274,7 +288,7 @@ alexa.session = function(session) {
     this.details.userId = this.details.user.userId || null;
     // @deprecated
     this.details.accessToken = this.details.user.accessToken || null;
-    
+
     // persist all the session attributes across requests
     // the Alexa API doesn't think session variables should persist for the entire
     // duration of the session, but I do
