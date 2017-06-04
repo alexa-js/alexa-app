@@ -150,7 +150,7 @@ alexa.response = function(session) {
   this.directive = function (directive) {
     self.response.response.directives.push(directive);
     return this;
-  }
+  };
 
   // legacy code below
   // @deprecated
