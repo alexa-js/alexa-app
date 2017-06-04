@@ -123,7 +123,7 @@ alexa.response = function(session) {
       "playBehavior": playBehavior,
       "audioItem": audioItem
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
     return this;
   };
   this.audioPlayerPlayStream = function(playBehavior, stream) {
@@ -136,7 +136,7 @@ alexa.response = function(session) {
     var audioPlayerDirective = {
       "type": "AudioPlayer.Stop"
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
     return this;
   };
   this.audioPlayerClearQueue = function (clearBehavior) {
@@ -144,7 +144,7 @@ alexa.response = function(session) {
       "type": "AudioPlayer.ClearQueue",
       "clearBehavior": clearBehavior || "CLEAR_ALL"
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
     return this;
   };
   this.directive = function (directive) {
