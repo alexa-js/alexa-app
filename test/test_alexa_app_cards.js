@@ -9,22 +9,27 @@ chai.config.includeStack = true;
 
 describe("Alexa", function() {
   var Alexa = require("../index");
+
   describe("app", function() {
-    var app = new Alexa.app("myapp");
+    var testApp;
+    beforeEach(function() {
+      testApp = new Alexa.app("testApp");
+    });
+
     var setupIntentHandler = function(handlerFunction) {
-      app = new Alexa.app("myapp");
-      app.intent("airportInfoIntent", {}, handlerFunction);
+      testApp.intent("airportInfoIntent", {}, handlerFunction);
     };
 
     describe("#request", function() {
       describe("cards response", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
+
         context("with an intent request of airportInfoIntent", function() {
           var intentHandler = function(req, res) {
             res.say(expectedMessage);
             return true;
           };
-          setupIntentHandler(intentHandler);
+
           var expectedMessage = "tubular!";
 
           describe("intent handler with AccountLink called on res", function() {
@@ -33,7 +38,7 @@ describe("Alexa", function() {
                 res.linkAccount();
               };
               setupIntentHandler(intentHandler);
-              var subject = app.request(mockRequest);
+              var subject = testApp.request(mockRequest);
               var cardResponse = subject.then(function(response) {
                 return response.response.card;
               });
@@ -52,21 +57,21 @@ describe("Alexa", function() {
                   });
                 };
                 setupIntentHandler(intentHandler);
-                var subject = app.request(mockRequest);
+                var subject = testApp.request(mockRequest);
                 var cardResponse = subject.then(function(response) {
-                  console.log(response.response);
                   return response.response;
                 });
                 expect(cardResponse).to.eventually.not.have.property("card");
               });
             });
+
             describe("of an unknown type", function() {
               it("adds no card response", function() {
                 var intentHandler = function(req, res) {
                   res.say("sweet!").card({});
                 };
                 setupIntentHandler(intentHandler);
-                var subject = app.request(mockRequest);
+                var subject = testApp.request(mockRequest);
                 var cardResponse = subject.then(function(response) {
                   return response.response.card;
                 });
@@ -84,7 +89,7 @@ describe("Alexa", function() {
                 return true;
               };
               setupIntentHandler(intentHandler);
-              var subject = app.request(mockRequest);
+              var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
               });
@@ -117,7 +122,7 @@ describe("Alexa", function() {
                 return true;
               };
               setupIntentHandler(intentHandler);
-              var subject = app.request(mockRequest);
+              var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
               });
@@ -150,7 +155,7 @@ describe("Alexa", function() {
                 return true;
               };
               setupIntentHandler(intentHandler);
-              var subject = app.request(mockRequest);
+              var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
               });
@@ -164,6 +169,34 @@ describe("Alexa", function() {
                 }),
                 expect(cardResponse).to.eventually.become(expectedCard),
               ]);
+            });
+
+            it("responds with ask for permissions concent", function() {
+              var oCard = {
+                  type: "AskForPermissionsConsent",
+                  permissions: ['read::alexa:device:all:address:country_and_postal_code']
+                },
+                expectedCard = JSON.parse(JSON.stringify(oCard));
+
+              intentHandler = function(req, res) {
+                res.say(expectedMessage).card(oCard);
+                return true;
+              };
+              setupIntentHandler(intentHandler);
+              var subject = testApp.request(mockRequest);
+              var alexaResponse = subject.then(function(response) {
+                return response.response.outputSpeech;
+              });
+              var cardResponse = subject.then(function(response) {
+                return response.response.card;
+              });
+              return Promise.all([
+                expect(alexaResponse).to.eventually.become({
+                  ssml: "<speak>" + expectedMessage + "</speak>",
+                  type: "SSML"
+                }),
+                expect(cardResponse).to.eventually.become(expectedCard),
+              ]); 
             });
 
             it("responds with a speech and no card because it was called with invalid info", function() {
@@ -180,7 +213,7 @@ describe("Alexa", function() {
                 return true;
               };
               setupIntentHandler(intentHandler);
-              var subject = app.request(mockRequest);
+              var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
               });

@@ -6,12 +6,13 @@
     "application": {
       "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
     },
-    "attributes": {},
+    "attributes": {
+      "airportCode": "DAL",
+      "airportName": "Dallas Love Field"
+    },
     "user": {
       "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
-    },
-    "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2",
-    "accessToken": null
+    }
   },
   "request": {
     "type": "IntentRequest",
@@ -19,12 +20,7 @@
     "timestamp": "2015-05-13T12:34:56Z",
     "intent": {
       "name": "airportInfoIntent",
-      "slots": {
-        "AirportCode": {
-          "name": "AirportCode",
-          "value" : "JFK"
-        }
-      }
+      "slots": {}
     }
   },
   "context": {

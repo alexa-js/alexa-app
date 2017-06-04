@@ -6,8 +6,9 @@
   "dependencies": {
     "body-parser": "^1.13.1",
     "ejs": "^2.3.1",
-    "express": "^4.13.0"
+    "express": "^4.13.0",
+    "alexa-app": ".."
   },
   "author": "Matt Kruse <github@mattkruse.com> (http://mattkruse.com/)",
-  "license": "ISC"
+  "license": "MIT"
 }

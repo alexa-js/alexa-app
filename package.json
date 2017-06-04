@@ -1,9 +1,12 @@
 {
   "name": "alexa-app",
-  "version": "2.3.4",
+  "version": "4.0.2-beta",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps (Skills) using Node.js",
   "main": "index.js",
-  "author": "Matt Kruse <github@mattkruse.com> (http://MattKruse.com)",
+  "author": "Matt Kruse <github@mattkruse.com> (http://mattkruse.com)",
+  "engines": {
+    "node": ">=1"
+  },
   "keywords": [
     "amazon",
     "echo",
@@ -14,29 +17,39 @@
     "lint": "eslint index.js;",
     "coverage": "istanbul cover _mocha -- -R spec",
     "test": "./node_modules/.bin/mocha",
-    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*",
+    "test-with-coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*.js",
     "danger": "./node_modules/.bin/danger"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/matt-kruse/alexa-app.git"
+    "url": "https://github.com/alexa-js/alexa-app.git"
   },
   "bugs": {
-    "url": "https://github.com/matt-kruse/alexa-app/issues"
+    "url": "https://github.com/alexa-js/alexa-app/issues"
   },
   "license": "MIT",
   "dependencies": {
     "alexa-utterances": "^0.2.0",
+    "alexa-verifier-middleware": "^0.2.1",
     "bluebird": "^2.10.2",
-    "numbered": "^1.0.0"
+    "lodash.defaults": "^4.2.0",
+    "numbered": "^1.0.0",
+    "body-parser": "^1.15.2"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "chai-as-promised": "^5.3.0",
+    "chai-string": "^1.3.0",
     "coveralls": "^2.11.9",
+    "danger": "0.6.10",
+    "ejs": "^2.5.5",
     "eslint": "^2.9.0",
+    "esprima": "^3.1.3",
+    "express": "^4.14.0",
     "istanbul": "^0.4.3",
     "mocha": "^2.3.4",
-    "danger": "0.6.10"
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.8.0",
+    "supertest": "^2.0.1"
   }
 }

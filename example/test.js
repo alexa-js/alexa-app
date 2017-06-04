@@ -1,4 +1,4 @@
-var alexa = require("../index.js");
+var alexa = require("alexa-app");
 var template = require("./template.js");
 
 var app = new alexa.app("test");
