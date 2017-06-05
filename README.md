@@ -591,7 +591,7 @@ The full specification for the `directive` object passed to this method can be f
 
 The `alexa-app` library has special handling for AudioPlayer directives, so you only need to use this method for more general custom directives.
 
-The `response.directive` adds your directive object to the directives array in the response. Currently, there is no way to remove a directive from the response once it is set except through `response.clear()`.
+The `response.directive` adds your directive object to the directives array in the response. To clear the directives from the response, call `response.getDirectives().clear()`.
 
 ## Error Handling
 

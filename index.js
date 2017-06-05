@@ -191,6 +191,10 @@ alexa.directives = function(directives) {
   this.set = function(directive) {
     this.details.push(directive);
   };
+
+  this.clear = function() {
+    this.details.length = 0;
+  };
 };
 
 alexa.request = function(json) {
