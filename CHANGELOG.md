@@ -1,7 +1,7 @@
 ## Changelog
 
 ### 4.0.2 (Next)
-* [#247](https://github.com/alexa-js/alexa-app/pull/247): Update README.md to contain AMAZON Intent Example - [@acucciniello](https://github.com/acucciniello).
+* Your contribution here
 
 ### 4.0.1 (May 17, 2017)
 

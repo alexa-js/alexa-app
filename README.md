@@ -302,13 +302,13 @@ app.intent('AMAZON.StopIntent',{
   'slots': {},
   'utterances': []
 }, function (request, response) {
-  	var stopOutput = 'Stopping your Request and Exiting Skill'
+  	var stopOutput = 'Don't You Worry. I'll be back.'
   	response.say(stopOutput).send()
   	return
 })
 ```
 
-You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon gives you.
+You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon provides.
 
 ### SessionEndRequest
 
