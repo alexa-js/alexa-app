@@ -293,6 +293,23 @@ app.intent("vacation", function(request, response) {
 });
 ```
 
+#### AMAZON Specific Intents
+
+Amazon has specific intents that have to do with basic functionality of your skill that you must add.  Some examples of this are `AMAZON.HelpIntent`, `AMAZON.StopIntent`, and `AMAZON.CancelIntent`.  Here is an example of how you would specify that type of intent.
+
+```javascript
+app.intent("AMAZON.StopIntent",{
+  "slots": {},
+  "utterances": []
+}, function(request, response) {
+  	var stopOutput = "Don't You Worry. I'll be back."
+  	response.say(stopOutput)
+  	return
+})
+```
+
+You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon [provides](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/standard-intents).  
+
 ### SessionEndRequest
 
 ```javascript
