@@ -26,16 +26,32 @@ describe("Alexa", function() {
                 type: 'special',
               }
             };
-          var intentHandler = function (req, res) {
-            res.directive(customDirective);
-            return true;
-          };
-          app.intent("audioPlayerIntent", {}, intentHandler);
+
           it("contains directive property with custom object", function () {
+            var intentHandler = function (req, res) {
+              res.directive(customDirective);
+              return true;
+            };
+            app.intent("audioPlayerIntent", {}, intentHandler);
+
             var subject = app.request(mockRequest).then(function (response) {
               return response.response.directives;
             });
             return expect(subject).to.eventually.contain(customDirective);
+          });
+
+          it("clears directive property when clear is called", function () {
+            var intentHandler = function (req, res) {
+              res.directive(customDirective).getDirectives().clear();
+              return true;
+            };
+            app.intent("audioPlayerIntent", {}, intentHandler);
+
+            var subject = app.request(mockRequest).then(function (response) {
+              return response.response.directives;
+            });
+
+            return expect(subject).to.eventually.become([]);
           });
         });
       });
