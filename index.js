@@ -177,10 +177,18 @@ alexa.response = function(session) {
 
 alexa.request = function(json) {
   this.data = json;
+  this.slots = {};
+  if (this.data.request && this.data.request.intent && this.data.request.intent.slots && Object.keys(this.data.request.intent.slots).length > 0) {
+    var slot, slotName;
+    for (slotName in this.data.request.intent.slots) {
+      slot = new alexa.slot(this.data.request.intent.slots[slotName]);
+      this.slots[slotName] = slot;
+    }
+  }
   this.slot = function(slotName, defaultValue) {
     try {
-      if (this.data.request.intent.slots && slotName in this.data.request.intent.slots) {
-        return this.data.request.intent.slots[slotName].value;
+      if (this.slots && 'undefined' != typeof this.slots[slotName]) {
+        return this.slots[slotName].value;
       } else {
         return defaultValue;
       }
@@ -236,6 +244,11 @@ alexa.request = function(json) {
   this.session = function(key) {
     return this.getSession().get(key);
   };
+};
+
+alexa.slot = function(slot) {
+  this.name = slot.name;
+  this.value = slot.value;
 };
 
 alexa.session = function(session) {
