@@ -213,6 +213,13 @@ alexa.request = function(json) {
     return (requestType && 0 === requestType.indexOf("PlaybackController."));
   };
 
+  if (this.data.request && this.data.request.intent) {
+    this.confirmationStatus = this.data.request.intent.confirmationStatus;
+  }
+  this.isConfirmed = function() {
+    return 'CONFIRMED' === this.confirmationStatus;
+  };
+
   this.userId = null;
   this.applicationId = null;
   this.context = null;
@@ -249,6 +256,11 @@ alexa.request = function(json) {
 alexa.slot = function(slot) {
   this.name = slot.name;
   this.value = slot.value;
+  this.confirmationStatus = slot.confirmationStatus;
+
+  this.isConfirmed = function() {
+    return 'CONFIRMED' === this.confirmationStatus;
+  };
 };
 
 alexa.session = function(session) {
