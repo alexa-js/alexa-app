@@ -186,14 +186,9 @@ alexa.request = function(json) {
     }
   }
   this.slot = function(slotName, defaultValue) {
-    try {
-      if (this.slots && 'undefined' != typeof this.slots[slotName]) {
-        return this.slots[slotName].value;
-      } else {
-        return defaultValue;
-      }
-    } catch (e) {
-      console.error("missing intent in request: " + slotName, e);
+    if (this.slots && 'undefined' != typeof this.slots[slotName]) {
+      return this.slots[slotName].value;
+    } else {
       return defaultValue;
     }
   };
@@ -295,7 +290,7 @@ alexa.session = function(session) {
     this.details.userId = this.details.user.userId || null;
     // @deprecated
     this.details.accessToken = this.details.user.accessToken || null;
-    
+
     // persist all the session attributes across requests
     // the Alexa API doesn't think session variables should persist for the entire
     // duration of the session, but I do
