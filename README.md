@@ -600,6 +600,15 @@ response.card({
 });
 ```
 
+## Custom Directives
+
+The `response.directive(Object directive)` method allows you to set custom directive objects to devices to perform a specific device-level actions.
+
+The full specification for the `directive` object passed to this method can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#response-format).
+
+The `alexa-app` library has special handling for AudioPlayer directives, so you only need to use this method for more general custom directives.
+
+The `response.directive` adds your directive object to the directives array in the response. To clear the directives from the response, call `response.getDirectives().clear()`.
 
 ## Error Handling
 

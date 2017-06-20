@@ -132,7 +132,7 @@ alexa.response = function(session) {
       "playBehavior": playBehavior,
       "audioItem": audioItem
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
     return this;
   };
   this.audioPlayerPlayStream = function(playBehavior, stream) {
@@ -145,7 +145,7 @@ alexa.response = function(session) {
     var audioPlayerDirective = {
       "type": "AudioPlayer.Stop"
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
     return this;
   };
   this.audioPlayerClearQueue = function(clearBehavior) {
@@ -153,7 +153,16 @@ alexa.response = function(session) {
       "type": "AudioPlayer.ClearQueue",
       "clearBehavior": clearBehavior || "CLEAR_ALL"
     };
-    self.response.response.directives.push(audioPlayerDirective);
+    this.directive(audioPlayerDirective);
+    return this;
+  };
+  // Read & manipulate response directives
+  var directives = new alexa.directives(self.response.response.directives);
+  this.getDirectives = function() {
+    return directives;
+  };
+  this.directive = function(directive) {
+    this.getDirectives().set(directive);
     return this;
   };
 
@@ -172,6 +181,19 @@ alexa.response = function(session) {
   this.clearSession = function(key) {
     this.sessionObject.clear(key);
     return this;
+  };
+};
+
+alexa.directives = function(directives) {
+  // load the alexa response directives information into details
+  this.details = directives;
+
+  this.set = function(directive) {
+    this.details.push(directive);
+  };
+
+  this.clear = function() {
+    this.details.length = 0;
   };
 };
 
@@ -270,7 +292,7 @@ alexa.session = function(session) {
     this.details.userId = this.details.user.userId || null;
     // @deprecated
     this.details.accessToken = this.details.user.accessToken || null;
-    
+
     // persist all the session attributes across requests
     // the Alexa API doesn't think session variables should persist for the entire
     // duration of the session, but I do
