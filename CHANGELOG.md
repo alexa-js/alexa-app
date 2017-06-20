@@ -1,7 +1,8 @@
 ## Changelog
 
 ### 4.0.2 (Next)
-* [#248](https://github.com/alexa-js/alexa-app/pull/248): Add support for intent and slot confirmationStatus - [@sbonami]((https://github.com/sbonami).
+* [#97](https://github.com/alexa-js/alexa-app/pull/97): Added support for custom directives - [@ajcrites](https://github.com/ajcrites).
+* [#248](https://github.com/alexa-js/alexa-app/pull/248): Add support for intent and slot `confirmationStatus` - [@sbonami]((https://github.com/sbonami).
 * Your contribution here
 
 ### 4.0.1 (May 17, 2017)
