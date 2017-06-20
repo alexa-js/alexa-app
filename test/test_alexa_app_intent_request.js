@@ -224,6 +224,64 @@ describe("Alexa", function() {
                 });
               });
 
+              it("retrieves an intent confirmation status", function() {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
+                  res.say(req.confirmationStatus);
+                  return true;
+                });
+
+                var subject = testApp.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>NONE</speak>",
+                  type: "SSML"
+                });
+              });
+
+              context("when an intent's confirmationStatus is CONFIRMED", function() {
+                var mockRequest = mockHelper.load("intent_request_airport_info.json");
+                mockRequest.request.intent.confirmationStatus = "CONFIRMED";
+
+                it("reports confirmation", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.isConfirmed() ? "yes" : "no");
+                    return true;
+                  });
+
+                  var subject = testApp.request(mockRequest);
+                  subject = subject.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>yes</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
+              context("when an intent's confirmationStatus is not CONFIRMED", function() {
+                it("reports no confirmation", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.isConfirmed() ? "yes" : "no");
+                    return true;
+                  });
+
+                  var subject = testApp.request(mockRequest);
+                  subject = subject.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>no</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
               it("retrieves a slot value", function() {
                 testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(req.slot("AirportCode"));
@@ -238,6 +296,67 @@ describe("Alexa", function() {
                 return expect(subject).to.eventually.become({
                   ssml: "<speak>JFK</speak>",
                   type: "SSML"
+                });
+              });
+
+              it("retrieves a slot confirmation status", function() {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
+                  res.say(req.slots["AirportCode"].confirmationStatus);
+                  return true;
+                });
+
+                var subject = testApp.request(mockRequest);
+                subject = subject.then(function(response) {
+                  return response.response.outputSpeech;
+                });
+
+                return expect(subject).to.eventually.become({
+                  ssml: "<speak>NONE</speak>",
+                  type: "SSML"
+                });
+              });
+
+              context("when a slot's confirmationStatus is CONFIRMED", function() {
+                var mockRequest = mockHelper.load("intent_request_airport_info.json");
+                mockRequest.request.intent.slots['AirportCode'].confirmationStatus = "CONFIRMED";
+
+                it("reports confirmation", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.slots["AirportCode"].isConfirmed() ? "yes" : "no");
+                    return true;
+                  });
+
+                  var subject = testApp.request(mockRequest);
+                  subject = subject.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>yes</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
+              context("when a slot's confirmationStatus is not CONFIRMED", function() {
+                var mockRequest = mockHelper.load("intent_request_airport_info.json");
+                mockRequest.request.intent.slots['AirportCode'].confirmationStatus = "NONE";
+
+                it("reports no confirmation", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.slots["AirportCode"].isConfirmed() ? "yes" : "no");
+                    return true;
+                  });
+
+                  var subject = testApp.request(mockRequest);
+                  subject = subject.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>no</speak>",
+                    type: "SSML"
+                  });
                 });
               });
 

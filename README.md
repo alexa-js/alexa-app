@@ -158,6 +158,15 @@ String request.type()
 // return the value passed in for a given slot name
 String request.slot("slotName")
 
+// return the Slot object
+Slot request.slots("slotName")
+
+// return the intent's confirmationStatus
+String request.confirmationStatus
+
+// check if the intent is confirmed
+Boolean request.isConfirmed()
+
 // check if you can use session (read or write)
 Boolean request.hasSession()
 
@@ -253,6 +262,24 @@ String session.get(String attributeName)
 // session details, as passed by Amazon in the request
 // for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
 session.details = { ... }
+```
+
+### slot
+```javascript
+// get the slot object
+var slot = request.slots("slotName")
+
+// return the slot's name
+String slot.name
+
+// return the slot's value
+String slot.value
+
+// return the slot's confirmationStatus
+String slot.confirmationStatus
+
+// check if the slot is confirmed
+Boolean slot.isConfirmed()
 ```
 
 ## Request Handlers

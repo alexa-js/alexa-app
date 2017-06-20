@@ -199,15 +199,18 @@ alexa.directives = function(directives) {
 
 alexa.request = function(json) {
   this.data = json;
+  this.slots = {};
+  if (this.data.request && this.data.request.intent && this.data.request.intent.slots && Object.keys(this.data.request.intent.slots).length > 0) {
+    var slot, slotName;
+    for (slotName in this.data.request.intent.slots) {
+      slot = new alexa.slot(this.data.request.intent.slots[slotName]);
+      this.slots[slotName] = slot;
+    }
+  }
   this.slot = function(slotName, defaultValue) {
-    try {
-      if (this.data.request.intent.slots && slotName in this.data.request.intent.slots) {
-        return this.data.request.intent.slots[slotName].value;
-      } else {
-        return defaultValue;
-      }
-    } catch (e) {
-      console.error("missing intent in request: " + slotName, e);
+    if (this.slots && 'undefined' != typeof this.slots[slotName]) {
+      return this.slots[slotName].value;
+    } else {
       return defaultValue;
     }
   };
@@ -225,6 +228,13 @@ alexa.request = function(json) {
   this.isPlaybackController = function() {
     var requestType = this.type();
     return (requestType && 0 === requestType.indexOf("PlaybackController."));
+  };
+
+  if (this.data.request && this.data.request.intent) {
+    this.confirmationStatus = this.data.request.intent.confirmationStatus;
+  }
+  this.isConfirmed = function() {
+    return 'CONFIRMED' === this.confirmationStatus;
   };
 
   this.userId = null;
@@ -257,6 +267,16 @@ alexa.request = function(json) {
   // @deprecated
   this.session = function(key) {
     return this.getSession().get(key);
+  };
+};
+
+alexa.slot = function(slot) {
+  this.name = slot.name;
+  this.value = slot.value;
+  this.confirmationStatus = slot.confirmationStatus;
+
+  this.isConfirmed = function() {
+    return 'CONFIRMED' === this.confirmationStatus;
   };
 };
 

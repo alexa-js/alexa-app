@@ -19,10 +19,12 @@
     "timestamp": "2015-05-13T12:34:56Z",
     "intent": {
       "name": "airportInfoIntent",
+      "confirmationStatus": "NONE",
       "slots": {
         "AirportCode": {
           "name": "AirportCode",
-          "value" : "JFK"
+          "value" : "JFK",
+          "confirmationStatus": "NONE"
         }
       }
     }
