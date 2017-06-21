@@ -497,7 +497,7 @@ The slots object is a simple `name: type` mapping. The type must be one of Amazo
 
 #### custom slot types
 
-[Custom slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interaction-model-reference#Custom Slot Type Syntax) are supported via the following syntax.
+[Custom slot types](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interaction-model-reference#custom-slot-syntax) are supported via the following syntax.
 
 ```javascript
 app.intent("sampleIntent", {
