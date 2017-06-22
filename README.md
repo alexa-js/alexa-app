@@ -29,6 +29,8 @@
     * [Generating Schema and Utterances Output](#generating-schema-and-utterances-output)
 * [Cards](#cards)
     * [Card Examples](#card-examples)
+* [Custom Directives](#custom-directives)
+* [Dialogue](#dialogue)
 * [Error Handling](#error-handling)
 * [Asynchronous Handlers Example](#asynchronous-handlers-example)
     * [Customizing Default Error Messages](#customizing-default-error-messages)
@@ -166,6 +168,9 @@ String request.confirmationStatus
 
 // check if the intent is confirmed
 Boolean request.isConfirmed()
+
+// return the Dialogue object
+Dialogue request.getDialogue()
 
 // check if you can use session (read or write)
 Boolean request.hasSession()
@@ -639,6 +644,43 @@ The full specification for the `directive` object passed to this method can be f
 The `alexa-app` library has special handling for AudioPlayer directives, so you only need to use this method for more general custom directives.
 
 The `response.directive` adds your directive object to the directives array in the response. To clear the directives from the response, call `response.getDirectives().clear()`.
+
+## Dialogue
+
+The `alexa-app` library has special handling for enabling Alexa to handle Dialogue directly. To
+configure `alexa-app` to delegate dialogue to Alexa, enable the handling
+per-intent via the schema:
+
+```javascript
+app.intent("sampleIntent", {
+    "dialogue": {
+      type: "delegate"
+    },
+    "slots": { ... },
+    "utterances": [ ... ],
+  },
+  function(request, response) { ... }
+);
+```
+
+### dialogue object
+
+```javascript
+// return the Dialogue object
+Dialogue request.getDialogue()
+
+// return the intent's dialogueState
+String request.dialogueState
+
+// check if the intent's dialogue is STARTED
+Boolean dialogue.isStarted()
+
+// check if the intent's dialogue is IN_PROGRESS
+Boolean dialogue.isInProgress()
+
+// check if the intent's dialogue is COMPLETED
+Boolean dialogue.isCompleted()
+```
 
 ## Error Handling
 
