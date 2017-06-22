@@ -293,6 +293,7 @@ alexa.dialogue = function(dialogueState) {
 alexa.intent = function(name, schema, handler) {
   this.name = name;
   this.handler = handler;
+  this.dialogue = (schema && typeof schema.dialogue != "undefined") ? schema.dialogue : {};
   this.slots = (schema && typeof schema["slots"] != "undefined") ? schema["slots"] : null;
   this.utterances = (schema && typeof schema["utterances"] != "undefined") ? schema["utterances"] : null;
 };

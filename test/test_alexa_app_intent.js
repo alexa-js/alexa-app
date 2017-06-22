@@ -33,6 +33,15 @@ describe("Alexa", function() {
         it("assigns name", function() {
           expect(testApp.intents["airportInfoIntent"].name).to.equal("airportInfoIntent");
         });
+
+        context("dialogue", function(){
+          var dialogue = { type: "delegate" };
+          schema = { dialogue: dialogue }
+
+          it("assigns dialogue", function() {
+            expect(testApp.intents["airportInfoIntent"].dialogue).to.equal(dialogue);
+          });
+        });
       });
 
       context("without schema", function() {

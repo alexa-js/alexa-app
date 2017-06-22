@@ -304,6 +304,9 @@ See example further below.
 
 ```javascript
 app.intent("live", {
+    "dialogue": {
+      type: "delegate",
+    },
     "slots": {
       "city": "AMAZON.US_CITY"
     },
