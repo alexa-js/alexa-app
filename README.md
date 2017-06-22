@@ -30,7 +30,7 @@
 * [Cards](#cards)
     * [Card Examples](#card-examples)
 * [Custom Directives](#custom-directives)
-* [Dialogue](#dialogue)
+* [Dialog](#dialog)
 * [Error Handling](#error-handling)
 * [Asynchronous Handlers Example](#asynchronous-handlers-example)
     * [Customizing Default Error Messages](#customizing-default-error-messages)
@@ -169,8 +169,8 @@ String request.confirmationStatus
 // check if the intent is confirmed
 Boolean request.isConfirmed()
 
-// return the Dialogue object
-Dialogue request.getDialogue()
+// return the Dialog object
+Dialog request.getDialog()
 
 // check if you can use session (read or write)
 Boolean request.hasSession()
@@ -309,7 +309,7 @@ See example further below.
 
 ```javascript
 app.intent("live", {
-    "dialogue": {
+    "dialog": {
       type: "delegate",
     },
     "slots": {
@@ -645,15 +645,15 @@ The `alexa-app` library has special handling for AudioPlayer directives, so you 
 
 The `response.directive` adds your directive object to the directives array in the response. To clear the directives from the response, call `response.getDirectives().clear()`.
 
-## Dialogue
+## Dialog
 
-The `alexa-app` library has special handling for enabling Alexa to handle Dialogue directly. To
-configure `alexa-app` to delegate dialogue to Alexa, enable the handling
+The `alexa-app` library has special handling for enabling Alexa to handle Dialog directly. To
+configure `alexa-app` to delegate dialog to Alexa, enable the handling
 per-intent via the schema:
 
 ```javascript
 app.intent("sampleIntent", {
-    "dialogue": {
+    "dialog": {
       type: "delegate"
     },
     "slots": { ... },
@@ -663,23 +663,23 @@ app.intent("sampleIntent", {
 );
 ```
 
-### dialogue object
+### dialog object
 
 ```javascript
-// return the Dialogue object
-Dialogue request.getDialogue()
+// return the Dialog object
+Dialog request.getDialog()
 
-// return the intent's dialogueState
-String request.dialogueState
+// return the intent's dialogState
+String request.dialogState
 
-// check if the intent's dialogue is STARTED
-Boolean dialogue.isStarted()
+// check if the intent's dialog is STARTED
+Boolean dialog.isStarted()
 
-// check if the intent's dialogue is IN_PROGRESS
-Boolean dialogue.isInProgress()
+// check if the intent's dialog is IN_PROGRESS
+Boolean dialog.isInProgress()
 
-// check if the intent's dialogue is COMPLETED
-Boolean dialogue.isCompleted()
+// check if the intent's dialog is COMPLETED
+Boolean dialog.isCompleted()
 ```
 
 ## Error Handling

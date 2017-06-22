@@ -255,10 +255,10 @@ alexa.request = function(json) {
     return session;
   };
 
-  this.getDialogue = function() {
+  this.getDialog = function() {
     var dialogState = (typeof this.data.request['dialogState'] != "undefined") ?
       this.data.request['dialogState'] : null;
-    return new alexa.dialogue(dialogState);
+    return new alexa.dialog(dialogState);
   };
 
   // legacy code below
@@ -276,36 +276,36 @@ alexa.request = function(json) {
   };
 };
 
-alexa.dialogue = function(dialogueState) {
-  this.dialogueState = dialogueState;
+alexa.dialog = function(dialogState) {
+  this.dialogState = dialogState;
 
   this.isStarted = function() {
-    return 'STARTED' === this.dialogueState;
+    return 'STARTED' === this.dialogState;
   };
   this.isInProgress = function() {
-    return 'IN_PROGRESS' === this.dialogueState;
+    return 'IN_PROGRESS' === this.dialogState;
   };
   this.isCompleted = function() {
-    return 'COMPLETED' === this.dialogueState;
+    return 'COMPLETED' === this.dialogState;
   };
 
-  this.handleDialogueDelegation = function(request, response) {
-    var dialogueDirective = {
+  this.handleDialogDelegation = function(request, response) {
+    var dialogDirective = {
       "type": "Dialog.Delegate"
     };
-    response.shouldEndSession(false).directive(dialogueDirective).send();
+    response.shouldEndSession(false).directive(dialogDirective).send();
   };
 };
 
 alexa.intent = function(name, schema, handler) {
   this.name = name;
   this.handler = handler;
-  this.dialogue = (schema && typeof schema.dialogue != "undefined") ? schema.dialogue : {};
+  this.dialog = (schema && typeof schema.dialog != "undefined") ? schema.dialog : {};
   this.slots = (schema && typeof schema["slots"] != "undefined") ? schema["slots"] : null;
   this.utterances = (schema && typeof schema["utterances"] != "undefined") ? schema["utterances"] : null;
 
-  this.isDelegatedDialogue = function() {
-    return this.dialogue.type == "delegate";
+  this.isDelegatedDialog = function() {
+    return this.dialog.type == "delegate";
   };
 };
 
@@ -494,8 +494,8 @@ alexa.app = function(name) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
           if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent].handler == "function") {
-            if (self.intents[intent].isDelegatedDialogue() && !request.getDialogue().isCompleted()) {
-              return Promise.resolve(request.getDialogue().handleDialogueDelegation(request, response));
+            if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
+              return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
             } else {
               return Promise.resolve(self.intents[intent].handler(request, response));
             }

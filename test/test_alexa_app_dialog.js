@@ -17,11 +17,11 @@ describe("Alexa", function() {
     });
 
     describe("#request", function() {
-      describe("dialogue object", function() {
+      describe("dialog object", function() {
         var mockRequest, intentHandler, subject;
 
-        var setupHandlerAndSubject = function(dialogueState, handler) {
-          mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_" + dialogueState + ".json")
+        var setupHandlerAndSubject = function(dialogState, handler) {
+          mockRequest = mockHelper.load("intent_request_food_delivery_dialog_" + dialogState + ".json")
 
           app.intent("deliveryCreationRequest", {}, handler);
 
@@ -30,15 +30,15 @@ describe("Alexa", function() {
           });
         };
 
-        describe("#dialogueState", function() {
+        describe("#dialogState", function() {
           beforeEach(function() {
             setupHandlerAndSubject("started", function (req, res) {
-              res.say(req.getDialogue().dialogueState);
+              res.say(req.getDialog().dialogState);
               return true;
             });
           });
 
-          it("returns an intent's dialogueState", function() {
+          it("returns an intent's dialogState", function() {
             return expect(subject).to.eventually.become({
               ssml: "<speak>STARTED</speak>",
               type: "SSML"
@@ -47,15 +47,15 @@ describe("Alexa", function() {
         });
 
         describe("#isStarted", function() {
-          context("when an intent's dialogueState is STARTED", function() {
+          context("when an intent's dialogState is STARTED", function() {
             beforeEach(function() {
               setupHandlerAndSubject("started", function (req, res) {
-                res.say(req.getDialogue().isStarted()  ? "yes" : "no");
+                res.say(req.getDialog().isStarted()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is STARTED", function() {
+            it("reports dialogState is STARTED", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>yes</speak>",
                 type: "SSML"
@@ -63,15 +63,15 @@ describe("Alexa", function() {
             });
           });
 
-          context("when an intent's dialogueState is not STARTED", function() {
+          context("when an intent's dialogState is not STARTED", function() {
             beforeEach(function() {
               setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialogue().isStarted()  ? "yes" : "no");
+                res.say(req.getDialog().isStarted()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is not STARTED", function() {
+            it("reports dialogState is not STARTED", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>no</speak>",
                 type: "SSML"
@@ -81,15 +81,15 @@ describe("Alexa", function() {
         });
 
         describe("#isInProgress", function() {
-          context("when an intent's dialogueState is IN_PROGRESS", function() {
+          context("when an intent's dialogState is IN_PROGRESS", function() {
             beforeEach(function() {
               setupHandlerAndSubject("in_progress", function (req, res) {
-                res.say(req.getDialogue().isInProgress()  ? "yes" : "no");
+                res.say(req.getDialog().isInProgress()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is IN_PROGRESS", function() {
+            it("reports dialogState is IN_PROGRESS", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>yes</speak>",
                 type: "SSML"
@@ -97,15 +97,15 @@ describe("Alexa", function() {
             });
           });
 
-          context("when an intent's dialogueState is not IN_PROGRESS", function() {
+          context("when an intent's dialogState is not IN_PROGRESS", function() {
             beforeEach(function() {
               setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialogue().isInProgress()  ? "yes" : "no");
+                res.say(req.getDialog().isInProgress()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is not IN_PROGRESS", function() {
+            it("reports dialogState is not IN_PROGRESS", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>no</speak>",
                 type: "SSML"
@@ -115,15 +115,15 @@ describe("Alexa", function() {
         });
 
         describe("#isCompleted", function() {
-          context("when an intent's dialogueState is COMPLETED", function() {
+          context("when an intent's dialogState is COMPLETED", function() {
             beforeEach(function() {
               setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialogue().isCompleted()  ? "yes" : "no");
+                res.say(req.getDialog().isCompleted()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is COMPLETED", function() {
+            it("reports dialogState is COMPLETED", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>yes</speak>",
                 type: "SSML"
@@ -131,15 +131,15 @@ describe("Alexa", function() {
             });
           });
 
-          context("when an intent's dialogueState is not COMPLETED", function() {
+          context("when an intent's dialogState is not COMPLETED", function() {
             beforeEach(function() {
               setupHandlerAndSubject("started", function (req, res) {
-                res.say(req.getDialogue().isCompleted()  ? "yes" : "no");
+                res.say(req.getDialog().isCompleted()  ? "yes" : "no");
                 return true;
               });
             });
 
-            it("reports dialogueState is not COMPLETED", function() {
+            it("reports dialogState is not COMPLETED", function() {
               return expect(subject).to.eventually.become({
                 ssml: "<speak>no</speak>",
                 type: "SSML"
@@ -149,10 +149,10 @@ describe("Alexa", function() {
         });
       });
 
-      describe("dialogue response", function() {
-        context("request's intent has a dialogueState of STARTED", function () {
-          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_started.json");
-          var dialogueDirective = {
+      describe("dialog response", function() {
+        context("request's intent has a dialogState of STARTED", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_started.json");
+          var dialogDirective = {
             type: 'Dialog.Delegate'
           };
           var intentHandler = function (req, res) {
@@ -160,10 +160,10 @@ describe("Alexa", function() {
             return true;
           };
 
-          context("intent configured to delegate dialogue to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
-                "dialogue": {
+                "dialog": {
                   type: "delegate"
                 }
               }, intentHandler);
@@ -173,7 +173,7 @@ describe("Alexa", function() {
               var subject = app.request(mockRequest).then(function (response) {
                 return response.response.directives;
               });
-              return expect(subject).to.eventually.contain(dialogueDirective);
+              return expect(subject).to.eventually.contain(dialogDirective);
             });
 
             it("does not utilize intent's intentHandler", function () {
@@ -187,7 +187,7 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialogue", function () {
+          context("intent is manually handling the dialog", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {}, intentHandler);
             });
@@ -211,9 +211,9 @@ describe("Alexa", function() {
           });
         });
 
-        context("request's intent has a dialogueState of IN_PROGRESS", function () {
-          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_in_progress.json");
-          var dialogueDirective = {
+        context("request's intent has a dialogState of IN_PROGRESS", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_in_progress.json");
+          var dialogDirective = {
             type: 'Dialog.Delegate'
           };
           var intentHandler = function (req, res) {
@@ -221,10 +221,10 @@ describe("Alexa", function() {
             return true;
           };
 
-          context("intent configured to delegate dialogue to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
-                "dialogue": {
+                "dialog": {
                   type: "delegate"
                 }
               }, intentHandler);
@@ -234,7 +234,7 @@ describe("Alexa", function() {
               var subject = app.request(mockRequest).then(function (response) {
                 return response.response.directives;
               });
-              return expect(subject).to.eventually.contain(dialogueDirective);
+              return expect(subject).to.eventually.contain(dialogDirective);
             });
 
             it("does not utilize intent's intentHandler", function () {
@@ -248,7 +248,7 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialogue", function () {
+          context("intent is manually handling the dialog", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {}, intentHandler);
             });
@@ -272,9 +272,9 @@ describe("Alexa", function() {
           });
         });
 
-        context("request's intent has a dialogueState of COMPLETED", function () {
-          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_completed.json");
-          var dialogueDirective = {
+        context("request's intent has a dialogState of COMPLETED", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_completed.json");
+          var dialogDirective = {
             type: 'Dialog.Delegate'
           };
           var intentHandler = function (req, res) {
@@ -282,10 +282,10 @@ describe("Alexa", function() {
             return true;
           };
 
-          context("intent configured to delegate dialogue to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
-                "dialogue": {
+                "dialog": {
                   type: "delegate"
                 }
               }, intentHandler);
@@ -309,7 +309,7 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialogue", function () {
+          context("intent is manually handling the dialog", function () {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {}, intentHandler);
             });
