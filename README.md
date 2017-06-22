@@ -298,7 +298,7 @@ app.launch(function(request, response) {
 ### IntentRequest
 
 Define the handler for multiple intents using multiple calls to `intent()`.
-Intent schema and sample utterances can also be passed to `intent()`, which is detailed below.
+Additional Intent configuration schema like slots and sample utterances can also be passed to `intent()`, which is detailed below.
 Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return a Promise. The response will be sent when the promise is resolved and fail when the promise is rejected.
 See example further below.
 

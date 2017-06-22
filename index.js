@@ -270,6 +270,13 @@ alexa.request = function(json) {
   };
 };
 
+alexa.intent = function(name, schema, handler) {
+  this.name = name;
+  this.handler = handler;
+  this.slots = (schema && typeof schema["slots"] != "undefined") ? schema["slots"] : null;
+  this.utterances = (schema && typeof schema["utterances"] != "undefined") ? schema["utterances"] : null;
+};
+
 alexa.slot = function(slot) {
   this.name = slot.name;
   this.value = slot.value;
@@ -377,15 +384,9 @@ alexa.app = function(name) {
   this.intent = function(intentName, schema, func) {
     if (typeof schema == "function") {
       func = schema;
-      schema = null;
+      schema = {};
     }
-    self.intents[intentName] = {
-      "name": intentName,
-      "function": func
-    };
-    if (schema) {
-      self.intents[intentName].schema = schema;
-    }
+    self.intents[intentName] = new alexa.intent(intentName, schema, func);
   };
   this.audioPlayerEventHandlers = {};
   this.audioPlayer = function(eventName, func) {
@@ -460,8 +461,8 @@ alexa.app = function(name) {
       if (!response.resolved) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
-          if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-            return Promise.resolve(self.intents[intent]["function"](request, response));
+          if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent].handler == "function") {
+            return Promise.resolve(self.intents[intent].handler(request, response));
           } else {
             throw "NO_INTENT_FOUND";
           }
@@ -538,12 +539,12 @@ alexa.app = function(name) {
       var intentSchema = {
         "intent": intent.name
       };
-      if (intent.schema && intent.schema.slots && Object.keys(intent.schema.slots).length > 0) {
+      if (intent.slots && Object.keys(intent.slots).length > 0) {
         intentSchema["slots"] = [];
-        for (key in intent.schema.slots) {
+        for (key in intent.slots) {
           intentSchema.slots.push({
             "name": key,
-            "type": intent.schema.slots[key]
+            "type": intent.slots[key]
           });
         }
       }
@@ -559,10 +560,10 @@ alexa.app = function(name) {
       out = "";
     for (intentName in self.intents) {
       intent = self.intents[intentName];
-      if (intent.schema && intent.schema.utterances) {
-        intent.schema.utterances.forEach(function(sample) {
+      if (intent.utterances) {
+        intent.utterances.forEach(function(sample) {
           var list = AlexaUtterances(sample,
-            intent.schema.slots,
+            intent.slots,
             self.dictionary,
             self.exhaustiveUtterances);
           list.forEach(function(utterance) {
