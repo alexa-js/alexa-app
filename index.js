@@ -255,6 +255,12 @@ alexa.request = function(json) {
     return session;
   };
 
+  this.getDialogue = function() {
+    var dialogState = (typeof this.data.request['dialogState'] != "undefined") ?
+      this.data.request['dialogState'] : null;
+    return new alexa.dialogue(dialogState);
+  };
+
   // legacy code below
   // @deprecated
   this.sessionDetails = this.getSession().details;
@@ -267,6 +273,20 @@ alexa.request = function(json) {
   // @deprecated
   this.session = function(key) {
     return this.getSession().get(key);
+  };
+};
+
+alexa.dialogue = function(dialogueState) {
+  this.dialogueState = dialogueState;
+
+  this.isStarted = function() {
+    return 'STARTED' === this.dialogueState;
+  };
+  this.isInProgress = function() {
+    return 'IN_PROGRESS' === this.dialogueState;
+  };
+  this.isCompleted = function() {
+    return 'COMPLETED' === this.dialogueState;
   };
 };
 
