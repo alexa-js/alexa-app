@@ -288,6 +288,13 @@ alexa.dialogue = function(dialogueState) {
   this.isCompleted = function() {
     return 'COMPLETED' === this.dialogueState;
   };
+
+  this.handleDialogueDelegation = function(request, response) {
+    var dialogueDirective = {
+      "type": "Dialog.Delegate"
+    };
+    response.shouldEndSession(false).directive(dialogueDirective).send();
+  };
 };
 
 alexa.intent = function(name, schema, handler) {
@@ -296,6 +303,10 @@ alexa.intent = function(name, schema, handler) {
   this.dialogue = (schema && typeof schema.dialogue != "undefined") ? schema.dialogue : {};
   this.slots = (schema && typeof schema["slots"] != "undefined") ? schema["slots"] : null;
   this.utterances = (schema && typeof schema["utterances"] != "undefined") ? schema["utterances"] : null;
+
+  this.isDelegatedDialogue = function() {
+    return this.dialogue.type == "delegate";
+  };
 };
 
 alexa.slot = function(slot) {
@@ -483,7 +494,11 @@ alexa.app = function(name) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
           if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent].handler == "function") {
-            return Promise.resolve(self.intents[intent].handler(request, response));
+            if (self.intents[intent].isDelegatedDialogue() && !request.getDialogue().isCompleted()) {
+              return Promise.resolve(request.getDialogue().handleDialogueDelegation(request, response));
+            } else {
+              return Promise.resolve(self.intents[intent].handler(request, response));
+            }
           } else {
             throw "NO_INTENT_FOUND";
           }

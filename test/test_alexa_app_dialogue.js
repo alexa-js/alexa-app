@@ -148,6 +148,190 @@ describe("Alexa", function() {
           });
         });
       });
+
+      describe("dialogue response", function() {
+        context("request's intent has a dialogueState of STARTED", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_started.json");
+          var dialogueDirective = {
+            type: 'Dialog.Delegate'
+          };
+          var intentHandler = function (req, res) {
+            res.say("I'm starting your delivery").send();
+            return true;
+          };
+
+          context("intent configured to delegate dialogue to Alexa", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {
+                "dialogue": {
+                  type: "delegate"
+                }
+              }, intentHandler);
+            });
+
+            it("contains directive property with Dialog.Delegate directive object", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.contain(dialogueDirective);
+            });
+
+            it("does not utilize intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.not.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+          context("intent is manually handling the dialogue", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {}, intentHandler);
+            });
+
+            it("contains no directive properties", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.be.empty;
+            });
+
+            it("utilizes intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+        });
+
+        context("request's intent has a dialogueState of IN_PROGRESS", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_in_progress.json");
+          var dialogueDirective = {
+            type: 'Dialog.Delegate'
+          };
+          var intentHandler = function (req, res) {
+            res.say("I'm starting your delivery").send();
+            return true;
+          };
+
+          context("intent configured to delegate dialogue to Alexa", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {
+                "dialogue": {
+                  type: "delegate"
+                }
+              }, intentHandler);
+            });
+
+            it("contains directive property with Dialog.Delegate directive object", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.contain(dialogueDirective);
+            });
+
+            it("does not utilize intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.not.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+          context("intent is manually handling the dialogue", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {}, intentHandler);
+            });
+
+            it("contains no directive properties", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.be.empty;
+            });
+
+            it("utilizes intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+        });
+
+        context("request's intent has a dialogueState of COMPLETED", function () {
+          var mockRequest = mockHelper.load("intent_request_food_delivery_dialogue_completed.json");
+          var dialogueDirective = {
+            type: 'Dialog.Delegate'
+          };
+          var intentHandler = function (req, res) {
+            res.say("I'm starting your delivery").send();
+            return true;
+          };
+
+          context("intent configured to delegate dialogue to Alexa", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {
+                "dialogue": {
+                  type: "delegate"
+                }
+              }, intentHandler);
+            });
+
+            it("contains no directive properties", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.be.empty;
+            });
+
+            it("utilizes intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+          context("intent is manually handling the dialogue", function () {
+            beforeEach(function() {
+              app.intent("deliveryCreationRequest", {}, intentHandler);
+            });
+
+            it("contains no directive properties", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.directives;
+              });
+              return expect(subject).to.eventually.be.empty;
+            });
+
+            it("utilizes intent's intentHandler", function () {
+              var subject = app.request(mockRequest).then(function (response) {
+                return response.response.outputSpeech;
+              });
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>I'm starting your delivery</speak>",
+                type: "SSML"
+              });
+            });
+          });
+        });
       });
     });
   });
