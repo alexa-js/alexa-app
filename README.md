@@ -647,6 +647,10 @@ The `response.directive` adds your directive object to the directives array in t
 
 ## Dialog
 
+The full specification for the dialog directives that can be used can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/dialog-interface-reference). See [Custom Directives](#custom-directives) above for an example on manually sending dialog directives.
+
+Note that skills must meet Alexa's [requirements to use the `Dialog` directive](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/dialog-interface-reference#dialog-reqs).
+
 The `alexa-app` library has special handling for enabling Alexa to handle Dialog directly. To
 configure `alexa-app` to delegate dialog to Alexa, enable the handling
 per-intent via the schema:
