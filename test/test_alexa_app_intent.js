@@ -26,16 +26,21 @@ describe("Alexa", function() {
           testApp.intent("airportInfoIntent", schema, func);
         });
 
-        it("assigns schema", function() {
-          expect(testApp.intents["airportInfoIntent"].schema).to.equal(schema);
-        });
-
-        it("assigns function", function() {
-          expect(testApp.intents["airportInfoIntent"].function).to.equal(func);
+        it("assigns handler", function() {
+          expect(testApp.intents["airportInfoIntent"].handler).to.equal(func);
         });
 
         it("assigns name", function() {
           expect(testApp.intents["airportInfoIntent"].name).to.equal("airportInfoIntent");
+        });
+
+        context("dialog", function(){
+          var dialog = { type: "delegate" };
+          schema = { dialog: dialog }
+
+          it("assigns dialog", function() {
+            expect(testApp.intents["airportInfoIntent"].dialog).to.equal(dialog);
+          });
         });
       });
 
@@ -44,12 +49,8 @@ describe("Alexa", function() {
           testApp.intent("airportInfoIntent", func);
         });
 
-        it("doesn't assign schema", function() {
-          expect(testApp.intents["airportInfoIntent"].schema).to.be.undefined;
-        });
-
-        it("assigns function", function() {
-          expect(testApp.intents["airportInfoIntent"].function).to.equal(func);
+        it("assigns handler", function() {
+          expect(testApp.intents["airportInfoIntent"].handler).to.equal(func);
         });
 
         it("assigns name", function() {

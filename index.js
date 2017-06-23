@@ -255,6 +255,12 @@ alexa.request = function(json) {
     return session;
   };
 
+  this.getDialog = function() {
+    var dialogState = (typeof this.data.request['dialogState'] !== "undefined") ?
+      this.data.request['dialogState'] : null;
+    return new alexa.dialog(dialogState);
+  };
+
   // legacy code below
   // @deprecated
   this.sessionDetails = this.getSession().details;
@@ -267,6 +273,39 @@ alexa.request = function(json) {
   // @deprecated
   this.session = function(key) {
     return this.getSession().get(key);
+  };
+};
+
+alexa.dialog = function(dialogState) {
+  this.dialogState = dialogState;
+
+  this.isStarted = function() {
+    return 'STARTED' === this.dialogState;
+  };
+  this.isInProgress = function() {
+    return 'IN_PROGRESS' === this.dialogState;
+  };
+  this.isCompleted = function() {
+    return 'COMPLETED' === this.dialogState;
+  };
+
+  this.handleDialogDelegation = function(request, response) {
+    var dialogDirective = {
+      "type": "Dialog.Delegate"
+    };
+    response.shouldEndSession(false).directive(dialogDirective).send();
+  };
+};
+
+alexa.intent = function(name, schema, handler) {
+  this.name = name;
+  this.handler = handler;
+  this.dialog = (schema && typeof schema.dialog !== "undefined") ? schema.dialog : {};
+  this.slots = (schema && typeof schema["slots"] !== "undefined") ? schema["slots"] : null;
+  this.utterances = (schema && typeof schema["utterances"] !== "undefined") ? schema["utterances"] : null;
+
+  this.isDelegatedDialog = function() {
+    return this.dialog.type === "delegate";
   };
 };
 
@@ -375,17 +414,11 @@ alexa.app = function(name) {
   this.dictionary = {};
   this.intents = {};
   this.intent = function(intentName, schema, func) {
-    if (typeof schema == "function") {
+    if (typeof schema === "function") {
       func = schema;
-      schema = null;
+      schema = {};
     }
-    self.intents[intentName] = {
-      "name": intentName,
-      "function": func
-    };
-    if (schema) {
-      self.intents[intentName].schema = schema;
-    }
+    self.intents[intentName] = new alexa.intent(intentName, schema, func);
   };
   this.audioPlayerEventHandlers = {};
   this.audioPlayer = function(eventName, func) {
@@ -460,8 +493,12 @@ alexa.app = function(name) {
       if (!response.resolved) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
-          if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
-            return Promise.resolve(self.intents[intent]["function"](request, response));
+          if (typeof self.intents[intent] !== "undefined" && typeof self.intents[intent].handler === "function") {
+            if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
+              return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
+            } else {
+              return Promise.resolve(self.intents[intent].handler(request, response));
+            }
           } else {
             throw "NO_INTENT_FOUND";
           }
@@ -538,12 +575,12 @@ alexa.app = function(name) {
       var intentSchema = {
         "intent": intent.name
       };
-      if (intent.schema && intent.schema.slots && Object.keys(intent.schema.slots).length > 0) {
+      if (intent.slots && Object.keys(intent.slots).length > 0) {
         intentSchema["slots"] = [];
-        for (key in intent.schema.slots) {
+        for (key in intent.slots) {
           intentSchema.slots.push({
             "name": key,
-            "type": intent.schema.slots[key]
+            "type": intent.slots[key]
           });
         }
       }
@@ -559,10 +596,10 @@ alexa.app = function(name) {
       out = "";
     for (intentName in self.intents) {
       intent = self.intents[intentName];
-      if (intent.schema && intent.schema.utterances) {
-        intent.schema.utterances.forEach(function(sample) {
+      if (intent.utterances) {
+        intent.utterances.forEach(function(sample) {
           var list = AlexaUtterances(sample,
-            intent.schema.slots,
+            intent.slots,
             self.dictionary,
             self.exhaustiveUtterances);
           list.forEach(function(utterance) {

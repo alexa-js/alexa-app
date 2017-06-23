@@ -29,6 +29,8 @@
     * [Generating Schema and Utterances Output](#generating-schema-and-utterances-output)
 * [Cards](#cards)
     * [Card Examples](#card-examples)
+* [Custom Directives](#custom-directives)
+* [Dialog](#dialog)
 * [Error Handling](#error-handling)
 * [Asynchronous Handlers Example](#asynchronous-handlers-example)
     * [Customizing Default Error Messages](#customizing-default-error-messages)
@@ -167,6 +169,9 @@ String request.confirmationStatus
 // check if the intent is confirmed
 Boolean request.isConfirmed()
 
+// return the Dialog object
+Dialog request.getDialog()
+
 // check if you can use session (read or write)
 Boolean request.hasSession()
 
@@ -298,12 +303,15 @@ app.launch(function(request, response) {
 ### IntentRequest
 
 Define the handler for multiple intents using multiple calls to `intent()`.
-Intent schema and sample utterances can also be passed to `intent()`, which is detailed below.
+Additional Intent configuration schema like slots and sample utterances can also be passed to `intent()`, which is detailed below.
 Intent handlers that don't return an immediate response (because they do some asynchronous operation) must return a Promise. The response will be sent when the promise is resolved and fail when the promise is rejected.
 See example further below.
 
 ```javascript
 app.intent("live", {
+    "dialog": {
+      type: "delegate",
+    },
     "slots": {
       "city": "AMAZON.US_CITY"
     },
@@ -636,6 +644,47 @@ The full specification for the `directive` object passed to this method can be f
 The `alexa-app` library has special handling for AudioPlayer directives, so you only need to use this method for more general custom directives.
 
 The `response.directive` adds your directive object to the directives array in the response. To clear the directives from the response, call `response.getDirectives().clear()`.
+
+## Dialog
+
+The full specification for the dialog directives that can be used can be found [here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/dialog-interface-reference). See [Custom Directives](#custom-directives) above for an example on manually sending dialog directives.
+
+Note that skills must meet Alexa's [requirements to use the `Dialog` directive](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/dialog-interface-reference#dialog-reqs).
+
+The `alexa-app` library has special handling for enabling Alexa to handle Dialog directly. To
+configure `alexa-app` to delegate dialog to Alexa, enable the handling
+per-intent via the schema:
+
+```javascript
+app.intent("sampleIntent", {
+    "dialog": {
+      type: "delegate"
+    },
+    "slots": { ... },
+    "utterances": [ ... ],
+  },
+  function(request, response) { ... }
+);
+```
+
+### dialog object
+
+```javascript
+// return the Dialog object
+Dialog request.getDialog()
+
+// return the intent's dialogState
+String request.dialogState
+
+// check if the intent's dialog is STARTED
+Boolean dialog.isStarted()
+
+// check if the intent's dialog is IN_PROGRESS
+Boolean dialog.isInProgress()
+
+// check if the intent's dialog is COMPLETED
+Boolean dialog.isCompleted()
+```
 
 ## Error Handling
 
