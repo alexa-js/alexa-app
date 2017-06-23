@@ -256,7 +256,7 @@ alexa.request = function(json) {
   };
 
   this.getDialog = function() {
-    var dialogState = (typeof this.data.request['dialogState'] != "undefined") ?
+    var dialogState = (typeof this.data.request['dialogState'] !== "undefined") ?
       this.data.request['dialogState'] : null;
     return new alexa.dialog(dialogState);
   };
@@ -300,12 +300,12 @@ alexa.dialog = function(dialogState) {
 alexa.intent = function(name, schema, handler) {
   this.name = name;
   this.handler = handler;
-  this.dialog = (schema && typeof schema.dialog != "undefined") ? schema.dialog : {};
-  this.slots = (schema && typeof schema["slots"] != "undefined") ? schema["slots"] : null;
-  this.utterances = (schema && typeof schema["utterances"] != "undefined") ? schema["utterances"] : null;
+  this.dialog = (schema && typeof schema.dialog !== "undefined") ? schema.dialog : {};
+  this.slots = (schema && typeof schema["slots"] !== "undefined") ? schema["slots"] : null;
+  this.utterances = (schema && typeof schema["utterances"] !== "undefined") ? schema["utterances"] : null;
 
   this.isDelegatedDialog = function() {
-    return this.dialog.type == "delegate";
+    return this.dialog.type === "delegate";
   };
 };
 
@@ -414,7 +414,7 @@ alexa.app = function(name) {
   this.dictionary = {};
   this.intents = {};
   this.intent = function(intentName, schema, func) {
-    if (typeof schema == "function") {
+    if (typeof schema === "function") {
       func = schema;
       schema = {};
     }
@@ -493,7 +493,7 @@ alexa.app = function(name) {
       if (!response.resolved) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;
-          if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent].handler == "function") {
+          if (typeof self.intents[intent] !== "undefined" && typeof self.intents[intent].handler === "function") {
             if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
               return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
             } else {
