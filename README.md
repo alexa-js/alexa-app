@@ -330,17 +330,37 @@ app.intent("vacation", function(request, response) {
 
 #### AMAZON Specific Intents
 
-Amazon has specific intents that have to do with basic functionality of your skill that you must add.  Some examples of this are `AMAZON.HelpIntent`, `AMAZON.StopIntent`, and `AMAZON.CancelIntent`.  Here is an example of how you would specify that type of intent.
+Amazon has specific intents that have to do with basic functionality of your skill that you must add.  Some examples of this are `AMAZON.HelpIntent`, `AMAZON.StopIntent`, and `AMAZON.CancelIntent`.  Here are examples of how you would specify these types of intents.
 
 ```javascript
+app.intent("AMAZON.HelpIntent",{
+  "slots": {},
+  "utterances": []
+}, function(request, response) {
+  	var helpOutput = "You can say 'some statement' or ask 'some question'. You can also say stop or exit to quit.";
+  	var reprompt = "What would you like to do?";
+  	// AMAZON.HelpIntent must leave session open -> .shouldEndSession(false)
+  	response.say(helpOutput).reprompt(reprompt).shouldEndSession(false);
+  	return
+});
+
 app.intent("AMAZON.StopIntent",{
   "slots": {},
   "utterances": []
 }, function(request, response) {
-  	var stopOutput = "Don't You Worry. I'll be back."
+  	var stopOutput = "Don't You Worry. I'll be back.";
   	response.say(stopOutput)
   	return
-})
+});
+
+app.intent("AMAZON.CancelIntent",{
+  "slots": {},
+  "utterances": []
+}, function(request, response) {
+  	var cancelOutput = "No problem. Request cancelled.";
+  	response.say(cancelOutput);
+  	return
+});
 ```
 
 You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon [provides](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/standard-intents).  
