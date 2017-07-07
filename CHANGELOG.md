@@ -2,8 +2,9 @@
 
 ### 4.1.0 (Next)
 * [#97](https://github.com/alexa-js/alexa-app/pull/97): Added support for custom directives - [@ajcrites](https://github.com/ajcrites).
-* [#248](https://github.com/alexa-js/alexa-app/pull/248): Add support for intent and slot `confirmationStatus` - [@sbonami]((https://github.com/sbonami).
-* [#250](https://github.com/alexa-js/alexa-app/pull/250): Add support for handling and/or delegating Dialog - [@sbonami]((https://github.com/sbonami).
+* [#248](https://github.com/alexa-js/alexa-app/pull/248): Add support for intent and slot `confirmationStatus` - [@sbonami](https://github.com/sbonami).
+* [#250](https://github.com/alexa-js/alexa-app/pull/250): Add support for handling and/or delegating Dialog - [@sbonami](https://github.com/sbonami).
+* [#258](https://github.com/alexa-js/alexa-app/pull/258): Fix ability to edit request.type() in app.pre - [@samueljr](https://github.com/samueljr).
 * Your contribution here
 
 ### 4.0.1 (May 17, 2017)

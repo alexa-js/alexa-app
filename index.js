@@ -490,6 +490,7 @@ alexa.app = function(name) {
       }
       return prePromise;
     }).then(function () {
+      requestType = request.type();
       if (!response.resolved) {
         if ("IntentRequest" === requestType) {
           var intent = request_json.request.intent.name;

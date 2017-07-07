@@ -352,6 +352,22 @@ describe("Alexa", function() {
 
     describe("#request", function() {
       context("request with session", function() {
+        var mockRequest = mockHelper.load("intent_request_airport_info.json");
+
+        it("should respond to changes to request.type() performed in app.pre", function() {
+          testApp.pre = function(req, res, type) {
+            req.data.request.type = 'Some Invalid Request Type';
+          };
+
+          return testApp.request(mockRequest).then(function(result) {
+            expect(result.response.outputSpeech.ssml).to.equal('<speak>Error: not a valid request</speak>');
+          });
+        });
+      });
+    });
+
+    describe("#request", function() {
+      context("request with session", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
 
         it("session.get(key) should not throw if attribute is not present", function() {
