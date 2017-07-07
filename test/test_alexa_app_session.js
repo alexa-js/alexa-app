@@ -359,7 +359,7 @@ describe("Alexa", function() {
             req.data.request.type = 'Some Invalid Request Type';
           };
 
-          return testApp.request(mockRequest).then(result => {
+          return testApp.request(mockRequest).then(function(result) {
             expect(result.response.outputSpeech.ssml).to.equal('<speak>Error: not a valid request</speak>');
           });
         });
