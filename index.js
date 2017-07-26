@@ -233,6 +233,11 @@ alexa.request = function(json) {
   if (this.data.request && this.data.request.intent) {
     this.confirmationStatus = this.data.request.intent.confirmationStatus;
   }
+
+  if (this.data.request && this.data.request.type === 'Display.ElementSelected' && this.data.request.token) {
+    this.selectedElementToken = this.data.request.token;
+  }
+
   this.isConfirmed = function() {
     return 'CONFIRMED' === this.confirmationStatus;
   };
@@ -394,7 +399,9 @@ alexa.app = function(name) {
     // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
     "NO_SESSION": "This request doesn't support session attributes",
     // if some other exception happens
-    "GENERIC_ERROR": "Sorry, the application encountered an error"
+    "GENERIC_ERROR": "Sorry, the application encountered an error",
+    // User interacted with the display but handler has been defined.
+    "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION": "Try telling the application how to handle display events. Make sure displayElementSelected is implemented."
   };
 
   // persist session variables from every request into every response
@@ -437,6 +444,10 @@ alexa.app = function(name) {
   this.launchFunc = null;
   this.launch = function(func) {
     self.launchFunc = func;
+  };
+  this.displayElementSelectedFunc = null;
+  this.displayElementSelected = function(func) {
+    self.displayElementSelectedFunc = func;
   };
   this.sessionEndedFunc = null;
   this.sessionEnded = function(func) {
@@ -524,6 +535,12 @@ alexa.app = function(name) {
           var playbackEventHandlerObject = self.playbackControllerEventHandlers[playbackControllerEvent];
           if (typeof playbackEventHandlerObject != "undefined" && typeof playbackEventHandlerObject["function"] == "function") {
             return Promise.resolve(playbackEventHandlerObject["function"](request, response));
+          }
+        } else if ("Display.ElementSelected" === requestType) {
+          if (typeof self.displayElementSelectedFunc === "function") {
+            return Promise.resolve(self.displayElementSelectedFunc(request, response));
+          } else {
+            throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
           }
         } else {
           throw "INVALID_REQUEST_TYPE";
