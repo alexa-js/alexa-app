@@ -15,6 +15,7 @@
     * [LaunchRequest](#launchrequest)
     * [IntentRequest](#intentrequest)
     * [SessionEndRequest](#sessionendrequest)
+    * [Display.ElementSelected](#display-element-selected)
     * [AudioPlayer Event Request](#audioplayer-event-request)
     * [PlaybackController Event Request](#playbackcontroller-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
@@ -364,6 +365,19 @@ app.intent("AMAZON.CancelIntent",{
 ```
 
 You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon [provides](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/standard-intents).  
+
+### Display Element Selected
+
+Define the handler for when a user selects an element displayed on alexa touch enabled device. For instance the [Echo Show](https://www.amazon.com/Amazon-MW46WB-Introducing-Echo-Show/dp/B01J24C0TI). 
+
+```javascript
+app.displayElementSelected(function(request, response) {
+  // The request object selectedElementToken will be populated with the token that was registered
+  // the element in the display directive. To get the token associated with the directive itself,
+  // it is populated on the request.context.Display.token property.
+  handleRequestForTouchEvent(request.selectedElementToken)
+})
+```
 
 ### SessionEndRequest
 
