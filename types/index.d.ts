@@ -1,15 +1,13 @@
-// Type definitions for alexa-app 2.3.4
-// Project: Alexa-app
-// Definitions by: Mike Lazer-Walker <http://lazerwalker.com>
+// TypeScript Version: 2.2
 
-type RequestHandler = (request: request, response: response) => void;
-type ErrorHandler = (e: any, request: request, response: response) => void;
-type PreOrPostHandler = (request: request, response: response, type: string) => void;
+export type RequestHandler = (request: request, response: response) => void;
+export type ErrorHandler = (e: any, request: request, response: response) => void;
+export type PreOrPostHandler = (request: request, response: response, type: string) => void;
 
-declare var apps: object;
+export let apps: object;
 
-declare class app {
-  constructor(name: String);
+export class app {
+  constructor(name: string);
 
   pre: PreOrPostHandler;
   post: PreOrPostHandler;
@@ -29,7 +27,7 @@ declare class app {
 
   launchFunc?: RequestHandler;
   launch: (func: RequestHandler) => void;
-  
+
   sessionEndedFunc?: RequestHandler;
   sessionEnded: (func: RequestHandler) => void;
 
@@ -45,7 +43,7 @@ declare class app {
   intent: (intentName: string, schema: any, handler: RequestHandler) => void;
 }
 
-declare class request {
+export class request {
   // return the type of request received (Launchrequest, Intentrequest, sessionEndedrequest)
   type: () => string;
 
@@ -78,7 +76,7 @@ declare class request {
 
   isAudioPlayer: () => boolean;
 
-  isPlaybackController: () => boolean;  
+  isPlaybackController: () => boolean;
 
   userId?: string;
   applicationId?: string;
@@ -91,13 +89,13 @@ export class response {
 
   // tell Alexa to say something; multiple calls to say() will be appended to each other
   // all text output is treated as SSML
-  say: (phrase: string) => response
+  say: (phrase: string) => response;
 
   // empty the response text
-  clear: () => response
+  clear: () => response;
 
   // tell Alexa to re-prompt the user for a response, if it didn't hear anything valid
-  reprompt: (phrase: string) => response
+  reprompt: (phrase: string) => response;
 
   // return a card to the user's Alexa app
   // for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#card-object
@@ -144,19 +142,19 @@ export class response {
 
   setSessionAttributes: (attributes: any) => void;
   prepare: () => void;
-  
+
   getDirectives: () => directive[];
-  directive: (directive: any) => response;  
+  directive: (directive: any) => response;
 }
 
-declare class directive {
+export class directive {
   details: any[];
 
   set: (directive: any) => void;
   clear: () => void;
 }
 
-declare class session {
+export class session {
   constructor(session: any);
 
   isAvailable: () => boolean;
@@ -185,7 +183,7 @@ declare class session {
   getAttributes: () => any;
 }
 
-declare class slot {
+export class slot {
   constructor(slot: any);
 
   name: string;
@@ -195,7 +193,7 @@ declare class slot {
   isConfirmed: () => boolean;
 }
 
-declare class dialog {
+export class dialog {
   constructor(dialogState: string);
 
   isStarted: () => boolean;
@@ -205,22 +203,22 @@ declare class dialog {
   handleDialogDelegation: (func: RequestHandler) => void;
 }
 
-declare interface card {
+export interface card {
   text?: string;
   content?: string;
   permissions?: string;
   image?: {
     smallImageUrl?: string;
     largeImageUrl?: string;
-  }
+  };
 }
 
-interface ExpressOptions {
-  expressApp: any,
-  router: any,
-  endpoint: string,
-  checkCert: boolean,
-  debug: boolean,
-  preRequest: PreOrPostHandler,
-  postRequest: PreOrPostHandler
+export interface ExpressOptions {
+  expressApp: any;
+  router: any;
+  endpoint: string;
+  checkCert: boolean;
+  debug: boolean;
+  preRequest: PreOrPostHandler;
+  postRequest: PreOrPostHandler;
 }
