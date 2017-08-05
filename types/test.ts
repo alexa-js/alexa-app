@@ -10,4 +10,9 @@ app.launch((request, response) => {});
 app.intent('intentName', {
   slots: {},
   utterances: ['do a thing']
-}, (request, response) => {});
+}, (request, response) => {
+  response.say("Say a thing!")
+    .card("Show a card", "Wow, you showed a card!")
+    .card({type: "Simple"})
+    .shouldEndSession(false, "Reprompt!")
+});
