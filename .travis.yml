@@ -9,7 +9,7 @@ matrix:
         - npm run-script danger
         - npm run-script lint
         - npm run-script test-with-coverage
-        - if [[ $TRAVIS_NODE_VERSION == "8" ]]; then npm install dtslint; npm run dtslint; fi
+        - npm install dtslint; npm run dtslint
       after_script:
         - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
