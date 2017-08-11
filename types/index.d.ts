@@ -1,5 +1,5 @@
 // TypeScript Version: 2.2
-import * as amazon from "./amazon";
+import * as alexa from "./alexa";
 
 export type RequestHandler = (request: request, response: response) => void;
 export type ErrorHandler = (e: any, request: request, response: response) => void;
@@ -37,7 +37,7 @@ export class app {
    * for expansion of sample utterances */
   dictionary: any;
 
-  intents: {[name: string]: amazon.Intent};
+  intents: {[name: string]: alexa.Intent};
 
   // TODO
   audioPlayerEventHandlers: any;
@@ -49,7 +49,7 @@ export class app {
   sessionEndedFunc?: RequestHandler;
   sessionEnded: (func: RequestHandler) => void;
 
-  request: (requestJSON: amazon.Request) => void;
+  request: (requestJSON: alexa.Request) => void;
 
   /** Extracts the schema and generates a schema JSON object */
   schema: () => string;
@@ -58,10 +58,10 @@ export class app {
   utterances: () => string;
 
   /** A built-in handler for AWS Lambda */
-  handler: (event: string, context: amazon.Context, callback: (error: Error, response: response) => void) => void;
+  handler: (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
 
   /** For backwards compatibility */
-  lambda: (event: string, context: amazon.Context, callback: (error: Error, response: response) => void) => void;
+  lambda: (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
 
   /* attach Alexa endpoint to an express router
    *
@@ -106,10 +106,10 @@ export class request {
   getSession: () => session;
 
   /** Returns the request context */
-  context?: amazon.Context;
+  context?: alexa.Context;
 
   /** The raw request JSON object from Amazon */
-  data: amazon.Request;
+  data: alexa.Request;
 
   isAudioPlayer: () => boolean;
 
@@ -121,7 +121,7 @@ export class request {
 
 export class response {
   resolved: boolean;
-  response: amazon.ResponseBody;
+  response: alexa.ResponseBody;
   sessionObject: session;
 
   /** Tells Alexa to say something; multiple calls to say() will be appended to each other. All text output is treated as SSML 
@@ -138,18 +138,18 @@ export class response {
   /** Returns a card to the user's Alexa app.
    * Supports card(String title, String content) for backwards compat of type "Simple" 
    * */
-  card: (title: string|amazon.Card, content?: string) => response;
+  card: (title: string|alexa.Card, content?: string) => response;
 
   /** return a card instructing the user how to link their account to the skill. 
    * This internally sets the card response 
    * */
   linkAccount: () => response;
 
-  audioPlayerPlay: (playBehavior: string, audioItem: amazon.AudioItem) => response;
+  audioPlayerPlay: (playBehavior: string, audioItem: alexa.AudioItem) => response;
 
   /** Plays audio stream (sends AudioPlayer.Play directive) 
-   * @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive */
-  audioPlayerPlayStream: (playBehavior: string, stream: amazon.Stream) => response;
+   * @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive */
+  audioPlayerPlayStream: (playBehavior: string, stream: alexa.Stream) => response;
 
   /** Stops playing audio stream (sends AudioPlayer.Stop directive) */
   audioPlayerStop: () => response;
@@ -157,7 +157,7 @@ export class response {
   /** Clears audio player queue (sends AudioPlayer.ClearQueue directive).
    * clearBehavior is "CLEAR_ALL" by default
    *  */
-  audioPlayerClearQueue: (clearBehavior?: amazon.ClearBehavior) => response;
+  audioPlayerClearQueue: (clearBehavior?: alexa.ClearBehavior) => response;
 
   /** Tells Alexa whether the user's session is over; sessions end by default.
    * You can optionally pass a reprompt message. 
@@ -199,7 +199,7 @@ export class directive {
 }
 
 export class session {
-  constructor(session: amazon.Session);
+  constructor(session: alexa.Session);
 
   isAvailable: () => boolean;
   isNew: () => boolean;
@@ -217,9 +217,9 @@ export class session {
   get: (attributeName: string) => any;
 
   /** Session details, as passed by Amazon in the request
-   * for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
+   * for Object definition @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
    */
-  details: amazon.Session;
+  details: alexa.Session;
 
   attributes: any;
   sessionId?: string;
@@ -230,7 +230,7 @@ export class session {
 }
 
 export class slot {
-  constructor(slot: amazon.Slot);
+  constructor(slot: alexa.Slot);
 
   name: string;
   value: string;
@@ -240,7 +240,7 @@ export class slot {
 }
 
 export class dialog {
-  constructor(dialogState: amazon.DialogState);
+  constructor(dialogState: alexa.DialogState);
 
   /** Check if the intent's dialog is STARTED */
   isStarted: () => boolean;
@@ -271,10 +271,10 @@ export interface ExpressOptions {
   debug: boolean;
 
   /** Function to execute before every POST. May return altered request JSON, or undefined, or a Promise */
-  preRequest: (json: amazon.RequestBody, req: any, res: any) => Promise<amazon.RequestBody>|amazon.RequestBody|undefined;
+  preRequest: (json: alexa.RequestBody, req: any, res: any) => Promise<alexa.RequestBody>|alexa.RequestBody|undefined;
 
   /** Function to execute after every POST. May return altered request JSON, or undefined, or a Promise */
-  postRequest: (json: amazon.ResponseBody, req: any, res: any) => Promise<amazon.ResponseBody>|amazon.ResponseBody|undefined;
+  postRequest: (json: alexa.ResponseBody, req: any, res: any) => Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined;
 }
 
 export interface IntentSchema {
