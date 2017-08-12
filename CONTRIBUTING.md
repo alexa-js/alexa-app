@@ -47,6 +47,17 @@ Implement your feature or bug fix.
 
 Make sure that `npm test` completes without errors.
 
+### Update Type Definitions
+
+If you've modified the public API at all, you should update the TypeScript definition file `types/index.d.ts`.
+
+You can run the TypeScript linter to verify your changes:
+
+```
+npm install
+npm run dtslint
+```
+
 ### Write Documentation
 
 Document any external behavior in the [README](README.md).
