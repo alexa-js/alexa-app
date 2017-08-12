@@ -4,15 +4,18 @@ sudo: false
 
 matrix:
   include:
-    - node_js: 1
+    - node_js: node
       script:
         - npm run-script danger
         - npm run-script lint
         - npm run-script test-with-coverage
+        - npm install dtslint
+        - npm run dtslint
       after_script:
         - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 node_js:
+  - 1
   - 2
   - 3
   - 4

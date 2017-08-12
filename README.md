@@ -70,6 +70,7 @@ or the ability to host multiple skills, check out [alexa-app-server](https://git
 - auto-generation of intent schema and sample utterances
 - support for session data
 - comprehensive test suite
+- TypeScript type definitions for type validation, IDE autocompletion, etc
 
 ## Examples
 

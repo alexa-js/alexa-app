@@ -6,6 +6,7 @@
 * [#248](https://github.com/alexa-js/alexa-app/pull/248): Add support for intent and slot `confirmationStatus` - [@sbonami](https://github.com/sbonami).
 * [#250](https://github.com/alexa-js/alexa-app/pull/250): Add support for handling and/or delegating Dialog - [@sbonami](https://github.com/sbonami).
 * [#258](https://github.com/alexa-js/alexa-app/pull/258): Fix ability to edit request.type() in app.pre - [@samueljr](https://github.com/samueljr).
+* [#266](https://github.com/alexa-js/alexa-app/pull/266): Add TypeScript definitions - [@lazerwalker](https://github.com/lazerwalker).
 * Your contribution here
 
 ### 4.0.1 (May 17, 2017)
