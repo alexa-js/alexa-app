@@ -583,7 +583,12 @@ alexa.app = function(name) {
   };
 
   // extract the schema and generate a schema JSON object
-  this.schema = function() {
+  // if `useBeta` is true, this will generate a schema for the Skill Builder Beta (containing utterances + custom slots)
+  this.schema = function(useBeta) {
+    if (useBeta) {
+      return betaSchema();
+    }
+
     var schema = {
         "intents": []
       },
@@ -599,6 +604,45 @@ alexa.app = function(name) {
           intentSchema.slots.push({
             "name": key,
             "type": intent.slots[key]
+          });
+        }
+      }
+      schema.intents.push(intentSchema);
+    }
+    return JSON.stringify(schema, null, 3);
+  };
+
+  var betaSchema = function() {
+    var schema = {
+        "intents": []
+      },
+      intentName, intent, key;
+    for (intentName in self.intents) {
+      intent = self.intents[intentName];
+      var intentSchema = {
+        "name": intent.name,
+        "samples": []
+      };
+      if (intent.utterances && intent.utterances.length > 0) {
+        intent.utterances.forEach(function(sample) {
+          var list = AlexaUtterances(sample,
+            intent.slots,
+            self.dictionary,
+            self.exhaustiveUtterances);
+          list.forEach(function(utterance) {
+            intentSchema.samples.push(utterance);
+          });
+        });
+      }
+      if (intent.slots && Object.keys(intent.slots).length > 0) {
+        intentSchema["slots"] = [];
+        for (key in intent.slots) {
+          //  It's unclear whether `samples` is actually used for slots, 
+          // but the interaction model will not build without an (empty) array
+          intentSchema.slots.push({
+            "name": key,
+            "type": intent.slots[key],
+            "samples": []
           });
         }
       }
@@ -652,6 +696,7 @@ alexa.app = function(name) {
   // @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
   // @param bool options.checkCert when true, applies Alexa certificate checking (default true)
   // @param bool options.debug when true, sets up the route to handle GET requests (default false)
+  // @param bool options.betaSchema when true, Express debug requests will use the new Skill Builder Beta schema
   // @param function options.preRequest function to execute before every POST
   // @param function options.postRequest function to execute after every POST
   // @throws Error when router or expressApp options are not specified
@@ -678,13 +723,13 @@ alexa.app = function(name) {
     if (options.debug) {
       target.get(endpoint, function(req, res) {
         if (typeof req.query['schema'] != "undefined") {
-          res.set('Content-Type', 'text/plain').send(self.schema());
+          res.set('Content-Type', 'text/plain').send(self.schema(options.betaSchema));
         } else if (typeof req.query['utterances'] != "undefined") {
           res.set('Content-Type', 'text/plain').send(self.utterances());
         } else {
           res.render("test", {
             "app": self,
-            "schema": self.schema(),
+            "schema": self.schema(options.betaSchema),
             "utterances": self.utterances()
           });
         }
