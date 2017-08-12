@@ -14,5 +14,5 @@ app.intent('intentName', {
   response.say("Say a thing!")
     .card("Show a card", "Wow, you showed a card!")
     .card({type: "Simple"})
-    .shouldEndSession(false, "Reprompt!")
+    .shouldEndSession(false, "Reprompt!");
 });

@@ -7,23 +7,34 @@ export type ErrorHandler = (e: any, request: request, response: response) => voi
 export let apps: object;
 
 export class app {
-  constructor(name: string, );
+  constructor(name: string);
 
-  /** Executed before any event handlers. This is useful to setup new sessions, validate the applicationId, or do any other kind of validations. You can perform asynchronous functionality in pre by returning a Promise. */
+  /** Executed before any event handlers. This is useful to setup new sessions,
+   * validate the applicationId, or do any other kind of validations.
+   * You can perform asynchronous functionality in pre by returning a Promise.
+   */
   pre: (request: request, response: response, type: string) => void;
 
-  /** The last thing executed for every request. It is even called if there is an exception or if a response has already been sent. The post() function can change anything about the response. It can even turn a return response.fail() into a return respond.send() with entirely new content. If post() is called after an exception is thrown, the exception itself will be the 4th argument.
-
-  You can perform asynchronous functionality in `post` by returning a Promise similar to pre or any of the handlers. */
+  /** The last thing executed for every request. It is even called if there is
+   * an exception or if a response has already been sent. The post() function
+   * can change anything about the response. It can even turn a return
+   * response.fail() into a return respond.send() with entirely new content. If
+   * post() is called after an exception is thrown, the exception itself will
+   * be the 4th argument.
+   *
+   * You can perform asynchronous functionality in `post` by returning a
+   * Promise similar to pre or any of the handlers.
+   */
   post: (request: request, response: response, type: string, exception: any) => void;
 
   name: string;
   messages: any;
 
-    /** By default, alexa-app will persist every request session attribute into the response. 
-   * This way, any session attributes you set will be sent on every subsequent 
-   * request, as is typical in most web programming environments. If you wish to
-   *  disable this feature, you can do so by setting app.persistentSession to false. 
+  /** By default, alexa-app will persist every request session attribute into
+   * the response. This way, any session attributes you set will be sent on
+   * every subsequent request, as is typical in most web programming
+   * environments. If you wish to disable this feature, you can do so by
+   * setting app.persistentSession to false.
    */
   persistentSession: boolean;
 
@@ -33,8 +44,9 @@ export class app {
   /** A catch-all error handler that does nothing by default */
   error?: ErrorHandler;
 
-  /** A mapping of keywords to arrays of possible values, 
-   * for expansion of sample utterances */
+  /** A mapping of keywords to arrays of possible values,
+   * for expansion of sample utterances
+   */
   dictionary: any;
 
   intents: {[name: string]: alexa.Intent};
@@ -124,9 +136,9 @@ export class response {
   response: alexa.ResponseBody;
   sessionObject: session;
 
-  /** Tells Alexa to say something; multiple calls to say() will be appended to each other. All text output is treated as SSML 
-   * 
-  */
+  /** Tells Alexa to say something; multiple calls to say() will be appended
+   * to each other. All text output is treated as SSML
+   */
   say: (phrase: string) => response;
 
   /** Empties the response text */
@@ -136,19 +148,20 @@ export class response {
   reprompt: (phrase: string) => response;
 
   /** Returns a card to the user's Alexa app.
-   * Supports card(String title, String content) for backwards compat of type "Simple" 
-   * */
+   * Supports card(String title, String content) for backwards compat of type "Simple"
+   */
   card: (title: string|alexa.Card, content?: string) => response;
 
-  /** return a card instructing the user how to link their account to the skill. 
-   * This internally sets the card response 
-   * */
+  /** return a card instructing the user how to link their account to the skill.
+   * This internally sets the card response
+   */
   linkAccount: () => response;
 
   audioPlayerPlay: (playBehavior: string, audioItem: alexa.AudioItem) => response;
 
-  /** Plays audio stream (sends AudioPlayer.Play directive) 
-   * @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive */
+  /** Plays audio stream (sends AudioPlayer.Play directive)
+   * @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
+   */
   audioPlayerPlayStream: (playBehavior: string, stream: alexa.Stream) => response;
 
   /** Stops playing audio stream (sends AudioPlayer.Stop directive) */
@@ -156,22 +169,22 @@ export class response {
 
   /** Clears audio player queue (sends AudioPlayer.ClearQueue directive).
    * clearBehavior is "CLEAR_ALL" by default
-   *  */
+   */
   audioPlayerClearQueue: (clearBehavior?: alexa.ClearBehavior) => response;
 
   /** Tells Alexa whether the user's session is over; sessions end by default.
-   * You can optionally pass a reprompt message. 
-   * */
+   * You can optionally pass a reprompt message.
+   */
   shouldEndSession: (end: boolean, reprompt?: string) => response;
 
   /** Sends the response to the Alexa device (success) immediately.
    * This returns a promise that you must return to continue the
-   * promise chain. Calling this is optional in most cases as it 
+   * promise chain. Calling this is optional in most cases as it
    * will be called automatically when the handler promise chain
    * resolves, but you can call it and return its value in the
    * chain to send the response immediately. You can also use it
-   * to send a response from `post` after failure. 
-   * */
+   * to send a response from `post` after failure.
+   */
   send: () => Promise<response>;
 
   /** Triggers a response failure.
@@ -179,7 +192,7 @@ export class response {
    * Instead of the Alexa response being returned, the failure message will be passed
    * similar to `response.send()`, you must return the value returned from this call to continue the promise chain.
    * This is equivalent to calling `throw message` in handlers
-   * *NOTE:* this does not generate a response compatible with Alexa, so when calling it explicitly you may want to handle the response with `.error` or `.post` 
+   * *NOTE:* this does not generate a response compatible with Alexa, so when calling it explicitly you may want to handle the response with `.error` or `.post`
    */
   fail: (message: string) => Promise<response>;
 
@@ -245,7 +258,7 @@ export class dialog {
   /** Check if the intent's dialog is STARTED */
   isStarted: () => boolean;
 
-  /** Check if the intent's dialog is IN_PROGRESS */  
+  /** Check if the intent's dialog is IN_PROGRESS */
   isInProgress: () => boolean;
 
     /** Check if the intent's dialog is COMPLETED */
@@ -271,10 +284,10 @@ export interface ExpressOptions {
   debug: boolean;
 
   /** Function to execute before every POST. May return altered request JSON, or undefined, or a Promise */
-  preRequest: (json: alexa.RequestBody, req: any, res: any) => Promise<alexa.RequestBody>|alexa.RequestBody|undefined;
+  preRequest(json: alexa.RequestBody, req: any, res: any): Promise<alexa.RequestBody>|alexa.RequestBody|undefined;
 
   /** Function to execute after every POST. May return altered request JSON, or undefined, or a Promise */
-  postRequest: (json: alexa.ResponseBody, req: any, res: any) => Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined;
+  postRequest(json: alexa.ResponseBody, req: any, res: any): Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined;
 }
 
 export interface IntentSchema {
