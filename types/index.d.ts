@@ -73,7 +73,7 @@ export class app {
   handler: (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
 
   /** For backwards compatibility */
-  lambda: (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
+  lambda: () => (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
 
   /* attach Alexa endpoint to an express router
    *
