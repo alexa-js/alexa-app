@@ -2,7 +2,16 @@ import * as alexa from 'alexa-app';
 
 const app = new alexa.app('app-name');
 
-app.pre = (request, response, type) => {};
+app.pre = (request, response, type) => {
+  if (request.applicationId !== undefined) {
+    // As documented in https://github.com/alexa-js/alexa-app#session
+    throw new Error('Invalid Application ID');
+  }
+  if (request.hasSession() && request.getSession().application.applicationId !== undefined) {
+    // As documented in https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
+    throw new Error('Invalid Application ID');
+  }
+};
 app.post = (request, response, type) => {};
 
 app.launch((request, response) => {});
