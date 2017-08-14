@@ -160,7 +160,7 @@ export class response {
   audioPlayerPlay: (playBehavior: string, audioItem: alexa.AudioItem) => response;
 
   /** Plays audio stream (sends AudioPlayer.Play directive)
-   * @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
+   * @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
    */
   audioPlayerPlayStream: (playBehavior: string, stream: alexa.Stream) => response;
 
@@ -230,7 +230,7 @@ export class session {
   get: (attributeName: string) => any;
 
   /** Session details, as passed by Amazon in the request
-   * for Object definition @see https://developer.alexa.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
+   * for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
    */
   details: alexa.Session;
 
