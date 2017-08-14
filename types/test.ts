@@ -25,3 +25,6 @@ app.intent('intentName', {
     .card({type: "Simple"})
     .shouldEndSession(false, "Reprompt!");
 });
+
+export const new_handler = app.handler;
+export const legacy_handler = app.lambda();
