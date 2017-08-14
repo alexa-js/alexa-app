@@ -2,6 +2,7 @@
 
 ### 4.1.1 (Next)
 
+* [#271](https://github.com/alexa-js/alexa-app/pull/271): Update request typing - [@jontg](https://github.com/jontg).
 * Your contribution here
 
 ### 4.1.0 (August 12, 2017)

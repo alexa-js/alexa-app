@@ -115,7 +115,7 @@ export class request {
   hasSession: () => boolean;
 
   /** Returns the session object */
-  getSession: () => session;
+  getSession: () => alexa.Session;
 
   /** Returns the request context */
   context?: alexa.Context;
