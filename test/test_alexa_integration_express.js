@@ -107,22 +107,43 @@ describe("Alexa", function() {
         });
       });
 
-      it("dumps debug schema", function() {
-        return request(testServer)
-          .get('/testApp')
-          .expect(200).then(function(response) {
-            expect(response.text).to.startWith('{"name":"testApp"')
-          });
-      });
+      context("when no schema type is sent", function() {
+        it("dumps default debug schema", function() {
+          return request(testServer)
+            .get('/testApp')
+            .expect(200).then(function(response) {
+              expect(response.text).to.startWith('{"name":"testApp"')
+            });
+        });
 
-      it("returns debug schema", function() {
-        return request(testServer)
-          .get('/testApp?schema')
-          .expect(200).then(function(response) {
-            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
-            expect(response.text).to.eq(testApp.schema());
-          });
-      });
+        it("returns default debug schema", function() {
+          return request(testServer)
+            .get('/testApp?schema')
+            .expect(200).then(function(response) {
+              expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+              expect(response.text).to.eq(testApp.schema());
+            });
+        });
+      })
+
+      context("when the skill builder schema type is sent", function() {
+        it("dumps skill builder debug schema", function() {
+          return request(testServer)
+            .get('/testApp?schemaType=skillBuilder')
+            .expect(200).then(function(response) {
+              expect(response.text).to.startWith('{"name":"testApp"')
+            });
+        });
+
+        it("returns default debug schema", function() {
+          return request(testServer)
+            .get('/testApp?schema&schemaType=skillBuilder')
+            .expect(200).then(function(response) {
+              expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+              expect(response.text).to.eq(testApp.schemas.skillBuilder());
+            });
+        });
+      })
 
       it("returns debug utterances", function() {
         return request(testServer)

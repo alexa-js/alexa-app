@@ -63,8 +63,20 @@ export class app {
 
   request: (requestJSON: alexa.Request) => void;
 
-  /** Extracts the schema and generates a schema JSON object */
+  /** @deprecated It's recommended you directly call `app.schema.*` instead
+   * Extracts the schema and generates a schema JSON object
+   * This is equivalent to calling `app.schemas.intent()`
+   */
   schema: () => string;
+
+  /** Functions to generate schema JSON objects in Amazon's various formats */
+  schemas: {
+    /** Generates a schema in the old default intent format */
+    intent(): string;
+
+    /** Generates a schema in the new Skill Builder beta format */
+    skillBuilder(): string;
+  };
 
   /** Generates a list of sample utterances */
   utterances: () => string;
@@ -82,6 +94,7 @@ export class app {
    * @param string options.endpoint the path to attach the router to (e.g., passing 'mine' attaches to '/mine')
    * @param bool options.checkCert when true, applies Alexa certificate checking (default true)
    * @param bool options.debug when true, sets up the route to handle GET requests (default false)
+   * @param bool options.betaSchema when true, Express debug requests will use the new Skill Builder Beta schema
    * @param function options.preRequest function to execute before every POST
    * @param function options.postRequest function to execute after every POST
    * @throws Error when router or expressApp options are not specified

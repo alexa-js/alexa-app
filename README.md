@@ -513,7 +513,7 @@ app.post = function(request, response, type, exception) {
 
 ## Schema and Utterances
 
-The alexa-app module makes it easy to define your intent schema and generate many sample utterances. Optionally pass your schema definition along with your intent handler, and extract the generated content using the `schema()` and `utterances()` functions on your app.
+The alexa-app module makes it easy to define your intent schema and generate many sample utterances. Optionally pass your schema definition along with your intent handler, and extract the generated content using either the `schemas.intent()` and `utterances()` functions on your app (if using the normal Developer portal) or `schemas.skillBuilder()` if using the new Skill Builder beta.
 
 
 ### Schema Syntax
@@ -586,11 +586,16 @@ app.dictionary = {"colors":["red","green","blue"]};
 
 ### Generating Schema and Utterances Output
 
-To get the generated content out of your app, call the `schema()` and `utterances()` functions. See [example/express.js](example/express.js) for one way to output this data.
+#### Intent Schema Syntax
+
+If you are using the normal Amazon developer portal, the `schemas.intent()` and `utterances()` functions will generate an
+intent schema JSON string and a list of utterances, respectively.
+
+See [example/express.js](example/express.js) for one way to output this data.
 
 ```javascript
-// returns a String representation of the JSON object
-app.schema() =>
+// returns a String representation of an Intent Schema JSON object
+app.schemas.intent() =>
 
 {
   "intents": [{
@@ -617,6 +622,31 @@ WhatsMyColorIntent what is my favorite color
 WhatsMyColorIntent say my favorite color
 WhatsMyColorIntent tell me my favorite color
 WhatsMyColorIntent tell me what my favorite color is
+```
+
+#### Skill Builder Syntax
+
+If you are using the Skill Builder Beta, the `schemas.skillBuilder()` function will generate a single schema JSON string
+that includes your intents with all of their utterances
+```javascript
+app.schemas.intent() =>
+
+{
+  "intents": [{
+    "name": "MyColorIsIntent",
+    "samples": [
+      "my color is {dark brown|Color}",
+      "my color is {green|Color}",
+      "my favorite color is {red|Color}",
+      "my favorite color is {navy blue|Color}"
+    ],
+    "slots": [{
+      "name": "Color",
+      "type": "AMAZON.Color",
+      "samples": []
+    }]
+  }]
+}
 ```
 
 ## Cards

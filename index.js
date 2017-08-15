@@ -582,29 +582,74 @@ alexa.app = function(name) {
     });
   };
 
-  // extract the schema and generate a schema JSON object
-  this.schema = function() {
-    var schema = {
-        "intents": []
-      },
-      intentName, intent, key;
-    for (intentName in self.intents) {
-      intent = self.intents[intentName];
-      var intentSchema = {
-        "intent": intent.name
-      };
-      if (intent.slots && Object.keys(intent.slots).length > 0) {
-        intentSchema["slots"] = [];
-        for (key in intent.slots) {
-          intentSchema.slots.push({
-            "name": key,
-            "type": intent.slots[key]
+  this.schemas = {
+    intent: function() {
+      var schema = {
+          "intents": []
+        },
+        intentName, intent, key;
+      for (intentName in self.intents) {
+        intent = self.intents[intentName];
+        var intentSchema = {
+          "intent": intent.name
+        };
+        if (intent.slots && Object.keys(intent.slots).length > 0) {
+          intentSchema["slots"] = [];
+          for (key in intent.slots) {
+            intentSchema.slots.push({
+              "name": key,
+              "type": intent.slots[key]
+            });
+          }
+        }
+        schema.intents.push(intentSchema);
+      }
+      return JSON.stringify(schema, null, 3);
+    },
+
+    skillBuilder: function() {
+      var schema = {
+          "intents": []
+        },
+        intentName, intent, key;
+      for (intentName in self.intents) {
+        intent = self.intents[intentName];
+        var intentSchema = {
+          "name": intent.name,
+          "samples": []
+        };
+        if (intent.utterances && intent.utterances.length > 0) {
+          intent.utterances.forEach(function(sample) {
+            var list = AlexaUtterances(sample,
+              intent.slots,
+              self.dictionary,
+              self.exhaustiveUtterances);
+            list.forEach(function(utterance) {
+              intentSchema.samples.push(utterance);
+            });
           });
         }
+        if (intent.slots && Object.keys(intent.slots).length > 0) {
+          intentSchema["slots"] = [];
+          for (key in intent.slots) {
+            //  It's unclear whether `samples` is actually used for slots,
+            // but the interaction model will not build without an (empty) array
+            intentSchema.slots.push({
+              "name": key,
+              "type": intent.slots[key],
+              "samples": []
+            });
+          }
+        }
+        schema.intents.push(intentSchema);
       }
-      schema.intents.push(intentSchema);
+      return JSON.stringify(schema, null, 3);
     }
-    return JSON.stringify(schema, null, 3);
+  };
+
+  // extract the schema and generate a schema JSON object
+  this.schema = function() {
+    return this.schemas.intent();
   };
 
   // generate a list of sample utterances
@@ -677,14 +722,17 @@ alexa.app = function(name) {
 
     if (options.debug) {
       target.get(endpoint, function(req, res) {
+        var schemaName = req.query['schemaType'] || 'intent';
+        var schema = self.schemas[schemaName] || function() {};
+
         if (typeof req.query['schema'] != "undefined") {
-          res.set('Content-Type', 'text/plain').send(self.schema());
+          res.set('Content-Type', 'text/plain').send(schema());
         } else if (typeof req.query['utterances'] != "undefined") {
           res.set('Content-Type', 'text/plain').send(self.utterances());
         } else {
           res.render("test", {
             "app": self,
-            "schema": self.schema(),
+            "schema": schema(),
             "utterances": self.utterances()
           });
         }

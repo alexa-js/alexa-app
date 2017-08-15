@@ -26,5 +26,8 @@ app.intent('intentName', {
     .shouldEndSession(false, "Reprompt!");
 });
 
+const intentSchema: string = app.schemas.intent();
+const skillBuilderSchema: string = app.schemas.skillBuilder();
+
 export const new_handler = app.handler;
 export const legacy_handler = app.lambda();
