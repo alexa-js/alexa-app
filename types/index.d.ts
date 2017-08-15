@@ -63,10 +63,20 @@ export class app {
 
   request: (requestJSON: alexa.Request) => void;
 
-  /** Extracts the schema and generates a schema JSON object
-   * @param boolean useBeta If true, will return the new Skill Builder Beta schema
+  /** @deprecated It's recommended you directly call `app.schema.*` instead
+   * Extracts the schema and generates a schema JSON object
+   * This is equivalent to calling `app.schemas.intent()`
    */
-  schema: (useBeta: boolean) => string;
+  schema: () => string;
+
+  /** Functions to generate schema JSON objects in Amazon's various formats */
+  schemas: {
+    /** Generates a schema in the old default intent format */
+    intent(): string;
+
+    /** Generates a schema in the new Skill Builder beta format */
+    skillBuilder(): string;
+  };
 
   /** Generates a list of sample utterances */
   utterances: () => string;
