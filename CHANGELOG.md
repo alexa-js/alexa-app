@@ -9,7 +9,6 @@
 * [#274](https://github.com/alexa-js/alexa-app/pull/274): Correct inconsistent interface definitions for optional ExpressOptions properties - [@lazerwalker](https://github.com/lazerwalker).
 * [#275](https://github.com/alexa-js/alexa-app/pull/275): Add support for custom slot types (for Skill Builder schema output) - [@lazerwalker](https://github.com/lazerwalker).
 * [#276](https://github.com/alexa-js/alexa-app/pull/276): Added documentation for building SSML responses - [@tejashah88](https://github.com/tejashah88).
-* [#276](https://github.com/alexa-js/alexa-app/pull/276): Minor README fixes - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here
 
 ### 4.1.0 (August 12, 2017)
