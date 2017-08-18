@@ -163,7 +163,7 @@ String request.type()
 String request.slot("slotName")
 
 // return the Slot object
-Slot request.slots("slotName")
+Slot request.slots["slotName"]
 
 // return the intent's confirmationStatus
 String request.confirmationStatus
@@ -274,7 +274,7 @@ session.details = { ... }
 ### slot
 ```javascript
 // get the slot object
-var slot = request.slots("slotName")
+var slot = request.slots["slotName"]
 
 // return the slot's name
 String slot.name
