@@ -430,18 +430,27 @@ alexa.app = function(name) {
 
   this.customSlots = {};
   this.customSlot = function(slotName, values) {
-    values = values.map(function(value) {
+    self.customSlots[slotName] = [];
+    
+    values.forEach(function(value) {
+      var valueObj;
       if (typeof value === "string") {
-        return {
+        valueObj = {
           value: value,
           id: null,
           synonyms: []
         };
       } else {
-        return Object.assign({id: null, synonyms: []}, value);
+        if (!value.id) {
+          value.id = null;
+        }
+        if (!value.synonyms) {
+          value.synonyms = [];
+        }
+        valueObj = value;
       }
+      self.customSlots[slotName].push(valueObj);
     });
-    self.customSlots[slotName] = values;
   };
 
   this.audioPlayerEventHandlers = {};
@@ -663,21 +672,22 @@ alexa.app = function(name) {
       }
 
       for (var slotName in self.customSlots) {
+        var slotSchema = {
+          name: slotName,
+          values: []
+        };
+
         var values = self.customSlots[slotName];
-        var valueSchemas = values.map(function(value) {
-          return {
+        values.forEach(function(value) {
+          var valueSchema = {
             "id": value.id,
             "name": {
               "value": value.value,
               "synonyms": value.synonyms || []
             }
           }; 
+          slotSchema.values.push(valueSchema);
         });     
-
-        var slotSchema = {
-          name: slotName,
-          values: valueSchemas
-        };
 
         schema.types.push(slotSchema);
       }
