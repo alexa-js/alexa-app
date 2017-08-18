@@ -52,8 +52,8 @@ export class app {
   intents: {[name: string]: alexa.Intent};
   intent: (intentName: string, schema: IntentSchema, handler: RequestHandler) => void;
 
-  customSlots: {[name: string]: CustomSlot}
-  customSlot: (name: string, values: (CustomSlot|string)[]) => void;
+  customSlots: {[name: string]: CustomSlot};
+  customSlot: (name: string, values: Array<CustomSlot|string>) => void;
 
   // TODO
   audioPlayerEventHandlers: any;
@@ -312,6 +312,6 @@ export interface IntentSchema {
 
 export interface CustomSlot {
   value: string;
-  synonyms: string[];
-  id: string|null;
+  synonyms?: string[];
+  id?: string|null;
 }

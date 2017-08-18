@@ -23,13 +23,27 @@ describe("Alexa", function() {
         id: "dog"
       };
 
-      context("with slot value objects", function() {
+      context("with a complete slot value object", function() {
         beforeEach(function() {
           testApp.customSlot("animals", [slotValue]);
         });
 
         it("adds the slot value", function() {
           expect(testApp.customSlots["animals"]).to.eql([slotValue]);
+        });
+      });
+
+      context("with an incomplete slot value object", function() {
+        beforeEach(function() {
+          testApp.customSlot("animals", [{value: "dog"}]);
+        });
+
+        it("adds the slot value with default params", function() {
+          expect(testApp.customSlots["animals"]).to.eql([{
+            value: "dog",
+            synonyms: [],
+            id: null
+          }]);
         });
       });
 

@@ -438,7 +438,7 @@ alexa.app = function(name) {
           synonyms: []
         };
       } else {
-        return value;
+        return Object.assign({id: null, synonyms: []}, value);
       }
     });
     self.customSlots[slotName] = values;
