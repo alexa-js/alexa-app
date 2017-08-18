@@ -112,8 +112,8 @@ export class request {
   /** Returns the value passed in for a given slot name. */
   slot: (slotName: string) => string;
 
-  /** Returns the slot object */
-  slots: (slotName: string) => slot;
+  /** slots['slotname'] returns the slot object */
+  slots: object;
 
   /** The intent's confirmationStatus */
   confirmationStatus: string;
