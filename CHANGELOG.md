@@ -7,6 +7,7 @@
 * [#268](https://github.com/alexa-js/alexa-app/pull/268): Add support for outputting new Skill Builder schema - [@lazerwalker](https://github.com/lazerwalker).
 * [#273](https://github.com/alexa-js/alexa-app/pull/273): Correct inconsistent slots API documentation and interface definitions - [@padraigkitterick](https://github.com/padraigkitterick).
 * [#274](https://github.com/alexa-js/alexa-app/pull/274): Correct inconsistent interface definitions for optional ExpressOptions properties - [@lazerwalker](https://github.com/lazerwalker).
+* [#275](https://github.com/alexa-js/alexa-app/pull/275): Add support for custom slot types (for Skill Builder schema output) - [@lazerwalker](https://github.com/lazerwalker).
 * Your contribution here
 
 ### 4.1.0 (August 12, 2017)
