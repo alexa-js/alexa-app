@@ -5,6 +5,7 @@
 * [#271](https://github.com/alexa-js/alexa-app/pull/271): Update request typing - [@jontg](https://github.com/jontg).
 * [#269](https://github.com/alexa-js/alexa-app/pull/269): Fix the lambda() type definition - [@jontg](https://github.com/jontg).
 * [#268](https://github.com/alexa-js/alexa-app/pull/268): Add support for outputting new Skill Builder schema - [@lazerwalker](https://github.com/lazerwalker).
+* [#273](https://github.com/alexa-js/alexa-app/pull/273): Correct inconsistent slots API documentation and interface definitions - [@padraigkitterick](https://github.com/padraigkitterick).
 * Your contribution here
 
 ### 4.1.0 (August 12, 2017)
