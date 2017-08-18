@@ -10,6 +10,7 @@
 * [API](#api)
     * [request](#request)
     * [response](#response)
+      * [Building SSML Responses](#building-ssml-responses)
     * [session](#session)
 * [Request Handlers](#request-handlers)
     * [LaunchRequest](#launchrequest)
@@ -247,6 +248,49 @@ async response.fail(String message)
 return response.say("OK").send()
 ```
 
+#### Building SSML Responses
+
+The [ssml-builder](https://github.com/mandnyc/ssml-builder) library is a great tool for building SSML responses. While it's meant to be a general purpose SSML builder, it does supports [Amazon-specific SSML tags](https://github.com/mandnyc/ssml-builder#amazon-ssml-specific-tags). See the [official Amazon documentation](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference) for which SSML tags you can use.
+
+Example using basic SSML tags:
+```javascript
+var Speech = require('ssml-builder');
+
+var speech = new Speech()
+  .say('Hello')
+  .pause('1s')
+  .say('fellow Alexa developers')
+  .pause('500ms')
+  .say('Testing phone numbers')
+  .sayAs({
+    word: "+1-234-567-8900",
+    interpret: "telephone"
+  });
+
+// change 'true' to 'false' if you want to include the surrounding <speak/> tag
+var speechOutput = speech.ssml(true);
+response.say(speechOutput);
+```
+
+Example using Amazon SSML specific tags:
+```javascript
+var AmazonSpeech = require('ssml-builder/amazon_speech');
+
+var speech = new AmazonSpeech()
+  .say('Hello')
+  .pause('1s')
+  .whisper('I can see you when you are sleeping')
+  .pause('500ms')
+  .say('Is your phone number still')
+  .sayAs({
+    word: "+1-234-567-8900",
+    interpret: "telephone"
+  });
+
+var speechOutput = speech.ssml();
+response.say(speechOutput);
+```
+
 ### session
 ```javascript
 // check if you can use session (read or write)
@@ -320,7 +364,8 @@ app.intent("live", {
     "utterances": [
       "in {-|city}"
     ]
-  }, function(request, response) {
+  },
+  function(request, response) {
     response.say("You live in " + request.slot("city"));
   }
 );
@@ -335,41 +380,42 @@ app.intent("vacation", function(request, response) {
 Amazon has specific intents that have to do with basic functionality of your skill that you must add.  Some examples of this are `AMAZON.HelpIntent`, `AMAZON.StopIntent`, and `AMAZON.CancelIntent`.  Here are examples of how you would specify these types of intents.
 
 ```javascript
-app.intent("AMAZON.HelpIntent",{
-  "slots": {},
-  "utterances": []
-}, function(request, response) {
-  	var helpOutput = "You can say 'some statement' or ask 'some question'. You can also say stop or exit to quit.";
-  	var reprompt = "What would you like to do?";
-  	// AMAZON.HelpIntent must leave session open -> .shouldEndSession(false)
-  	response.say(helpOutput).reprompt(reprompt).shouldEndSession(false);
-  	return
-});
+app.intent("AMAZON.HelpIntent", {
+    "slots": {},
+    "utterances": []
+  },
+  function(request, response) {
+    var helpOutput = "You can say 'some statement' or ask 'some question'. You can also say stop or exit to quit.";
+    var reprompt = "What would you like to do?";
+    // AMAZON.HelpIntent must leave session open -> .shouldEndSession(false)
+    response.say(helpOutput).reprompt(reprompt).shouldEndSession(false);
+  }
+);
 
-app.intent("AMAZON.StopIntent",{
-  "slots": {},
-  "utterances": []
-}, function(request, response) {
-  	var stopOutput = "Don't You Worry. I'll be back.";
-  	response.say(stopOutput)
-  	return
-});
+app.intent("AMAZON.StopIntent", {
+    "slots": {},
+    "utterances": []
+  }, function(request, response) {
+    var stopOutput = "Don't You Worry. I'll be back.";
+    response.say(stopOutput);
+  }
+);
 
-app.intent("AMAZON.CancelIntent",{
-  "slots": {},
-  "utterances": []
-}, function(request, response) {
-  	var cancelOutput = "No problem. Request cancelled.";
-  	response.say(cancelOutput);
-  	return
-});
+app.intent("AMAZON.CancelIntent", {
+    "slots": {},
+    "utterances": []
+  }, function(request, response) {
+    var cancelOutput = "No problem. Request cancelled.";
+    response.say(cancelOutput);
+  }
+);
 ```
 
-You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon [provides](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/standard-intents).  
+You do not need to pass any utterances or slots into these intents.  Also when specifying the name of the intent just use the exact name Amazon [provides](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/built-in-intent-ref/standard-intents).
 
 ### Display Element Selected
 
-Define the handler for when a user selects an element displayed on alexa touch enabled device. For instance the [Echo Show](https://www.amazon.com/Amazon-MW46WB-Introducing-Echo-Show/dp/B01J24C0TI). 
+Define the handler for when a user selects an element displayed on alexa touch enabled device. For instance the [Echo Show](https://www.amazon.com/Amazon-MW46WB-Introducing-Echo-Show/dp/B01J24C0TI).
 
 ```javascript
 app.displayElementSelected(function(request, response) {
@@ -803,7 +849,7 @@ app.error = function(exception, request, response) {
 };
 ```
 
-## Asynchronous Handlers Example 
+## Asynchronous Handlers Example
 
 If an intent or other request handler (including `pre` and `post`, but *not* `error`) will return a response later, it must a `Promise`. This tells the alexa-app library not to send the response automatically.
 
