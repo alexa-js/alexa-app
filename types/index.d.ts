@@ -306,8 +306,9 @@ export interface ExpressOptions {
 }
 
 export interface IntentSchema {
-  slots: any;
-  utterances: string[];
+  dialog?: object;
+  slots?: any;
+  utterances?: string[];
 }
 
 export interface CustomSlot {
