@@ -285,22 +285,22 @@ export interface ExpressOptions {
   expressApp: any;
 
   /** Router instance to attach to the express app */
-  router: any;
+  router?: any;
 
   /** The path to attach the router to (e.g., passing 'mine' attaches to '/mine') */
-  endpoint: string;
+  endpoint?: string;
 
   /** When true, applies Alexa certificate checking (default true) */
-  checkCert: boolean;
+  checkCert?: boolean;
 
   /** When true, sets up the route to handle GET requests (default false) */
-  debug: boolean;
+  debug?: boolean;
 
   /** Function to execute before every POST. May return altered request JSON, or undefined, or a Promise */
-  preRequest(json: alexa.RequestBody, req: any, res: any): Promise<alexa.RequestBody>|alexa.RequestBody|undefined;
+  preRequest?(json: alexa.RequestBody, req: any, res: any): Promise<alexa.RequestBody>|alexa.RequestBody|undefined|void;
 
   /** Function to execute after every POST. May return altered request JSON, or undefined, or a Promise */
-  postRequest(json: alexa.ResponseBody, req: any, res: any): Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined;
+  postRequest?(json: alexa.ResponseBody, req: any, res: any): Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined|void;
 }
 
 export interface IntentSchema {

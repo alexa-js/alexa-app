@@ -26,6 +26,20 @@ app.intent('intentName', {
     .shouldEndSession(false, "Reprompt!");
 });
 
+app.express({
+  expressApp: {}
+});
+
+app.express({
+  expressApp: {},
+  router: {},
+  endpoint: "app",
+  checkCert: true,
+  debug: true,
+  preRequest: (json: any, req: any, res: any) => {},
+  postRequest: (json: any, req: any, res: any) => {}
+});
+
 const intentSchema: string = app.schemas.intent();
 const skillBuilderSchema: string = app.schemas.skillBuilder();
 
