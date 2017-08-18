@@ -40,6 +40,12 @@ app.express({
   postRequest: (json: any, req: any, res: any) => {}
 });
 
+app.customSlot("myCustomSlot", ["a value", {
+  value: "another value",
+  synonyms: [],
+  id: null
+}])
+
 const intentSchema: string = app.schemas.intent();
 const skillBuilderSchema: string = app.schemas.skillBuilder();
 

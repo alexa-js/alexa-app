@@ -427,6 +427,23 @@ alexa.app = function(name) {
     }
     self.intents[intentName] = new alexa.intent(intentName, schema, func);
   };
+
+  this.customSlots = {};
+  this.customSlot = function(slotName, values) {
+    values = values.map(function(value) {
+      if (typeof value === "string") {
+        return {
+          value: value,
+          id: null,
+          synonyms: []
+        };
+      } else {
+        return value;
+      }
+    });
+    self.customSlots[slotName] = values;
+  };
+
   this.audioPlayerEventHandlers = {};
   this.audioPlayer = function(eventName, func) {
     self.audioPlayerEventHandlers[eventName] = {
@@ -609,7 +626,8 @@ alexa.app = function(name) {
 
     skillBuilder: function() {
       var schema = {
-          "intents": []
+          "intents": [],
+          "types": []
         },
         intentName, intent, key;
       for (intentName in self.intents) {
@@ -642,6 +660,26 @@ alexa.app = function(name) {
           }
         }
         schema.intents.push(intentSchema);
+      }
+
+      for (var slotName in self.customSlots) {
+        var values = self.customSlots[slotName];
+        var valueSchemas = values.map(function(value) {
+          return {
+            "id": value.id,
+            "name": {
+              "value": value.value,
+              "synonyms": value.synonyms || []
+            }
+          }; 
+        });     
+
+        var slotSchema = {
+          name: slotName,
+          values: valueSchemas
+        };
+
+        schema.types.push(slotSchema);
       }
       return JSON.stringify(schema, null, 3);
     }

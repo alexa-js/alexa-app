@@ -50,6 +50,10 @@ export class app {
   dictionary: any;
 
   intents: {[name: string]: alexa.Intent};
+  intent: (intentName: string, schema: IntentSchema, handler: RequestHandler) => void;
+
+  customSlots: {[name: string]: CustomSlot}
+  customSlot: (name: string, values: (CustomSlot|string)[]) => void;
 
   // TODO
   audioPlayerEventHandlers: any;
@@ -101,8 +105,6 @@ export class app {
    * @returns this
    */
   express: (options: ExpressOptions) => void;
-
-  intent: (intentName: string, schema: IntentSchema, handler: RequestHandler) => void;
 }
 
 export class request {
@@ -306,4 +308,10 @@ export interface ExpressOptions {
 export interface IntentSchema {
   slots: any;
   utterances: string[];
+}
+
+export interface CustomSlot {
+  value: string;
+  synonyms: string[];
+  id: string|null;
 }
