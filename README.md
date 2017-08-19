@@ -250,7 +250,7 @@ return response.say("OK").send()
 
 #### Building SSML Responses
 
-The [ssml-builder](https://github.com/mandnyc/ssml-builder) library is a great tool for building SSML responses. While it's meant to be a general purpose SSML builder, it does supports [Amazon-specific SSML tags](https://github.com/mandnyc/ssml-builder#amazon-ssml-specific-tags). See the [official Amazon documentation](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference) for which SSML tags you can use.
+Use [ssml-builder](https://github.com/mandnyc/ssml-builder) to build SSML responses.
 
 Example using basic SSML tags:
 ```javascript
@@ -714,11 +714,11 @@ app.schemas.skillBuilder() =>
   "types": [{
     "name": "MyCustomColor",
     "values": [{
-		  "id": null,
-		  "name": {
-        "value": "aquamarine", 
+      "id": null,
+      "name": {
+        "value": "aquamarine",
         "synonyms": ["aqua", "seafoam", "teal"]
-		  }
+      }
     }]
   }];
 }
