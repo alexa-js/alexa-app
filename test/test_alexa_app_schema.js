@@ -203,7 +203,8 @@ describe("Alexa", function() {
             "intents": [{
               "name": "AMAZON.PauseIntent",
               "samples": []
-            }]
+            }],
+            "types": []
           });
         });
       });
@@ -221,7 +222,8 @@ describe("Alexa", function() {
             "intents": [{
               "name": "AMAZON.PauseIntent",
               "samples": []
-            }]
+            }],
+            "types": []
           });
         });
       });
@@ -251,7 +253,8 @@ describe("Alexa", function() {
                 "type": "AMAZON.US_STATE",
                 "samples": []
               }]
-            }]
+            }],
+            "types": []
           });
         });
       });
@@ -272,7 +275,8 @@ describe("Alexa", function() {
                 "turn on the thermostat",
                 "kill all humans"
               ]
-            }]
+            }],
+            "types": []
           });
         });
       });
@@ -336,11 +340,113 @@ describe("Alexa", function() {
                 "type": "AMAZON.LITERAL",
                 "samples": []
               }]
-            }]
+            }],
+            "types": []
           });
         });
       });
 
+      describe("with a custom slot", function() {
+        beforeEach(function() {
+          testApp.customSlot("animal", [
+            "cat",
+            {
+              value: "dog",
+              id: "canine",
+              synonyms: ["doggo", "pupper", "woofmeister"]
+            }
+          ]);
+        });
+
+        it("includes custom slots", function() {
+          var subject = JSON.parse(testApp.schemas.skillBuilder());
+          expect(subject).to.eql({
+            "intents": [],
+            "types": [
+              {
+                "name": "animal",
+                "values": [
+                  {
+                    "id": null,
+                    "name": {
+                      "value": "cat",
+                      "synonyms": []
+                    }
+                  },
+                  {
+                    "id": "canine",
+                    "name": {
+                      "value": "dog", 
+                      "synonyms": ["doggo", "pupper", "woofmeister"]
+                    }
+                  }
+                ]
+              }
+            ]
+          });
+        });
+        describe("with multiple custom slots", function() {
+          beforeEach(function() {
+            testApp.customSlot("animal", [
+              "cat",
+              {
+                value: "dog",
+                id: "canine",
+                synonyms: ["doggo", "pupper", "woofmeister"]
+              }
+            ]);
+
+            testApp.customSlot("vegetable", ["carrot", "cucumber"]);
+          });
+  
+          it("includes all custom slots", function() {
+            var subject = JSON.parse(testApp.schemas.skillBuilder());
+            expect(subject).to.eql({
+              "intents": [],
+              "types": [
+                {
+                  "name": "animal",
+                  "values": [
+                    {
+                      "id": null,
+                      "name": {
+                        "value": "cat",
+                        "synonyms": []
+                      }
+                    },
+                    {
+                      "id": "canine",
+                      "name": {
+                        "value": "dog", 
+                        "synonyms": ["doggo", "pupper", "woofmeister"]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "vegetable",
+                  "values": [
+                    {
+                      "id": null,
+                      "name": {
+                        "value": "carrot",
+                        "synonyms": []
+                      }
+                    },
+                    {
+                      "id": null,
+                      "name": {
+                        "value": "cucumber",
+                        "synonyms": []
+                      }
+                    }
+                  ]
+                }
+              ]
+            });
+          });
+        });
+      });
     });
   });
 });

@@ -17,6 +17,7 @@ app.post = (request, response, type) => {};
 app.launch((request, response) => {});
 
 app.intent('intentName', {
+  dialog: {type: "directive"},
   slots: {},
   utterances: ['do a thing']
 }, (request, response) => {
@@ -25,6 +26,8 @@ app.intent('intentName', {
     .card({type: "Simple"})
     .shouldEndSession(false, "Reprompt!");
 });
+
+app.intent('emptySchema', {}, (request, response) => {});
 
 app.express({
   expressApp: {}
@@ -39,6 +42,12 @@ app.express({
   preRequest: (json: any, req: any, res: any) => {},
   postRequest: (json: any, req: any, res: any) => {}
 });
+
+app.customSlot("myCustomSlot", ["a value", {
+  value: "another value",
+  synonyms: [],
+  id: null
+}]);
 
 const intentSchema: string = app.schemas.intent();
 const skillBuilderSchema: string = app.schemas.skillBuilder();

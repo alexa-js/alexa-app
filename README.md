@@ -564,6 +564,24 @@ sampleIntent     airport status for {CustomSlotName}
 
 Note that the "CustomSlotType" type values must be specified in the Skill Interface's Interaction Model for the custom slot type to function correctly.
 
+#### custom slot type values
+
+If you have custom slot types, you can define your custom slot type values as well. Custom values can either be simple strings, or more full-fledged objects if you want to take advantage of Skill Builder features like synonyms.
+
+```javascript
+testApp.customSlot("animal", ["cat", "dog"]);
+```
+
+OR
+
+```javascript
+testApp.customSlot("animal", [{
+  value: "dog",
+  id: "canine",
+  synonyms: ["doggo", "pupper", "woofmeister"]
+}]);
+```
+
 #### utterances
 
 The utterances syntax allows you to generate many (hundreds or even thousands) of sample utterances using just a few samples that get auto-expanded.
@@ -628,8 +646,9 @@ WhatsMyColorIntent tell me what my favorite color is
 
 If you are using the Skill Builder Beta, the `schemas.skillBuilder()` function will generate a single schema JSON string
 that includes your intents with all of their utterances
+
 ```javascript
-app.schemas.intent() =>
+app.schemas.skillBuilder() =>
 
 {
   "intents": [{
@@ -645,7 +664,17 @@ app.schemas.intent() =>
       "type": "AMAZON.Color",
       "samples": []
     }]
-  }]
+  }],
+  "types": [{
+    "name": "MyCustomColor",
+    "values": [{
+		  "id": null,
+		  "name": {
+        "value": "aquamarine", 
+        "synonyms": ["aqua", "seafoam", "teal"]
+		  }
+    }]
+  }];
 }
 ```
 
