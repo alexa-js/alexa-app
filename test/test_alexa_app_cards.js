@@ -7,37 +7,29 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function() {
-  var Alexa = require("../index");
+import * as Alexa from '..';
 
+describe("Alexa", function() {
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
-
-    var setupIntentHandler = function(handlerFunction) {
-      testApp.intent("airportInfoIntent", {}, handlerFunction);
-    };
 
     describe("#request", function() {
       describe("cards response", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
         context("with an intent request of airportInfoIntent", function() {
-          var intentHandler = function(req, res) {
-            res.say(expectedMessage);
-            return true;
-          };
-
           var expectedMessage = "tubular!";
 
           describe("intent handler with AccountLink called on res", function() {
             it("responds with a account link card", function() {
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.linkAccount();
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var cardResponse = subject.then(function(response) {
                 return response.response.card;
@@ -51,12 +43,12 @@ describe("Alexa", function() {
           describe("with a missing required attribute", function() {
             describe("of a known type", function() {
               it("adds no card response", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say("sweet!").card({
                     type: "Simple"
                   });
-                };
-                setupIntentHandler(intentHandler);
+                });
+
                 var subject = testApp.request(mockRequest);
                 var cardResponse = subject.then(function(response) {
                   return response.response;
@@ -67,10 +59,10 @@ describe("Alexa", function() {
 
             describe("of an unknown type", function() {
               it("adds no card response", function() {
-                var intentHandler = function(req, res) {
-                  res.say("sweet!").card({});
-                };
-                setupIntentHandler(intentHandler);
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
+                  res.say("sweet!").card({type: undefined});
+                });
+
                 var subject = testApp.request(mockRequest);
                 var cardResponse = subject.then(function(response) {
                   return response.response.card;
@@ -84,11 +76,11 @@ describe("Alexa", function() {
             it("responds with a speech and card using deprecated api", function() {
               var cardTitle = "radCard";
               var cardContent = "MyCard Content!";
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage).card(cardTitle, cardContent);
                 return true;
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
@@ -104,7 +96,7 @@ describe("Alexa", function() {
                 expect(cardResponse).to.eventually.become({
                   "content": "MyCard Content!",
                   "title": "radCard",
-                  "type": "Simple"
+                  "type": "Simple",
                 }),
               ]);
             });
@@ -113,15 +105,15 @@ describe("Alexa", function() {
               var oCard = {
                   type: "Simple",
                   title: "My Cool Card",
-                  content: "This is the\ncontent of my card"
+                  content: "This is the\ncontent of my card",
                 },
                 expectedCard = JSON.parse(JSON.stringify(oCard));
 
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage).card(oCard);
                 return true;
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
@@ -150,11 +142,12 @@ describe("Alexa", function() {
                 },
                 expectedCard = JSON.parse(JSON.stringify(oCard));
 
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
+
                 res.say(expectedMessage).card(oCard);
                 return true;
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
@@ -178,11 +171,11 @@ describe("Alexa", function() {
                 },
                 expectedCard = JSON.parse(JSON.stringify(oCard));
 
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage).card(oCard);
                 return true;
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;
@@ -196,7 +189,7 @@ describe("Alexa", function() {
                   type: "SSML"
                 }),
                 expect(cardResponse).to.eventually.become(expectedCard),
-              ]); 
+              ]);
             });
 
             it("responds with a speech and no card because it was called with invalid info", function() {
@@ -208,11 +201,11 @@ describe("Alexa", function() {
                 },
                 expectedCard = undefined;
 
-              intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage).card(oCard);
                 return true;
-              };
-              setupIntentHandler(intentHandler);
+              });
+
               var subject = testApp.request(mockRequest);
               var alexaResponse = subject.then(function(response) {
                 return response.response.outputSpeech;

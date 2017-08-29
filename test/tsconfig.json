@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": ["es6"],
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "baseUrl": ".",
+        "paths": { "alexa-app": [".."] },
+        "noEmit": true,
+        "allowJs": true,
+        "checkJs": true
+    },
+    "files": [
+        "test_alexa_app_audioplayer.js",
+        "test_alexa_app_cards.js",
+        "test_alexa_app_customslot.js",
+        "test_alexa_app_intent.js",
+        "test_alexa_app_session.js"
+    ]
+}

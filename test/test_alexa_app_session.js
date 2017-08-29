@@ -7,10 +7,12 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
+import * as Alexa from "..";
+
 describe("Alexa", function() {
-  var Alexa = require("../index");
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+    
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -19,10 +21,11 @@ describe("Alexa", function() {
       var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
       context("intent handler with shouldEndSession = false", function() {
+        /** @type {Alexa.request} */
         var reqObject;
 
         beforeEach(function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("message").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -30,9 +33,7 @@ describe("Alexa", function() {
             });
             reqObject = req;
             return true;
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
         });
 
         it("reponds with expected context applicationId", function() {
@@ -79,6 +80,11 @@ describe("Alexa", function() {
         });
 
         it("does not update session properties without explicit set", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
@@ -86,6 +92,10 @@ describe("Alexa", function() {
           };
 
           testApp.intent("airportInfoIntent", {}, function(req, res) {
+            var session = req.getSession();
+            session.set("foo", true);
+            session.set("bar", {qaz: "woah"});
+
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
             var bar = session.get("bar");
@@ -108,6 +118,11 @@ describe("Alexa", function() {
         });
 
         it("does not update session properties when clearing non-existant attribute", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
@@ -136,6 +151,11 @@ describe("Alexa", function() {
         });
 
         it("updates session properties with explicit set", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
@@ -173,7 +193,7 @@ describe("Alexa", function() {
 
       context("intent handler with shouldEndSession = false", function() {
         it("responds with an empty session object after clearing session", function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -181,9 +201,7 @@ describe("Alexa", function() {
             });
             res.clearSession();
             return true;
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
 
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
@@ -200,7 +218,7 @@ describe("Alexa", function() {
 
       context("intent handler with shouldEndSession = false", function() {
         it("responds with session object missing a cleared session variable", function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("foo", true);
             res.session("bar", {
@@ -208,9 +226,7 @@ describe("Alexa", function() {
             });
             res.clearSession("bar");
             return true;
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
 
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes;
@@ -229,16 +245,14 @@ describe("Alexa", function() {
 
       context("intent handler with shouldEndSession = false", function() {
         it("responds with a copied session object", function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("hi").shouldEndSession(false);
             res.session("bar", {
               qaz: "woah"
             });
             res.session("foo", res.session("bar"));
             return true;
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
 
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.sessionAttributes["foo"];
@@ -259,12 +273,10 @@ describe("Alexa", function() {
         it("responds reprompted message on shouldEndSession", function() {
           var expectedReprompt = "totally";
 
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say("hi").shouldEndSession(false, expectedReprompt);
             return true;
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
 
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.reprompt.outputSpeech;
@@ -283,6 +295,11 @@ describe("Alexa", function() {
 
       context("request without session", function() {
         it("responds with an empty session object", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             if (req.hasSession()) {
               // unreachable code, because the request doesn't have session
@@ -307,6 +324,11 @@ describe("Alexa", function() {
         var mockRequest = mockHelper.load("audio_player_event_request.json");
 
         it("session.clear() should fail the app", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             return req.getSession().clear();
           };
@@ -323,7 +345,12 @@ describe("Alexa", function() {
 
         it("session.get(key) should fail the app", function() {
           var returnedAttributeValue = "overridden";
-
+          
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
@@ -341,6 +368,11 @@ describe("Alexa", function() {
         it("session.get(key) should not throw if attribute is not present", function() {
           var returnedAttributeValue = "overridden";
 
+           /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
@@ -355,6 +387,11 @@ describe("Alexa", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
         it("should respond to changes to request.type() performed in app.pre", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             req.data.request.type = 'Some Invalid Request Type';
           };
@@ -375,6 +412,11 @@ describe("Alexa", function() {
           var returnedAirportCode = "overridden";
           var returnedAirportCodeBackwardsCompat = "overridden";
 
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
             returnedAirportCode = req.getSession().get("airportCode");
@@ -397,6 +439,11 @@ describe("Alexa", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
         it("session.clear() should not throw", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             req.getSession().clear();
           };
@@ -412,6 +459,11 @@ describe("Alexa", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info_with_attributes.json");
 
         it("session.clear() should not throw", function() {
+          /**
+           * @param {Alexa.request} req
+           * @param {Alexa.response} res
+           * @param {string} type
+           */
           testApp.pre = function(req, res, type) {
             req.getSession().clear();
           };
@@ -427,6 +479,11 @@ describe("Alexa", function() {
       context("request without session", function() {
         context("trying to get session variable", function() {
           it("it fails with NO_SESSION message", function() {
+            /**
+             * @param {Alexa.request} req
+             * @param {Alexa.response} res
+             * @param {string} type
+             */
             testApp.pre = function(req, res, type) {
               req.getSession().get("foo");
             };
@@ -441,6 +498,11 @@ describe("Alexa", function() {
 
         context("trying to set session variable", function() {
           it("it fails with NO_SESSION message", function() {
+            /**
+             * @param {Alexa.request} req
+             * @param {Alexa.response} res
+             * @param {string} type
+             */
             testApp.pre = function(req, res, type) {
               req.getSession().set("foo", "bar");
             };

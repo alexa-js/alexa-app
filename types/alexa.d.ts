@@ -1,6 +1,7 @@
 export type DialogState = "STARTED"|"IN_PROGRESS"|"COMPLETED";
 export type ClearBehavior = "CLEAR_ENQUEUED"|"CLEAR_ALL";
-export type Request = LaunchRequest|IntentRequest|SessionEndedRequest; // TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+export type Request = LaunchRequest|IntentRequest|SessionEndedRequest|any; // TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+export type CardType = "Simple"|"Standard"|"LinkAccount"|any;
 
 export interface AudioItem {
   stream: Stream;
@@ -13,7 +14,8 @@ export interface AudioPlayer {
 }
 
 export interface Card {
-  type: "Simple"|"Standard"|"LinkAccount";
+  type: CardType;
+  title?: string;
   text?: string;
   content?: string;
   image?: {
