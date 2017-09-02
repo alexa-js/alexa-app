@@ -91,6 +91,8 @@ export interface Session {
     applicationId: string;
   };
   user: User;
+  userId?: string;
+  accessToken?: string|null;
 }
 
 export interface SessionEndedRequest {
