@@ -17,7 +17,7 @@
   "scripts": {
     "lint": "eslint index.js;",
     "coverage": "istanbul cover _mocha -- -R spec",
-    "dtslint": "./node_modules/.bin/dtslint types",
+    "dtslint": "./node_modules/.bin/dtslint types && ./node_modules/.bin/tsc -p test",
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
     "test-with-coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec ./test/*.js --compilers js:babel-core/register",
     "danger": "./node_modules/.bin/danger"
