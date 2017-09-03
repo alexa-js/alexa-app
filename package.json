@@ -62,6 +62,6 @@
   },
   "optionalDependencies": {
     "dtslint": "^0.1.2",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5"
   }
 }
