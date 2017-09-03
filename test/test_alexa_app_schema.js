@@ -6,11 +6,12 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function() {
-  var Alexa = require("../index");
+import * as Alexa from "..";
 
+describe("Alexa", function() {
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -376,7 +377,7 @@ describe("Alexa", function() {
                   {
                     "id": "canine",
                     "name": {
-                      "value": "dog", 
+                      "value": "dog",
                       "synonyms": ["doggo", "pupper", "woofmeister"]
                     }
                   }
@@ -398,7 +399,7 @@ describe("Alexa", function() {
 
             testApp.customSlot("vegetable", ["carrot", "cucumber"]);
           });
-  
+
           it("includes all custom slots", function() {
             var subject = JSON.parse(testApp.schemas.skillBuilder());
             expect(subject).to.eql({
@@ -417,7 +418,7 @@ describe("Alexa", function() {
                     {
                       "id": "canine",
                       "name": {
-                        "value": "dog", 
+                        "value": "dog",
                         "synonyms": ["doggo", "pupper", "woofmeister"]
                       }
                     }

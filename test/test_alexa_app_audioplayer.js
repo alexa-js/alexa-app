@@ -160,6 +160,7 @@ describe("Alexa", function () {
       context("set PlaybackFinished event handler with play directive", function() {
         describe("response", function() {
           it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            /** @type {Alexa.Stream} */
             var stream = {
               url: "https://testing",
               token: "some token",
@@ -191,6 +192,7 @@ describe("Alexa", function () {
       context("set PlaybackFinished event handler with async response", function () {
         describe("response", function() {
           it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            /** @type {Alexa.Stream} */
             var stream = {
               url: "https://testing",
               token: "some token",

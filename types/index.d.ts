@@ -1,10 +1,12 @@
 // TypeScript Version: 2.2
 import * as alexa from "./alexa";
 
+export * from "./alexa";
+
 export type RequestHandler = (request: request, response: response) => void;
 export type ErrorHandler = (e: any, request: request, response: response) => void;
 
-export let apps: object;
+export let apps: {[name: string]: app};
 
 export class app {
   constructor(name: string);
@@ -50,7 +52,7 @@ export class app {
   dictionary: any;
 
   intents: {[name: string]: intent};
-  intent: (intentName: string, schema: IntentSchema | RequestHandler, handler?: RequestHandler) => void;
+  intent: (intentName: string, schema?: IntentSchema | RequestHandler, handler?: RequestHandler) => void;
 
   customSlots: {[name: string]: CustomSlot};
   customSlot: (name: string, values: Array<CustomSlot|string>) => void;
@@ -65,7 +67,14 @@ export class app {
   sessionEndedFunc?: RequestHandler;
   sessionEnded: (func: RequestHandler) => void;
 
-  request: (requestJSON: alexa.Request) => Promise<any>; // TODO: Figure out what the promise actually contains
+  displayElementSelectedFunc?: RequestHandler;
+  displayElementSelected: (func: RequestHandler) => void;
+
+  playbackControllerEventHandlers: {[name: string]: PlaybackController};
+  playbackController: (eventName: string, func: RequestHandler) => void;
+
+  /** TODO: Figure out what the promise actually contains */
+  request: (requestJSON: alexa.Request) => Promise<alexa.ResponseBody>;
 
   /** @deprecated It's recommended you directly call `app.schema.*` instead
    * Extracts the schema and generates a schema JSON object
@@ -85,11 +94,14 @@ export class app {
   /** Generates a list of sample utterances */
   utterances: () => string;
 
-  /** A built-in handler for AWS Lambda */
-  handler: (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
+  /** A built-in handler for AWS Lambda
+   * The "context" param is not actually used in code, but appears for
+   * backwards comaptibility purposes.
+   */
+  handler: (event: alexa.RequestBody, context: any, callback: (error: Error, response: alexa.ResponseBody) => void) => void;
 
   /** For backwards compatibility */
-  lambda: () => (event: string, context: alexa.Context, callback: (error: Error, response: response) => void) => void;
+  lambda: () => (event: alexa.RequestBody, context: any, callback: (error: Error, response: response) => void) => void;
 
   /* attach Alexa endpoint to an express router
    *
@@ -114,10 +126,10 @@ export class request {
   type: () => "LaunchRequest"|"IntentRequest"|"SessionEndedRequest";
 
   /** Returns the value passed in for a given slot name. */
-  slot: (slotName: string) => string;
+  slot: (slotName: string, defaultValue?: string) => string;
 
   /** slots['slotname'] returns the slot object */
-  slots: object;
+  slots: {[name: string]: slot};
 
   /** The intent's confirmationStatus */
   confirmationStatus: string;
@@ -135,7 +147,7 @@ export class request {
   getSession: () => session;
 
   /** Returns the request context */
-  context?: alexa.Context;
+  context: alexa.Context;
 
   /** The raw request JSON object from Amazon */
   data: alexa.RequestBody;
@@ -146,6 +158,9 @@ export class request {
 
   userId?: string;
   applicationId?: string;
+
+  /** This will only exist if the request type is `AudioPlayer` */
+  selectedElementToken?: string;
 
   /** @deprecated */
   session: (key: string) => any;
@@ -219,7 +234,7 @@ export class response {
   setSessionAttributes: (attributes: any) => void;
   prepare: () => void;
 
-  getDirectives: () => directive[];
+  getDirectives: () => directive;
   directive: (directive: any) => response;
 
   /** @deprecated */
@@ -338,4 +353,9 @@ export interface CustomSlot {
   value: string;
   synonyms?: string[];
   id?: string|null;
+}
+
+export interface PlaybackController {
+  name: string;
+  function: RequestHandler;
 }

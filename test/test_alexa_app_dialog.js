@@ -7,10 +7,11 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
+import * as Alexa from "..";
+
 describe("Alexa", function() {
-  var Alexa = require("../index");
   describe("app", function() {
-    var app;
+    var app = new Alexa.app("testApp");
 
     beforeEach(function() {
       app = new Alexa.app("testApp");
@@ -18,8 +19,15 @@ describe("Alexa", function() {
 
     describe("#request", function() {
       describe("dialog object", function() {
-        var mockRequest, intentHandler, subject;
+        var mockRequest, intentHandler;
 
+        /** @type {Promise<Alexa.OutputSpeech|undefined>} */
+        var subject;
+
+        /**
+         * @param {string} dialogState
+         * @param {Alexa.RequestHandler} handler
+         */
         var setupHandlerAndSubject = function(dialogState, handler) {
           mockRequest = mockHelper.load("intent_request_food_delivery_dialog_" + dialogState + ".json")
 
@@ -155,10 +163,6 @@ describe("Alexa", function() {
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
-          var intentHandler = function (req, res) {
-            res.say("I'm starting your delivery").send();
-            return true;
-          };
 
           context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
@@ -166,7 +170,10 @@ describe("Alexa", function() {
                 "dialog": {
                   type: "delegate"
                 }
-              }, intentHandler);
+              }, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains directive property with Dialog.Delegate directive object", function () {
@@ -189,7 +196,10 @@ describe("Alexa", function() {
 
           context("intent is manually handling the dialog", function () {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, intentHandler);
+              app.intent("deliveryCreationRequest", {}, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains no directive properties", function () {
@@ -216,10 +226,6 @@ describe("Alexa", function() {
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
-          var intentHandler = function (req, res) {
-            res.say("I'm starting your delivery").send();
-            return true;
-          };
 
           context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
@@ -227,7 +233,10 @@ describe("Alexa", function() {
                 "dialog": {
                   type: "delegate"
                 }
-              }, intentHandler);
+              }, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains directive property with Dialog.Delegate directive object", function () {
@@ -250,7 +259,10 @@ describe("Alexa", function() {
 
           context("intent is manually handling the dialog", function () {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, intentHandler);
+              app.intent("deliveryCreationRequest", {}, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains no directive properties", function () {
@@ -277,10 +289,6 @@ describe("Alexa", function() {
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
-          var intentHandler = function (req, res) {
-            res.say("I'm starting your delivery").send();
-            return true;
-          };
 
           context("intent configured to delegate dialog to Alexa", function () {
             beforeEach(function() {
@@ -288,7 +296,10 @@ describe("Alexa", function() {
                 "dialog": {
                   type: "delegate"
                 }
-              }, intentHandler);
+              }, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains no directive properties", function () {
@@ -311,7 +322,10 @@ describe("Alexa", function() {
 
           context("intent is manually handling the dialog", function () {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, intentHandler);
+              app.intent("deliveryCreationRequest", {}, function (req, res) {
+                res.say("I'm starting your delivery").send();
+                return true;
+              });
             });
 
             it("contains no directive properties", function () {

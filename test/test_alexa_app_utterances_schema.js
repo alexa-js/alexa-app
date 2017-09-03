@@ -4,10 +4,12 @@ var chai = require("chai");
 var expect = chai.expect;
 chai.config.includeStack = true;
 
+import * as Alexa from "..";
+
 describe("Alexa", function() {
-  var Alexa = require("../index");
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });

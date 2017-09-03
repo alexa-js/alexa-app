@@ -7,14 +7,11 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
+import * as Alexa from '..';
+
 describe("Alexa", function() {
-  var Alexa = require("../index");
   describe("app", function() {
     var app = new Alexa.app("myapp");
-    var setupIntentHandler = function(handlerFunction) {
-      app = new Alexa.app("myapp");
-      app.intent("airportInfoIntent", {}, handlerFunction);
-    };
 
     describe("#request", function() {
       describe("directives response", function() {
@@ -28,11 +25,10 @@ describe("Alexa", function() {
             };
 
           it("contains directive property with custom object", function () {
-            var intentHandler = function (req, res) {
+            app.intent("audioPlayerIntent", {}, function (req, res) {
               res.directive(customDirective);
               return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
+            });
 
             var subject = app.request(mockRequest).then(function (response) {
               return response.response.directives;
@@ -41,11 +37,10 @@ describe("Alexa", function() {
           });
 
           it("clears directive property when clear is called", function () {
-            var intentHandler = function (req, res) {
+            app.intent("audioPlayerIntent", {}, function (req, res) {
               res.directive(customDirective).getDirectives().clear();
               return true;
-            };
-            app.intent("audioPlayerIntent", {}, intentHandler);
+            });
 
             var subject = app.request(mockRequest).then(function (response) {
               return response.response.directives;

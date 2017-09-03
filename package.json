@@ -34,9 +34,9 @@
     "alexa-utterances": "^0.2.0",
     "alexa-verifier-middleware": "^0.2.1",
     "bluebird": "^2.10.2",
+    "body-parser": "^1.15.2",
     "lodash.defaults": "^4.2.0",
-    "numbered": "^1.0.0",
-    "body-parser": "^1.15.2"
+    "numbered": "^1.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",

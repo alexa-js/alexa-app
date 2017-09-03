@@ -26,7 +26,8 @@ export interface Card {
 // @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#context-object
 export interface Context {
   System: System;
-  AudioPlayer: AudioPlayer;
+  AudioPlayer?: AudioPlayer;
+  Display?: Display;
 }
 
 export interface Intent {
@@ -80,7 +81,7 @@ export interface Response {
 
 export interface ResponseBody {
   version: string;
-  sessionAttributes: string;
+  sessionAttributes: {[key: string]: object};
   response: Response;
 }
 
@@ -141,4 +142,12 @@ export interface User {
     userId: string;
     accessToken?: string;
     permissions?: Permissions;
+}
+
+// TODO: This needs more fleshing out.
+// @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference
+export interface Display {
+  token: string;
+  type: string;
+  listItems?: any[];
 }

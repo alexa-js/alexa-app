@@ -12,7 +12,7 @@ import * as Alexa from "..";
 describe("Alexa", function() {
   describe("app", function() {
     var testApp = new Alexa.app("testApp");
-    
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -345,7 +345,7 @@ describe("Alexa", function() {
 
         it("session.get(key) should fail the app", function() {
           var returnedAttributeValue = "overridden";
-          
+
           /**
            * @param {Alexa.request} req
            * @param {Alexa.response} res
