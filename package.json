@@ -61,7 +61,7 @@
     "supertest": "^2.0.1"
   },
   "optionalDependencies": {
-    "dtslint": "^0.1.2",
+    "dtslint": "microsoft/dtslint#production",
     "typescript": "^2.5"
   }
 }

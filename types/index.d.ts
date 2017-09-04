@@ -1,4 +1,5 @@
-// TypeScript Version: 2.2
+// TypeScript Version: 2.4
+
 import * as alexa from "./alexa";
 
 export * from "./alexa";
@@ -313,7 +314,7 @@ export class dialog {
 export class intent {
   name?: string;
   handler?: RequestHandler;
-  dialog: dialog | any;
+  dialog: dialog;
   slots: object | null;
   utterances: string[];
 
