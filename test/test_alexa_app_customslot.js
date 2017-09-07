@@ -7,11 +7,12 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function() {
-  var Alexa = require("../index");
+import * as Alexa from '..';
 
+describe("Alexa", function() {
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -61,7 +62,7 @@ describe("Alexa", function() {
         });
       });
 
-      context("with a mix of strings and objects", function() {  
+      context("with a mix of strings and objects", function() {
         beforeEach(function() {
           testApp.customSlot("animals", ["dog", slotValue]);
         });

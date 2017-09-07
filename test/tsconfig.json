@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": ["es6"],
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "baseUrl": ".",
+        "paths": { "alexa-app": [".."] },
+        "noEmit": true,
+        "allowJs": true,
+        "checkJs": true
+    },
+    "files": [
+        "test_alexa_app_audioplayer.js",
+        "test_alexa_app_cards.js",
+        "test_alexa_app_customslot.js",
+        "test_alexa_app_dialog.js",
+        "test_alexa_app_directives.js",
+        "test_alexa_app_display_element_selected_request.js",
+        "test_alexa_app_error_string_responses.js",
+        "test_alexa_app_initialization.js",
+        "test_alexa_app_intent_request.js",
+        "test_alexa_app_intent.js",
+        "test_alexa_app_launch_request.js",
+        "test_alexa_app_playbackcontroller.js",
+        "test_alexa_app_schema.js",
+        "test_alexa_app_session.js",
+        "test_alexa_app_session_ended_request.js",
+        "test_alexa_app_unknown_type_request.js",
+        "test_alexa_app_utterances_schema.js"
+    ]
+}

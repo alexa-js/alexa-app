@@ -6,15 +6,15 @@ var mockHelper = require("./helpers/mock_helper");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
-var Promise = require("bluebird");
 
+import * as Alexa from "..";
 
 describe("Alexa", function () {
-  var Alexa = require("../index");
-
   describe("app", function () {
-    var testApp;
-    var playbackHandlerWasCalled;
+    var testApp = new Alexa.app("testApp");
+    var playbackHandlerWasCalled = false;
+
+    /** @type {Alexa.RequestHandler} */
     var playbackControllerHandler = function(req, res) {
       playbackHandlerWasCalled = true;
     };
@@ -26,8 +26,7 @@ describe("Alexa", function () {
     describe("request", function () {
 
       context("with a playback controller command", function() {
-        var mockRequest;
-        beforeEach(function() { mockRequest = mockHelper.load("playback_controller_play_command.json");});
+        var mockRequest = mockHelper.load("playback_controller_play_command.json");
 
         it("should not return speech output", function() {
           return testApp.request(mockRequest)
@@ -55,8 +54,7 @@ describe("Alexa", function () {
       });
 
       context("without a playback controller command", function() {
-        var mockRequest;
-        beforeEach(function() { mockRequest = mockHelper.load("intent_request_airport_info.json"); });
+        var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
         it("should not call the playbackController handler", function() {
           testApp.playbackController("PlayCommandIssued", playbackControllerHandler);

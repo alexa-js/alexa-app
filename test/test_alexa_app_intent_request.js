@@ -3,16 +3,16 @@
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
 var mockHelper = require("./helpers/mock_helper");
-var Promise = require("bluebird");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function() {
-  var Alexa = require("../index");
+import * as Alexa from '..';
 
+describe("Alexa", function() {
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -22,19 +22,19 @@ describe("Alexa", function() {
         var mockRequest = mockHelper.load("intent_request_airport_info.json");
 
         describe("defaults", function() {
-          var subject;
+          var request = testApp.request(mockRequest);
 
           beforeEach(function() {
-            subject = testApp.request(mockRequest);
+            request = testApp.request(mockRequest);
           })
 
           it("responds with expected version attribute", function() {
-            return expect(subject).to.eventually.have.property("version", "1.0");
+            return expect(request).to.eventually.have.property("version", "1.0");
           });
 
           describe("alexa response", function() {
             it("responds with expected alexa response defaults", function() {
-              subject = subject.then(function(response) {
+              var subject = request.then(function(response) {
                 return response.response;
               });
               return expect(subject).to.eventually.have.property("shouldEndSession", true);
@@ -44,15 +44,15 @@ describe("Alexa", function() {
 
         context("with an intent request of airportInfoIntent", function() {
           context("with no intent handler", function() {
-            var subject;
+            var request = testApp.request(mockRequest);
 
             beforeEach(function() {
-              subject = testApp.request(mockRequest);
+              request = testApp.request(mockRequest);
             })
 
             describe("outputSpeech", function() {
               it("responds with NO_INTENT_FOUND message", function() {
-                subject = subject.then(function(response) {
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -68,12 +68,10 @@ describe("Alexa", function() {
             var expectedMessage = "tubular!";
 
             beforeEach(function() {
-              var intentHandler = function(req, res) {
+              testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage);
                 return true;
-              };
-
-              testApp.intent("airportInfoIntent", {}, intentHandler);
+              });
             });
 
             describe("outputSpeech", function() {
@@ -81,6 +79,11 @@ describe("Alexa", function() {
                 it("invokes the post method after the intenthandler", function() {
                   var postMessage = "hallelujah";
 
+                  /**
+                   * @param {Alexa.request} req
+                   * @param {Alexa.response} res
+                   * @param {string} type
+                   */
                   testApp.post = function(req, res, type) {
                     res.say(postMessage);
                   };
@@ -106,6 +109,11 @@ describe("Alexa", function() {
                 it("invokes the pre method before intenthandler", function() {
                   var preMessage = "hallelujah";
 
+                  /**
+                   * @param {Alexa.request} req
+                   * @param {Alexa.response} res
+                   * @param {string} type
+                   */
                   testApp.pre = function(req, res, type) {
                     res.say(preMessage);
                   };
@@ -128,15 +136,13 @@ describe("Alexa", function() {
               });
 
               it("clears output when clear is called", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(expectedMessage).say(expectedMessage).clear();
                   return true;
-                };
+                });
 
-                testApp.intent("airportInfoIntent", {}, intentHandler);
-
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -147,17 +153,15 @@ describe("Alexa", function() {
               });
 
               it("clears output when clear is called and say is then called", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(expectedMessage)
                     .say(expectedMessage)
                     .clear().say(expectedMessage);
                   return true;
-                };
+                });
 
-                testApp.intent("airportInfoIntent", {}, intentHandler);
-
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -168,14 +172,12 @@ describe("Alexa", function() {
               });
 
               it("combines says into a larger response", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(expectedMessage).say(expectedMessage);
                   return true;
-                };
-
-                testApp.intent("airportInfoIntent", {}, intentHandler);
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                });
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -186,15 +188,13 @@ describe("Alexa", function() {
               });
 
               it("responds with expected message", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   res.say(expectedMessage);
                   return true;
-                };
+                });
 
-                testApp.intent("airportInfoIntent", {}, intentHandler);
-
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -205,16 +205,14 @@ describe("Alexa", function() {
               });
 
               it("responds with expected message for promise", function() {
-                var intentHandler = function(req, res) {
+                testApp.intent("airportInfoIntent", {}, function(req, res) {
                   return Promise.resolve().then(function() {
                     res.say(expectedMessage);
                   });
-                };
+                });
 
-                testApp.intent("airportInfoIntent", {}, intentHandler);
-
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -230,8 +228,8 @@ describe("Alexa", function() {
                   return true;
                 });
 
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -251,8 +249,8 @@ describe("Alexa", function() {
                     return true;
                   });
 
-                  var subject = testApp.request(mockRequest);
-                  subject = subject.then(function(response) {
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
                     return response.response.outputSpeech;
                   });
 
@@ -270,8 +268,8 @@ describe("Alexa", function() {
                     return true;
                   });
 
-                  var subject = testApp.request(mockRequest);
-                  subject = subject.then(function(response) {
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
                     return response.response.outputSpeech;
                   });
 
@@ -288,8 +286,8 @@ describe("Alexa", function() {
                   return true;
                 });
 
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -305,8 +303,8 @@ describe("Alexa", function() {
                   return true;
                 });
 
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -326,8 +324,8 @@ describe("Alexa", function() {
                     return true;
                   });
 
-                  var subject = testApp.request(mockRequest);
-                  subject = subject.then(function(response) {
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
                     return response.response.outputSpeech;
                   });
 
@@ -348,8 +346,8 @@ describe("Alexa", function() {
                     return true;
                   });
 
-                  var subject = testApp.request(mockRequest);
-                  subject = subject.then(function(response) {
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
                     return response.response.outputSpeech;
                   });
 
@@ -366,8 +364,8 @@ describe("Alexa", function() {
                   return true;
                 });
 
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 
@@ -389,6 +387,11 @@ describe("Alexa", function() {
                 });
 
                 it("can clear failure in post", function() {
+                  /**
+                   * @param {Alexa.request} req
+                   * @param {Alexa.response} res
+                   * @param {string} type
+                   */
                   testApp.post = function(req, res, type) {
                     return res.clear().say("An error occured!").send();
                   };
@@ -443,8 +446,8 @@ describe("Alexa", function() {
                   return true;
                 });
 
-                var subject = testApp.request(mockRequest);
-                subject = subject.then(function(response) {
+                var request = testApp.request(mockRequest);
+                var subject = request.then(function(response) {
                   return response.response.outputSpeech;
                 });
 

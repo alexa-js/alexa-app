@@ -7,27 +7,27 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
+import * as Alexa from '..';
+
 describe("Alexa", function() {
-  var Alexa = require("../index");
 
   describe("app", function() {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+    
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
 
     context("#intent", function() {
-      var func = function(req, res) { };
-
       context("with schema", function() {
-        var schema = { schema: "yes" };
+        var schema = {};
 
         beforeEach(function() {
-          testApp.intent("airportInfoIntent", schema, func);
+          testApp.intent("airportInfoIntent", schema, function() {});
         });
 
         it("assigns handler", function() {
-          expect(testApp.intents["airportInfoIntent"].handler).to.equal(func);
+          expect(testApp.intents["airportInfoIntent"].handler).to.exist;
         });
 
         it("assigns name", function() {
@@ -46,11 +46,11 @@ describe("Alexa", function() {
 
       context("without schema", function() {
         beforeEach(function() {
-          testApp.intent("airportInfoIntent", func);
+          testApp.intent("airportInfoIntent", function() {});
         });
 
         it("assigns handler", function() {
-          expect(testApp.intents["airportInfoIntent"].handler).to.equal(func);
+          expect(testApp.intents["airportInfoIntent"].handler).to.exist;
         });
 
         it("assigns name", function() {

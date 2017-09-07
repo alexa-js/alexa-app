@@ -21,7 +21,8 @@
   },
   "context": {
     "Display": {
-      "token": "fake-template-token"
+      "token": "fake-template-token",
+      "type": "string"
     },
     "System": {
       "user": {

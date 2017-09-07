@@ -7,11 +7,12 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-describe("Alexa", function() {
-  var Alexa = require("../index");
+import * as Alexa from '..';
 
+describe("Alexa", function() {
   describe("app", function() {
-    var testApp;
+    var testApp =  new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -22,12 +23,10 @@ describe("Alexa", function() {
         var expectedMessage = "tubular!";
 
         it('fails with unhandled message: error.message.', function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say(expectedMessage);
             throw new Error("OOPS!");
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });
@@ -35,12 +34,10 @@ describe("Alexa", function() {
         });
 
         it('fails with unhandled message: "Unhandled exception:" message.', function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say(expectedMessage);
             throw "OOPS!";
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });
@@ -48,12 +45,10 @@ describe("Alexa", function() {
         });
 
         it('fails with unhandled message: "Unhandled exception."', function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say(expectedMessage);
             throw new Error();
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });
@@ -61,12 +56,10 @@ describe("Alexa", function() {
         });
 
         it('fails with handled message: app.messages[e].', function() {
-          var intentHandler = function(req, res) {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
             res.say(expectedMessage);
             throw "GENERIC_ERROR";
-          };
-
-          testApp.intent("airportInfoIntent", {}, intentHandler);
+          });
           var subject = testApp.request(mockRequest).then(function(response) {
             return response.response.outputSpeech;
           });

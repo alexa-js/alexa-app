@@ -1,6 +1,9 @@
 export type DialogState = "STARTED"|"IN_PROGRESS"|"COMPLETED";
 export type ClearBehavior = "CLEAR_ENQUEUED"|"CLEAR_ALL";
-export type Request = LaunchRequest|IntentRequest|SessionEndedRequest; // TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+export type CardType = any; /* "Simple"|"Standard"|"LinkAccount" */
+
+// TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+export type Request = any; /* LaunchRequest|IntentRequest|SessionEndedRequest| */
 
 export interface AudioItem {
   stream: Stream;
@@ -13,7 +16,8 @@ export interface AudioPlayer {
 }
 
 export interface Card {
-  type: "Simple"|"Standard"|"LinkAccount";
+  type: CardType;
+  title?: string;
   text?: string;
   content?: string;
   image?: {
@@ -24,7 +28,8 @@ export interface Card {
 // @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#context-object
 export interface Context {
   System: System;
-  AudioPlayer: AudioPlayer;
+  AudioPlayer?: AudioPlayer;
+  Display?: Display;
 }
 
 export interface Intent {
@@ -78,7 +83,7 @@ export interface Response {
 
 export interface ResponseBody {
   version: string;
-  sessionAttributes: string;
+  sessionAttributes: {[key: string]: object};
   response: Response;
 }
 
@@ -139,4 +144,12 @@ export interface User {
     userId: string;
     accessToken?: string;
     permissions?: Permissions;
+}
+
+// TODO: This needs more fleshing out.
+// @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference
+export interface Display {
+  token: string;
+  type: string;
+  listItems?: any[];
 }

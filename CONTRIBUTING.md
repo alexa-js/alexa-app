@@ -58,6 +58,8 @@ npm install
 npm run dtslint
 ```
 
+This will also run the TypeScript type checker on all of the unit tests (even though they're in JavaScript!) to make sure that reality matches the type definitions. This may fail, possibly with an error that there's some type ambiguity, which might mean you need to tweak the tests a bit to give TypeScript the info it needs. If you're having trouble with this, you may want to look at other tests in this project to see workarounds for similar problems, or barring that feel free to bug [@lazerwalker](https://github.com/lazerwalker).
+
 ### Write Documentation
 
 Document any external behavior in the [README](README.md).

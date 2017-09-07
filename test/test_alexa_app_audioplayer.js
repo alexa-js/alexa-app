@@ -6,14 +6,13 @@ var mockHelper = require("./helpers/mock_helper");
 chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
-var Promise = require("bluebird");
 
+import * as Alexa from '..';
 
 describe("Alexa", function () {
-  var Alexa = require("../index");
-
   describe("app", function () {
-    var testApp;
+    var testApp = new Alexa.app("testApp");
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -22,33 +21,24 @@ describe("Alexa", function () {
 
       context("without an audioPlayer intent", function () {
         context("AudioPlayer.PlaybackFinished", function() {
-          var mockRequest;
-          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_finished.json"); })
-
           it("should succeed and return empty object ", function() {
-            return testApp.request(mockRequest)
+            return testApp.request(mockHelper.load("audio_player_events/playback_finished.json"))
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
         context("AudioPlayer.PlaybackFailed", function() {
-          var mockRequest;
-          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_failed.json"); })
-
           it("should succeed and return empty object ", function() {
-            return testApp.request(mockRequest)
+            return testApp.request(mockHelper.load("audio_player_events/playback_failed.json"))
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
         context("AudioPlayer.PlaybackNearlyFinished", function() {
-          var mockRequest;
-          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_nearly_finished.json"); })
-
           it("should succeed and return empty object ", function() {
-            return testApp.request(mockRequest)
+            return testApp.request(mockHelper.load("audio_player_events/playback_nearly_finished.json"))
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
@@ -56,22 +46,16 @@ describe("Alexa", function () {
 
 
         context("AudioPlayer.PlaybackStarted", function() {
-          var mockRequest;
-          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_started.json"); })
-
           it("should succeed and return empty object ", function() {
-            return testApp.request(mockRequest)
+            return testApp.request(mockHelper.load("audio_player_events/playback_started.json"))
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
         });
 
         context("AudioPlayer.PlaybackStopped", function() {
-          var mockRequest;
-          beforeEach(function() { mockRequest = mockHelper.load("audio_player_events/playback_stopped.json"); })
-
           it("should succeed and return empty object ", function() {
-            return testApp.request(mockRequest)
+            return testApp.request(mockHelper.load("audio_player_events/playback_stopped.json"))
               .should.eventually.be.fulfilled
               .and.not.have.deep.property("response.outputSpeech.type");
           });
@@ -98,13 +82,12 @@ describe("Alexa", function () {
               expectedPreviousToken: "some_previous_token",
               offsetInMilliseconds: 1000
             };
-          var intentHandler = function (req, res) {
-            res.audioPlayerPlayStream(playBehavior, stream);
-            return true;
-          };
 
           it("contains AudioPlayer directive array property", function () {
-            testApp.intent("audioPlayerIntent", {}, intentHandler);
+            testApp.intent("audioPlayerIntent", {}, function (req, res) {
+              res.audioPlayerPlayStream(playBehavior, stream);
+              return true;
+            });
             var subject = testApp.request(mockRequest).then(function (response) {
               return response.response.directives;
             });
@@ -112,7 +95,10 @@ describe("Alexa", function () {
           });
 
           it("audioPlayerPlay directive contains stream object", function () {
-            testApp.intent("audioPlayerIntent", {}, intentHandler);
+            testApp.intent("audioPlayerIntent", {}, function (req, res) {
+              res.audioPlayerPlayStream(playBehavior, stream);
+              return true;
+            });
             var subject = testApp.request(mockRequest).then(function (response) {
               return response.response.directives[0];
             });
@@ -126,11 +112,10 @@ describe("Alexa", function () {
           });
 
           it("audioPlayerStop directive", function() {
-            var intentHandler = function(req, res) {
+            testApp.intent("audioPlayerIntent", {}, function(req, res) {
               res.audioPlayerStop();
               return true;
-            };
-            testApp.intent("audioPlayerIntent", {}, intentHandler);
+            });
             var subject = testApp.request(mockRequest).then(function (response) {
               return response.response.directives[0];
             });
@@ -140,11 +125,10 @@ describe("Alexa", function () {
           });
 
           it("audioPlayerClearQueue w/o clearBehavior arg", function() {
-            var intentHandler = function(req, res) {
+            testApp.intent("audioPlayerIntent", {}, function(req, res) {
               res.audioPlayerClearQueue();
               return true;
-            };
-            testApp.intent("audioPlayerIntent", {}, intentHandler);
+            });
             var subject = testApp.request(mockRequest).then(function (response) {
               return response.response.directives[0];
             });
@@ -154,11 +138,10 @@ describe("Alexa", function () {
             });
           });
           it("audioPlayerClearQueue w/ clearBehavior arg", function() {
-            var intentHandler = function(req, res) {
+            testApp.intent("audioPlayerIntent", {}, function(req, res) {
               res.audioPlayerClearQueue("CLEAR_ENQUEUED");
               return true;
-            };
-            testApp.intent("audioPlayerIntent", {}, intentHandler);
+            });
             var subject = testApp.request(mockRequest).then(function (response) {
               return response.response.directives[0];
             });
@@ -177,6 +160,7 @@ describe("Alexa", function () {
       context("set PlaybackFinished event handler with play directive", function() {
         describe("response", function() {
           it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            /** @type {Alexa.Stream} */
             var stream = {
               url: "https://testing",
               token: "some token",
@@ -208,6 +192,7 @@ describe("Alexa", function () {
       context("set PlaybackFinished event handler with async response", function () {
         describe("response", function() {
           it("with NO_AUDIO_PLAYER_EVENT_HANDLER_FOUND message", function() {
+            /** @type {Alexa.Stream} */
             var stream = {
               url: "https://testing",
               token: "some token",

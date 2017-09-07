@@ -4,7 +4,7 @@ var path = require("path");
 
 function MockHelper() {}
 
-MockHelper.prototype.load = function(mockFile) {
+MockHelper.prototype.load = function(mockFile = "") {
   var fixturePath = path.join(__dirname, "../../test/fixtures");
   return JSON.parse(fs.readFileSync(path.join(fixturePath, mockFile), "utf8"));
 };
