@@ -31,6 +31,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@types/chai-as-promised": "^7.1.0",
     "alexa-utterances": "^0.2.0",
     "alexa-verifier-middleware": "^0.2.1",
     "bluebird": "^2.10.2",
@@ -40,7 +41,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
-    "@types/chai-as-promised": "0.0.31",
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.0.25",
     "babel-core": "^6.26.0",
