@@ -130,7 +130,7 @@ export class request {
   hasSession: () => boolean;
 
   /** Returns the session object */
-  getSession: () => alexa.Session;
+  getSession: () => session;
 
   /** Returns the request context */
   context?: alexa.Context;
@@ -276,7 +276,7 @@ export class dialog {
   /** Check if the intent's dialog is IN_PROGRESS */
   isInProgress: () => boolean;
 
-    /** Check if the intent's dialog is COMPLETED */
+  /** Check if the intent's dialog is COMPLETED */
   isCompleted: () => boolean;
 
   handleDialogDelegation: (func: RequestHandler) => void;

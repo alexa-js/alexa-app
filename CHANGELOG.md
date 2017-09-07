@@ -2,6 +2,7 @@
 
 ### 4.1.1 (Next)
 
+* [#280](https://github.com/alexa-js/alexa-app/pull/280): Fix session typing - [@benestem](https://github.com/benestem).
 * [#271](https://github.com/alexa-js/alexa-app/pull/271): Update request typing - [@jontg](https://github.com/jontg).
 * [#269](https://github.com/alexa-js/alexa-app/pull/269): Fix the lambda() type definition - [@jontg](https://github.com/jontg).
 * [#268](https://github.com/alexa-js/alexa-app/pull/268): Add support for outputting new Skill Builder schema - [@lazerwalker](https://github.com/lazerwalker).
