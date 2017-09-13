@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.1 (next)
+
+* Your contribution here
+
 ### 4.2.0 (September 13, 2017)
 
 * [#280](https://github.com/alexa-js/alexa-app/pull/280): Fix session typing - [@benestem](https://github.com/benestem).
