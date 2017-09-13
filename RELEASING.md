@@ -10,6 +10,7 @@ Run tests, check that all tests succeed locally.
 ```
 npm install
 npm test
+npm run dtslint
 ```
 
 Check that the last build succeeded in [Travis CI](https://travis-ci.org/alexa-js/alexa-app).
