@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.1.1 (Next)
+### 4.2.0 (September 13, 2017)
 
 * [#280](https://github.com/alexa-js/alexa-app/pull/280): Fix session typing - [@benestem](https://github.com/benestem).
 * [#271](https://github.com/alexa-js/alexa-app/pull/271): Update request typing - [@jontg](https://github.com/jontg).
@@ -11,7 +11,6 @@
 * [#275](https://github.com/alexa-js/alexa-app/pull/275): Add support for custom slot types (for Skill Builder schema output) - [@lazerwalker](https://github.com/lazerwalker).
 * [#276](https://github.com/alexa-js/alexa-app/pull/276): Added documentation for building SSML responses - [@tejashah88](https://github.com/tejashah88).
 * [#278](https://github.com/alexa-js/alexa-app/pull/278): Adds type checking for unit tests, and fixes some incorrect TypeScript type definitions - [@lazerwalker](https://github.com/lazerwalker).
-* Your contribution here
 
 ### 4.1.0 (August 12, 2017)
 
