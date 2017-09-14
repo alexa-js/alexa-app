@@ -559,7 +559,7 @@ app.post = function(request, response, type, exception) {
 
 ## Schema and Utterances
 
-The alexa-app module makes it easy to define your intent schema and generate many sample utterances. Optionally pass your schema definition along with your intent handler, and extract the generated content using either the `schemas.intent()` and `utterances()` functions on your app (if using the normal Developer portal) or `schemas.skillBuilder()` if using the new Skill Builder beta.
+The alexa-app module makes it easy to define your intent schema and generate many sample utterances. Optionally pass your schema definition along with your intent handler, and extract the generated content using either the `schemas.intent()` and `utterances()` functions on your app (if using the normal Developer portal), `schemas.skillBuilder()` if using the new Skill Builder beta, or `schemas.askcli()` if using the `ask-cli` tool.
 
 
 ### Schema Syntax
@@ -721,6 +721,48 @@ app.schemas.skillBuilder() =>
       }
     }]
   }];
+}
+```
+
+#### ask-cli Schema
+
+The [ask-cli](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/ask-cli-intro) tool accepts a schema in the same format as the Skill Builder, but is structured slightly differently. The `schemas.askcli()` function generates a JSON string suitable to be used with the `ask deploy` command.
+
+This schema format requires you to specify the invocation name for your skill. You can set this for your skill by setting `app.invocationName`. If you need to use different invocation names for the same skill (e.g. you have both a staging and production version), the schema function itself can take in an invocation name which overwrites the app's default.
+
+```javascript
+app.schemas.askcli("favorite color") =>
+
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "favorite color"
+      "intents": [{
+        "name": "MyColorIsIntent",
+        "samples": [
+          "my color is {dark brown|Color}",
+          "my color is {green|Color}",
+          "my favorite color is {red|Color}",
+          "my favorite color is {navy blue|Color}"
+        ],
+        "slots": [{
+          "name": "Color",
+          "type": "AMAZON.Color",
+          "samples": []
+        }]
+      }],
+      "types": [{
+        "name": "MyCustomColor",
+        "values": [{
+          "id": null,
+          "name": {
+            "value": "aquamarine",
+            "synonyms": ["aqua", "seafoam", "teal"]
+          }
+        }]
+      }];
+    }
+  }
 }
 ```
 

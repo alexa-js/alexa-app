@@ -31,6 +31,7 @@ export class app {
   post: (request: request, response: response, type: string, exception: any) => void;
 
   name: string;
+  invocationName?: string;
   messages: any;
 
   /** By default, alexa-app will persist every request session attribute into
@@ -90,6 +91,13 @@ export class app {
 
     /** Generates a schema in the new Skill Builder beta format */
     skillBuilder(): string;
+
+    /** Generates a schema in the modified Skill Builder format accepted by the ask-cli tool
+     * @param invocationName {string?} The invocation name to include in the resulting JSON.
+     * If present, invocationName will be used. Otherwise, if app.invocationName is set,
+     * it will be used. Otherwise, it will default to app.name.
+     */
+    askcli(invocationName?: string): string;
   };
 
   /** Generates a list of sample utterances */

@@ -431,7 +431,7 @@ alexa.app = function(name) {
   this.customSlots = {};
   this.customSlot = function(slotName, values) {
     self.customSlots[slotName] = [];
-    
+
     values.forEach(function(value) {
       var valueObj;
       if (typeof value === "string") {
@@ -608,6 +608,67 @@ alexa.app = function(name) {
     });
   };
 
+  var skillBuilderSchema = function() {
+    var schema = {
+      "intents": [],
+      "types": []
+    },
+    intentName, intent, key;
+    for (intentName in self.intents) {
+      intent = self.intents[intentName];
+      var intentSchema = {
+        "name": intent.name,
+        "samples": []
+      };
+      if (intent.utterances && intent.utterances.length > 0) {
+        intent.utterances.forEach(function(sample) {
+          var list = AlexaUtterances(sample,
+            intent.slots,
+            self.dictionary,
+            self.exhaustiveUtterances);
+          list.forEach(function(utterance) {
+            intentSchema.samples.push(utterance);
+          });
+        });
+      }
+      if (intent.slots && Object.keys(intent.slots).length > 0) {
+        intentSchema["slots"] = [];
+        for (key in intent.slots) {
+          //  It's unclear whether `samples` is actually used for slots,
+          // but the interaction model will not build without an (empty) array
+          intentSchema.slots.push({
+            "name": key,
+            "type": intent.slots[key],
+            "samples": []
+          });
+        }
+      }
+      schema.intents.push(intentSchema);
+    }
+
+    for (var slotName in self.customSlots) {
+      var slotSchema = {
+        name: slotName,
+        values: []
+      };
+
+      var values = self.customSlots[slotName];
+      values.forEach(function(value) {
+        var valueSchema = {
+          "id": value.id,
+          "name": {
+            "value": value.value,
+            "synonyms": value.synonyms || []
+          }
+        };
+        slotSchema.values.push(valueSchema);
+      });
+
+      schema.types.push(slotSchema);
+    }
+    return schema;
+  };
+
   this.schemas = {
     intent: function() {
       var schema = {
@@ -634,63 +695,17 @@ alexa.app = function(name) {
     },
 
     skillBuilder: function() {
+      var schema = skillBuilderSchema();
+      return JSON.stringify(schema, null, 3);
+    },
+    askcli: function(invocationName) {
+      var model = skillBuilderSchema();
+      model.invocationName = invocationName || self.invocationName || self.name;
       var schema = {
-          "intents": [],
-          "types": []
-        },
-        intentName, intent, key;
-      for (intentName in self.intents) {
-        intent = self.intents[intentName];
-        var intentSchema = {
-          "name": intent.name,
-          "samples": []
-        };
-        if (intent.utterances && intent.utterances.length > 0) {
-          intent.utterances.forEach(function(sample) {
-            var list = AlexaUtterances(sample,
-              intent.slots,
-              self.dictionary,
-              self.exhaustiveUtterances);
-            list.forEach(function(utterance) {
-              intentSchema.samples.push(utterance);
-            });
-          });
+        interactionModel: {
+          languageModel: model
         }
-        if (intent.slots && Object.keys(intent.slots).length > 0) {
-          intentSchema["slots"] = [];
-          for (key in intent.slots) {
-            //  It's unclear whether `samples` is actually used for slots,
-            // but the interaction model will not build without an (empty) array
-            intentSchema.slots.push({
-              "name": key,
-              "type": intent.slots[key],
-              "samples": []
-            });
-          }
-        }
-        schema.intents.push(intentSchema);
-      }
-
-      for (var slotName in self.customSlots) {
-        var slotSchema = {
-          name: slotName,
-          values: []
-        };
-
-        var values = self.customSlots[slotName];
-        values.forEach(function(value) {
-          var valueSchema = {
-            "id": value.id,
-            "name": {
-              "value": value.value,
-              "synonyms": value.synonyms || []
-            }
-          }; 
-          slotSchema.values.push(valueSchema);
-        });     
-
-        schema.types.push(slotSchema);
-      }
+      };
       return JSON.stringify(schema, null, 3);
     }
   };
