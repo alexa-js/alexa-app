@@ -698,9 +698,9 @@ alexa.app = function(name) {
       var schema = skillBuilderSchema();
       return JSON.stringify(schema, null, 3);
     },
-    askcli: function() {
+    askcli: function(invocationName) {
       var model = skillBuilderSchema();
-      model.invocationName = self.name;
+      model.invocationName = invocationName || self.invocationName || self.name;
       var schema = {
         interactionModel: {
           languageModel: model

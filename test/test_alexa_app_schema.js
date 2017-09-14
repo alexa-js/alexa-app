@@ -451,6 +451,56 @@ describe("Alexa", function() {
     });
 
     describe("#schemas.askcli", function() {
+      describe("the invocation name", function() {
+        context("when no invocation name is set", function() {
+          it("should use the app name", function() {
+            var subject = JSON.parse(testApp.schemas.askcli());
+            expect(subject).to.eql({
+              "interactionModel": {
+                "languageModel": {
+                  "invocationName": "testApp",
+                  "intents": [],
+                  "types": []
+                }
+              }
+            });
+          })
+        })
+
+        context("when the app's invocationName is set", function() {
+          beforeEach(function() {
+            testApp.invocationName = "my cool skill";
+          })
+
+          it("should use the invocationName", function() {
+            var subject = JSON.parse(testApp.schemas.askcli());
+            expect(subject).to.eql({
+              "interactionModel": {
+                "languageModel": {
+                  "invocationName": "my cool skill",
+                  "intents": [],
+                  "types": []
+                }
+              }
+            });
+          })
+
+          context("when a custom invocation name is passed in", function() {
+            it("should override the app's setting", function() {
+              var subject = JSON.parse(testApp.schemas.askcli("my okay skill"));
+              expect(subject).to.eql({
+                "interactionModel": {
+                  "languageModel": {
+                    "invocationName": "my okay skill",
+                    "intents": [],
+                    "types": []
+                  }
+                }
+              });
+            })
+          })
+        })
+      });
       describe("with a minimum intent", function() {
         beforeEach(function() {
           testApp.intent("AMAZON.PauseIntent");
