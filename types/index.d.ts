@@ -90,6 +90,9 @@ export class app {
 
     /** Generates a schema in the new Skill Builder beta format */
     skillBuilder(): string;
+
+    /** Generates a schema in the modified Skill Builder format accepted by the ask-cli tool */
+    askcli(): string;
   };
 
   /** Generates a list of sample utterances */

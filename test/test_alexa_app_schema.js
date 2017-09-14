@@ -449,5 +449,298 @@ describe("Alexa", function() {
         });
       });
     });
+
+    describe("#schemas.askcli", function() {
+      describe("with a minimum intent", function() {
+        beforeEach(function() {
+          testApp.intent("AMAZON.PauseIntent");
+        });
+
+        it("contains no slots", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [{
+                  "name": "AMAZON.PauseIntent",
+                  "samples": []
+                }],
+                "types": []
+              }
+            }
+          });
+        });
+      });
+
+      describe("with empty slots", function() {
+        beforeEach(function() {
+          testApp.intent("AMAZON.PauseIntent", {
+            "slots": {}
+          });
+        });
+
+        it("contains no slots", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [{
+                  "name": "AMAZON.PauseIntent",
+                  "samples": []
+                }],
+                "types": []
+              }
+            }
+          });
+        });
+      });
+
+      describe("with a slot", function() {
+        beforeEach(function() {
+          testApp.intent("testIntent", {
+            "slots": {
+              "Tubular": "AMAZON.LITERAL",
+              "Radical": "AMAZON.US_STATE"
+            },
+          });
+        });
+
+        it("includes slots", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [{
+                  "name": "testIntent",
+                  "samples": [],
+                  "slots": [{
+                    "name": "Tubular",
+                    "type": "AMAZON.LITERAL",
+                    "samples": []
+                  }, {
+                    "name": "Radical",
+                    "type": "AMAZON.US_STATE",
+                    "samples": []
+                  }]
+                }],
+                "types": []
+              }
+            }
+          });
+        });
+      });
+
+      describe("with simple utterances", function() {
+        beforeEach(function() {
+          testApp.intent("testIntent", {
+            "utterances": ["turn on the thermostat", "kill all humans"]
+          });
+        });
+
+        it("contains utterances", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [{
+                  "name": "testIntent",
+                  "samples": [
+                    "turn on the thermostat",
+                    "kill all humans"
+                  ]
+                }],
+                "types": []
+              }
+            }
+          });
+        });
+      });
+
+      describe("with multiple intents", function() {
+        beforeEach(function() {
+          testApp.intent("AMAZON.PauseIntent");
+
+          testApp.intent("testIntentTwo", {
+            "slots": {
+              "MyCustomSlotType": "CUSTOMTYPE",
+              "Tubular": "AMAZON.LITERAL",
+              "Radical": "AMAZON.US_STATE"
+            },
+          });
+
+          testApp.intent("testIntent", {
+            "slots": {
+              "AirportCode": "FAACODES",
+              "Awesome": "AMAZON.DATE",
+              "Tubular": "AMAZON.LITERAL"
+            },
+          });
+        });
+
+        it("generates the expected schema", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [{
+                  "name": "AMAZON.PauseIntent",
+                  "samples": []
+                }, {
+                  "name": "testIntentTwo",
+                  "samples": [],
+                  "slots": [{
+                    "name": "MyCustomSlotType",
+                    "type": "CUSTOMTYPE",
+                    "samples": []
+                  }, {
+                    "name": "Tubular",
+                    "type": "AMAZON.LITERAL",
+                    "samples": []
+                  }, {
+                    "name": "Radical",
+                    "type": "AMAZON.US_STATE",
+                    "samples": []
+                  }]
+                }, {
+                  "name": "testIntent",
+                  "samples": [],
+                  "slots": [{
+                    "name": "AirportCode",
+                    "type": "FAACODES",
+                    "samples": []
+                  }, {
+                    "name": "Awesome",
+                    "type": "AMAZON.DATE",
+                    "samples": []
+                  }, {
+                    "name": "Tubular",
+                    "type": "AMAZON.LITERAL",
+                    "samples": []
+                  }]
+                }],
+                "types": []
+              }
+            }
+          });
+        });
+      });
+
+      describe("with a custom slot", function() {
+        beforeEach(function() {
+          testApp.customSlot("animal", [
+            "cat",
+            {
+              value: "dog",
+              id: "canine",
+              synonyms: ["doggo", "pupper", "woofmeister"]
+            }
+          ]);
+        });
+
+        it("includes custom slots", function() {
+          var subject = JSON.parse(testApp.schemas.askcli());
+          expect(subject).to.eql({
+            "interactionModel": {
+              "languageModel": {
+                "invocationName": "testApp",
+                "intents": [],
+                "types": [
+                  {
+                    "name": "animal",
+                    "values": [
+                      {
+                        "id": null,
+                        "name": {
+                          "value": "cat",
+                          "synonyms": []
+                        }
+                      },
+                      {
+                        "id": "canine",
+                        "name": {
+                          "value": "dog",
+                          "synonyms": ["doggo", "pupper", "woofmeister"]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          });
+        });
+        describe("with multiple custom slots", function() {
+          beforeEach(function() {
+            testApp.customSlot("animal", [
+              "cat",
+              {
+                value: "dog",
+                id: "canine",
+                synonyms: ["doggo", "pupper", "woofmeister"]
+              }
+            ]);
+
+            testApp.customSlot("vegetable", ["carrot", "cucumber"]);
+          });
+
+          it("includes all custom slots", function() {
+            var subject = JSON.parse(testApp.schemas.askcli());
+            expect(subject).to.eql({
+              "interactionModel": {
+                "languageModel": {
+                  "invocationName": "testApp",
+                  "intents": [],
+                  "types": [
+                    {
+                      "name": "animal",
+                      "values": [
+                        {
+                          "id": null,
+                          "name": {
+                            "value": "cat",
+                            "synonyms": []
+                          }
+                        },
+                        {
+                          "id": "canine",
+                          "name": {
+                            "value": "dog",
+                            "synonyms": ["doggo", "pupper", "woofmeister"]
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "name": "vegetable",
+                      "values": [
+                        {
+                          "id": null,
+                          "name": {
+                            "value": "carrot",
+                            "synonyms": []
+                          }
+                        },
+                        {
+                          "id": null,
+                          "name": {
+                            "value": "cucumber",
+                            "synonyms": []
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            });
+          });
+        });
+      });
+    });
   });
 });
