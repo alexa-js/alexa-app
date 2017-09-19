@@ -161,6 +161,7 @@ Skills define handlers for launch, intent, and session end, just like normal Ale
 String request.type()
 
 // return the value passed in for a given slot name
+// if the slot is a custom slot, and the user says a synonym, this will return the main value rather than the synonym
 String request.slot("slotName")
 
 // return the Slot object
@@ -325,6 +326,10 @@ String slot.name
 
 // return the slot's value
 String slot.value
+
+// if the user said a synonym for a custom slot value, `slot.value` returns the main value.
+// slot.rawValue will always contain the actual word the user said
+String slot.rawValue
 
 // return the slot's confirmationStatus
 String slot.confirmationStatus
