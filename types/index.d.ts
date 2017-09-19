@@ -297,6 +297,7 @@ export class slot {
 
   name: string;
   value: string;
+  rawValue: string;
   confirmationStatus: string;
 
   isConfirmed: () => boolean;

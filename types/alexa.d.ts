@@ -115,7 +115,22 @@ export interface Slot {
   name: string;
   value: string;
   confirmationStatus: "NONE"|"CONFIRMED"|"DENIED";
-  resolutions: any; // TODO
+  resolutions: Resolution;
+}
+
+export interface Resolution {
+  resolutionsPerAuthority: ResolutionPerAuthority[];
+}
+
+export interface ResolutionPerAuthority {
+  authority: string;
+  status: {
+    code: "ER_SUCCESS_MATCH"|"ER_SUCCESS_NO_MATCH"|"ER_ERROR_TIMEOUT"|"ER_ERROR_EXCEPTION";
+  };
+  values: [{
+    name: string;
+    id: string;
+  }];
 }
 
 export interface Stream {
