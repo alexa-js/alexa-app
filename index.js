@@ -317,7 +317,15 @@ alexa.intent = function(name, schema, handler) {
 alexa.slot = function(slot) {
   this.name = slot.name;
   this.value = slot.value;
+  this.rawValue = slot.value;
   this.confirmationStatus = slot.confirmationStatus;
+
+  if (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length === 1) {
+    var resolution = slot.resolutions.resolutionsPerAuthority[0];
+    if (resolution.values.length === 1) {
+      this.value = resolution.values[0].value.name;
+    }
+  }
 
   this.isConfirmed = function() {
     return 'CONFIRMED' === this.confirmationStatus;

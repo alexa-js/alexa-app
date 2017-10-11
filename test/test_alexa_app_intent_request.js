@@ -42,6 +42,28 @@ describe("Alexa", function() {
           });
         });
 
+        context("when there is a custom slot value that's a synonym", function() {
+          var mock = mockHelper.load("intent_request_slot_synonyms.json")
+
+          it("should return the original non-synonym value", function(done) {
+            testApp.intent("favoriteAnimal", function(req, res) {
+              expect(req.slot("animal")).to.equal("dog")
+              expect(req.slots.animal.value).to.equal("dog")
+
+              done()
+            })
+            var request = testApp.request(mock);
+          });
+
+          it("should store the synonym as the rawValue", function(done) {
+            testApp.intent("favoriteAnimal", function(req, res) {
+              expect(req.slots.animal.rawValue).to.equal("doggo")
+              done()
+            })
+            var request = testApp.request(mock);
+          });
+        });
+
         context("with an intent request of airportInfoIntent", function() {
           context("with no intent handler", function() {
             var request = testApp.request(mockRequest);

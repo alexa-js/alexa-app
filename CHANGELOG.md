@@ -3,6 +3,7 @@
 ### 4.2.1 (next)
 
 * [#284](https://github.com/alexa-js/alexa-app/pull/284): Add support for generating `ask-cli`-compatible schema JSON - [@lazerwalker](https://github.com/lazerwalker).
+* [#286](https://github.com/alexa-js/alexa-app/pull/286): When an intent request contains a custom slot value synonym, coerce the slot value into the main value instead of the synonym - [@lazerwalker](https://github.com/lazerwalker).
 * Your contribution here
 
 
