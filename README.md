@@ -34,6 +34,7 @@
 * [Custom Directives](#custom-directives)
 * [Dialog](#dialog)
 * [Error Handling](#error-handling)
+* [Echo Show Support](#echo-show-support)
 * [Asynchronous Handlers Example](#asynchronous-handlers-example)
     * [Customizing Default Error Messages](#customizing-default-error-messages)
     * [Read/write session data](#readwrite-session-data)
@@ -890,6 +891,21 @@ app.error = function(exception, request, response) {
   throw exception;
 };
 ```
+
+## Echo Show Support
+
+With the addition of [custom directives](#custom-directives) and support for [display elements]((#display-element-selected)) being selected, this library fully supports the Echo Show. Note that it is up to the developer to detect if the device can handle a display directive. If a display directive is returned to a non-visual device it will throw an error. One technique is to leverage the `app.post` call and remove any directives if the device does not support a UI. For example:
+
+```
+app.post(req, res, type, exception) {  
+  // If the device does not support display directives then remove them from the response
+  if (!system.supportsDisplay(req))) {
+    res.response.response.directives = []
+  }
+}
+```
+
+Please refer to [Amazon's documentation](https://developer.amazon.com/docs/custom-skills/display-interface-reference.html#display-template-reference) for the list of supported template markup.
 
 ## Asynchronous Handlers Example
 
