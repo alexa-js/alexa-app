@@ -6,6 +6,7 @@
         "noImplicitThis": true,
         "strictNullChecks": true,
         "baseUrl": "..",
-        "paths": { "alexa-app": ["."] }
+        "paths": { "alexa-app": ["."] },
+        "strictFunctionTypes": true
     }
 }
