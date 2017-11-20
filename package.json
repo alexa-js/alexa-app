@@ -33,7 +33,7 @@
   "dependencies": {
     "@types/chai-as-promised": "^7.1.0",
     "alexa-utterances": "^0.2.0",
-    "alexa-verifier-middleware": "^0.2.1",
+    "alexa-verifier-middleware": "^1.0.0",
     "bluebird": "^2.10.2",
     "body-parser": "^1.15.2",
     "lodash.defaults": "^4.2.0",
