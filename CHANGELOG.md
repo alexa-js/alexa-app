@@ -3,6 +3,7 @@
 ### 4.2.1 (next)
 
 * [#284](https://github.com/alexa-js/alexa-app/pull/284): Add support for generating `ask-cli`-compatible schema JSON - [@lazerwalker](https://github.com/lazerwalker).
+* [#301](https://github.com/alexa-js/alexa-app/pull/301): Updated alexa-verifier-middleware to v1.0.0 - [@tejashah88](https://github.com/tejashah88).
 * Your contribution here
 
 
