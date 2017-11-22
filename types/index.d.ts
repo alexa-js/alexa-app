@@ -12,13 +12,15 @@ export let apps: {[name: string]: app};
 export class app {
   constructor(name: string);
 
-  /** Executed before any event handlers. This is useful to setup new sessions,
+  /**
+   * Executed before any event handlers. This is useful to setup new sessions,
    * validate the applicationId, or do any other kind of validations.
    * You can perform asynchronous functionality in pre by returning a Promise.
    */
   pre: (request: request, response: response, type: string) => void;
 
-  /** The last thing executed for every request. It is even called if there is
+  /**
+   * The last thing executed for every request. It is even called if there is
    * an exception or if a response has already been sent. The post() function
    * can change anything about the response. It can even turn a return
    * response.fail() into a return respond.send() with entirely new content. If
@@ -34,7 +36,8 @@ export class app {
   invocationName?: string;
   messages: any;
 
-  /** By default, alexa-app will persist every request session attribute into
+  /**
+   * By default, alexa-app will persist every request session attribute into
    * the response. This way, any session attributes you set will be sent on
    * every subsequent request, as is typical in most web programming
    * environments. If you wish to disable this feature, you can do so by
@@ -48,8 +51,8 @@ export class app {
   /** A catch-all error handler that does nothing by default */
   error?: ErrorHandler;
 
-  /** A mapping of keywords to arrays of possible values,
-   * for expansion of sample utterances
+  /**
+   * A mapping of keywords to arrays of possible values, for expansion of sample utterances
    */
   dictionary: any;
 
@@ -78,7 +81,8 @@ export class app {
   /** TODO: Figure out what the promise actually contains */
   request: (requestJSON: alexa.Request) => Promise<alexa.ResponseBody>;
 
-  /** @deprecated It's recommended you directly call `app.schema.*` instead
+  /**
+   * @deprecated It's recommended you directly call `app.schema.*` instead
    * Extracts the schema and generates a schema JSON object
    * This is equivalent to calling `app.schemas.intent()`
    */
@@ -92,8 +96,9 @@ export class app {
     /** Generates a schema in the new Skill Builder beta format */
     skillBuilder(): string;
 
-    /** Generates a schema in the modified Skill Builder format accepted by the ask-cli tool
-     * @param invocationName {string?} The invocation name to include in the resulting JSON.
+    /**
+     * Generates a schema in the modified Skill Builder format accepted by the ask-cli tool
+     * @param invocationName The invocation name to include in the resulting JSON.
      * If present, invocationName will be used. Otherwise, if app.invocationName is set,
      * it will be used. Otherwise, it will default to app.name.
      */
@@ -103,7 +108,8 @@ export class app {
   /** Generates a list of sample utterances */
   utterances: () => string;
 
-  /** A built-in handler for AWS Lambda
+  /**
+   * A built-in handler for AWS Lambda
    * The "context" param is not actually used in code, but appears for
    * backwards comaptibility purposes.
    */
@@ -112,7 +118,8 @@ export class app {
   /** For backwards compatibility */
   lambda: () => (event: alexa.RequestBody, context: any, callback: (error: Error, response: response) => void) => void;
 
-  /* attach Alexa endpoint to an express router
+  /**
+   * attach Alexa endpoint to an express router
    *
    * @param object options.expressApp the express instance to attach to
    * @param router options.router router instance to attach to the express app
@@ -180,7 +187,8 @@ export class response {
   response: alexa.ResponseBody;
   sessionObject: session;
 
-  /** Tells Alexa to say something; multiple calls to say() will be appended
+  /**
+   * Tells Alexa to say something; multiple calls to say() will be appended
    * to each other. All text output is treated as SSML
    */
   say: (phrase: string) => response;
@@ -191,19 +199,22 @@ export class response {
   /** Tells Alexa to re-prompt the user for a response, if it didn't hear anything valid */
   reprompt: (phrase: string) => response;
 
-  /** Returns a card to the user's Alexa app.
+  /**
+   * Returns a card to the user's Alexa app.
    * Supports card(String title, String content) for backwards compat of type "Simple"
    */
   card: (title: string|alexa.Card, content?: string) => response;
 
-  /** return a card instructing the user how to link their account to the skill.
+  /**
+   * Return a card instructing the user how to link their account to the skill.
    * This internally sets the card response
    */
   linkAccount: () => response;
 
   audioPlayerPlay: (playBehavior: string, audioItem: alexa.AudioItem) => response;
 
-  /** Plays audio stream (sends AudioPlayer.Play directive)
+  /**
+   * Plays audio stream (sends AudioPlayer.Play directive)
    * @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#play-directive
    */
   audioPlayerPlayStream: (playBehavior: string, stream: alexa.Stream) => response;
@@ -211,17 +222,20 @@ export class response {
   /** Stops playing audio stream (sends AudioPlayer.Stop directive) */
   audioPlayerStop: () => response;
 
-  /** Clears audio player queue (sends AudioPlayer.ClearQueue directive).
+  /**
+   * Clears audio player queue (sends AudioPlayer.ClearQueue directive).
    * clearBehavior is "CLEAR_ALL" by default
    */
   audioPlayerClearQueue: (clearBehavior?: alexa.ClearBehavior) => response;
 
-  /** Tells Alexa whether the user's session is over; sessions end by default.
+  /**
+   * Tells Alexa whether the user's session is over; sessions end by default.
    * You can optionally pass a reprompt message.
    */
   shouldEndSession: (end: boolean, reprompt?: string) => response;
 
-  /** Sends the response to the Alexa device (success) immediately.
+  /**
+   * Sends the response to the Alexa device (success) immediately.
    * This returns a promise that you must return to continue the
    * promise chain. Calling this is optional in most cases as it
    * will be called automatically when the handler promise chain
@@ -231,7 +245,8 @@ export class response {
    */
   send: () => Promise<response>;
 
-  /** Triggers a response failure.
+  /**
+   * Triggers a response failure.
    * The internal promise containing the response will be rejected, and should be handled by the calling environment.
    * Instead of the Alexa response being returned, the failure message will be passed
    * similar to `response.send()`, you must return the value returned from this call to continue the promise chain.
@@ -267,7 +282,8 @@ export class session {
   isAvailable: () => boolean;
   isNew: () => boolean;
 
-  /** Sets a session variable.
+  /**
+   * Sets a session variable.
    * By default, Alexa only persists session variables to the next request.
    * The alexa-app module makes session variables persist across multiple requests.
    * Note that you *must* use `.set` or `.clear` to update
@@ -279,7 +295,8 @@ export class session {
   /** Returns the value of a session variable */
   get: (attributeName: string) => any;
 
-  /** Session details, as passed by Amazon in the request
+  /**
+   * Session details, as passed by Amazon in the request
    * for Object definition @see https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#session-object
    */
   details: alexa.Session;
