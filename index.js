@@ -318,10 +318,40 @@ alexa.slot = function(slot) {
   this.name = slot.name;
   this.value = slot.value;
   this.confirmationStatus = slot.confirmationStatus;
+  if (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) {
+    this.resolutions = slot.resolutions.resolutionsPerAuthority.map(function (resolution) {
+      return new alexa.slotResolution(resolution);
+    });
+  } else {
+    this.resolutions = [];
+  }
 
   this.isConfirmed = function() {
     return 'CONFIRMED' === this.confirmationStatus;
   };
+  this.resolution = function (idx) {
+    idx = idx && idx < this.resolutions.length ? idx : 0;
+    return this.resolutions[idx];
+  };
+};
+
+alexa.slotResolution = function(resolution) {
+  this.status = resolution.status.code;
+  this.values = (resolution.values || []).map(function (elem) {
+    return new alexa.resolutionValue(elem.value);
+  });
+
+  this.isMatched = function() {
+    return 'ER_SUCCESS_MATCH' === this.status;
+  };
+  this.first = function() {
+    return this.values[0];
+  };
+};
+
+alexa.resolutionValue = function (value) {
+  this.name = value.name;
+  this.id = value.id;
 };
 
 alexa.session = function(session) {

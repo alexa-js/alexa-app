@@ -309,14 +309,37 @@ export class session {
   getAttributes: () => any;
 }
 
+export class resolutionValue {
+  constructor(value: alexa.ResolutionValue);
+
+  value: string;
+  id: string;
+}
+
+export class slotResolution {
+  constructor(resolution: alexa.AuthorityResolution);
+
+  status: string;
+  values: resolutionValue[];
+
+  isMatched: () => boolean;
+  /** Returns the first resolution value */
+  first: () => resolutionValue;
+}
+
 export class slot {
   constructor(slot: alexa.Slot);
 
   name: string;
   value: string;
   confirmationStatus: string;
+  resolutions: slotResolution[];
 
   isConfirmed: () => boolean;
+  /**
+   * Returns the `idx` resolution (if any). If `idx` is omitted, returns the first resolution.
+   */
+  resolution: (idx: number) => slotResolution;
 }
 
 export class dialog {
