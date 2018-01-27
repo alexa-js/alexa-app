@@ -312,7 +312,7 @@ export class session {
 export class resolutionValue {
   constructor(value: alexa.ResolutionValue);
 
-  value: string;
+  name: string;
   id: string;
 }
 
