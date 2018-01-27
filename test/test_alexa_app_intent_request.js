@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-import * as Alexa from '../';
+import * as Alexa from '..';
 
 describe("Alexa", function() {
   describe("app", function() {
