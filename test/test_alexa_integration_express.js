@@ -101,7 +101,6 @@ describe("Alexa", function() {
 
         testApp.express({
           expressApp: app,
-          router: express.Router(),
           checkCert: false,
           debug: true
         });
@@ -176,7 +175,6 @@ describe("Alexa", function() {
       beforeEach(function() {
         testApp.express({
           expressApp: app,
-          router: express.Router(),
           checkCert: false,
           preRequest: function(json, request, response) {
             fired.preRequest = json;
@@ -202,7 +200,6 @@ describe("Alexa", function() {
       beforeEach(function() {
         testApp.express({
           expressApp: app,
-          router: express.Router(),
           checkCert: true,
           debug: true
         });
@@ -211,7 +208,7 @@ describe("Alexa", function() {
       it("requires a cert header", function() {
         return request(testServer)
           .post('/testApp')
-          .expect(401).then(function(res) {
+          .expect(400).then(function(res) {
             expect(res.body.status).to.equal("failure");
             expect(res.body.reason).to.equal("missing certificate url");
           });
@@ -222,7 +219,7 @@ describe("Alexa", function() {
           .post('/testApp')
           .set('signaturecertchainurl', 'dummy')
           .set('signature', 'dummy')
-          .expect(401).then(function(res) {
+          .expect(400).then(function(res) {
             expect(res.body.status).to.equal("failure");
             expect(res.body.reason).to.equal("missing request (certificate) body");
           });
@@ -236,7 +233,7 @@ describe("Alexa", function() {
           .set('signaturecertchainurl', 'dummy')
           .set('signature', 'dummy')
           .send(mockRequest)
-          .expect(401).then(function(res) {
+          .expect(400).then(function(res) {
             expect(res.body.status).to.equal("failure");
             expect(res.body.reason).to.equal("invalid signature (not base64 encoded)");
           });
