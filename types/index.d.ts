@@ -339,7 +339,7 @@ export class slot {
   /**
    * Returns the `idx` resolution (if any). If `idx` is omitted, returns the first resolution.
    */
-  resolution: (idx: number) => slotResolution;
+  resolution: (idx?: number) => slotResolution;
 }
 
 export class dialog {
