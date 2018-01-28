@@ -5,7 +5,7 @@
 * [#284](https://github.com/alexa-js/alexa-app/pull/284): Add support for generating `ask-cli`-compatible schema JSON - [@lazerwalker](https://github.com/lazerwalker).
 * [#301](https://github.com/alexa-js/alexa-app/pull/301): Updated alexa-verifier-middleware to v1.0.0 - [@tejashah88](https://github.com/tejashah88).
 * [#302](https://github.com/alexa-js/alexa-app/pull/302): Move typescript and dtslint from optionalDependencies to devDependencies - [@lazerwalker](https://github.com/lazerwalker).
-* [#310](https://github.com/alexa-js/alexa-app/pull/310): Feature: Slot Resolutions - [@kobim](https://github.com/kobim)
+* [#310](https://github.com/alexa-js/alexa-app/pull/310): Added support for slot resolutions - [@kobim](https://github.com/kobim).
 * Your contribution here
 
 
