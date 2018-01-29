@@ -111,11 +111,32 @@ export interface SessionEndedRequest {
     message: string;
   };
 }
+
+export interface ResolutionValue {
+  value: {
+    name: string;
+    id: string;
+  };
+}
+
+export interface AuthorityResolution {
+  authority: string;
+  status: {
+    code: "ER_SUCCESS_MATCH|ER_SUCCESS_NO_MATCH|ER_ERROR_TIMEOUT|ER_ERROR_EXCEPTION";
+  };
+  values: ResolutionValue[];
+}
+
+export interface Resolutions {
+  type: "Resolutions";
+  resolutionsPerAuthority: AuthorityResolution[];
+}
+
 export interface Slot {
   name: string;
   value: string;
   confirmationStatus: "NONE"|"CONFIRMED"|"DENIED";
-  resolutions: any; // TODO
+  resolutions?: Resolutions;
 }
 
 export interface Stream {

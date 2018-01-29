@@ -334,6 +334,23 @@ describe("Alexa", function() {
                     type: "SSML"
                   });
                 });
+
+                it("can handle no resolutions", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.slots["AirportCode"].resolution() ? "has any" : "empty");
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>empty</speak>",
+                    type: "SSML"
+                  });
+                });
               });
 
               context("when a slot's confirmationStatus is not CONFIRMED", function() {
@@ -353,6 +370,100 @@ describe("Alexa", function() {
 
                   return expect(subject).to.eventually.become({
                     ssml: "<speak>no</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
+              context("when a slot has matched resolutions", function() {
+                var mockRequest = mockHelper.load("intent_request_airport_info_resolutions.json");
+
+                it("reports matched resolution", function() {
+                  testApp.intent("airportInfoIntent", {}, function (req, res) {
+                    res.say(req.slots['AirportCode'].resolution().isMatched() ? "yes": "no");
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>yes</speak>",
+                    type: "SSML"
+                  });
+                });
+
+                it("has a name for the resolution value", function() {
+                  testApp.intent("airportInfoIntent", {}, function (req, res) {
+                    res.say(req.slots['AirportCode'].resolution().first().name);
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>JFK</speak>",
+                    type: "SSML"
+                  });
+                });
+
+                it("has an id for the resolution value", function() {
+                  testApp.intent("airportInfoIntent", {}, function (req, res) {
+                    res.say(req.slots['AirportCode'].resolution().first().id);
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>200</speak>",
+                    type: "SSML"
+                  });
+                });
+              });
+
+              context("when a slot has non-matched resolutions", function() {
+                var mockRequest = mockHelper.load("intent_request_airport_info_resolutions_not_found.json");
+
+                it("reports non-matched resolution", function() {
+                  testApp.intent("airportInfoIntent", {}, function (req, res) {
+                    res.say(req.slots['AirportCode'].resolution().isMatched() ? "yes": "no");
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>no</speak>",
+                    type: "SSML"
+                  });
+                });
+
+                it("has no values for the resolution", function() {
+                  testApp.intent("airportInfoIntent", {}, function (req, res) {
+                    var resolution = req.slots['AirportCode'].resolution();
+                    res.say(resolution.first() ? "has value!": "doesn't have any values");
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>doesn't have any values</speak>",
                     type: "SSML"
                   });
                 });

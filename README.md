@@ -12,6 +12,9 @@
     * [response](#response)
       * [Building SSML Responses](#building-ssml-responses)
     * [session](#session)
+    * [slot](#slot)
+    * [slotResolution](#slotResolution)
+    * [resolutionValue](#resolutionValue)
 * [Request Handlers](#request-handlers)
     * [LaunchRequest](#launchrequest)
     * [IntentRequest](#intentrequest)
@@ -330,8 +333,38 @@ String slot.value
 // return the slot's confirmationStatus
 String slot.confirmationStatus
 
+// return the slot's resolutions
+SlotResolution[] slot.resolutions
+
 // check if the slot is confirmed
 Boolean slot.isConfirmed()
+
+// return the n-th resolution
+SlotResolution slot.resolution(Integer n)
+```
+
+### slotResolution
+```javascript
+// get the resolution status code
+String resolution.status
+
+// get the list of resolution values
+ResolutionValue resolution.values
+
+// check if the resolution is matched
+Boolean resolution.isMatched()
+
+// Get the first resolution value
+ResolutionValue resolution.first()
+```
+
+### resolutionValue
+```javascript
+// get the value name
+String resolutionValue.name
+
+// get the value id
+String resolutionValue.id
 ```
 
 ## Request Handlers
