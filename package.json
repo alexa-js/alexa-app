@@ -1,6 +1,6 @@
 {
   "name": "alexa-app",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "A module to simplify creation of Alexa (Amazon Echo) apps (Skills) using Node.js",
   "main": "index.js",
   "types": "types",

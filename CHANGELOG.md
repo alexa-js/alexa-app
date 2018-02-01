@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.2.2 (Next)
+
+* Your contribution here.
+
 ### 4.2.1 (February 1, 2018)
 
 * [#284](https://github.com/alexa-js/alexa-app/pull/284): Add support for generating `ask-cli`-compatible schema JSON - [@lazerwalker](https://github.com/lazerwalker).
