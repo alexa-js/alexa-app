@@ -22,6 +22,7 @@
     * [Display.ElementSelected](#display-element-selected)
     * [AudioPlayer Event Request](#audioplayer-event-request)
     * [PlaybackController Event Request](#playbackcontroller-event-request)
+    * [Other Event Request](#other-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
     * [pre()](#pre)
     * [post()](#post)
@@ -228,6 +229,7 @@ response.audioPlayerStop()
 response.audioPlayerClearQueue([ String clearBehavior ])
 
 // tell Alexa whether the user's session is over; sessions end by default
+// pass null or undefined to leave shouldEndSession undefined in the response, to satisfy newer API's
 // you can optionally pass a reprompt message
 response.shouldEndSession(boolean end [, String reprompt] )
 
@@ -545,6 +547,20 @@ app.playbackController('NextCommandIssued', (request, response) => {
 ```
 
 Note that some device interactions don't always produce PlaybackController events. See the [PlaybackController Interface Introduction](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-playbackcontroller-interface-reference#introduction) for more details.
+
+### Other Event Request
+
+Handle any new requests that don't have an explicit handler type available (such as new or pre-release features) using the general on() and passing the event type.
+
+The following example will handle an imaginary request of type `DeviceEngine.InputHandler` if was added to the Alexa API.
+
+```javascript
+app.on('DeviceEngine.InputHandler', (request, response, request_json) => {
+  response.say("You triggered an event from device "+request_json.request.event.deviceName);
+});
+```
+
+Note that the raw request json is sent as the 3rd parameter to make sure the handler function has access to all data in the case that the request format differs from other handler types.
 
 ## Execute Code On Every Request
 
