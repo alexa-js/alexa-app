@@ -15,7 +15,7 @@ describe("Alexa", function() {
     var mockRequest = mockHelper.load("intent_request_airport_info.json");
     var testReq;
     beforeEach(function () {
-      testReq = Object.assign({}, mockRequest);
+      testReq = mockRequest;
     });
 
     afterEach(() => {
