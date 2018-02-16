@@ -208,7 +208,7 @@ alexa.request = function(json) {
     }
   }
   this.slot = function(slotName, defaultValue) {
-    if (this.slots && 'undefined' != typeof this.slots[slotName]) {
+    if (this.slots && 'undefined' != typeof this.slots[slotName] && 'undefined' != typeof this.slots[slotName].value) {
       return this.slots[slotName].value;
     } else {
       return defaultValue;
