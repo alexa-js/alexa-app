@@ -12,10 +12,9 @@ import * as Alexa from '..';
 describe("Alexa", function() {
 
   context("#alexa.request.slot", function () {
-    var mockRequest = mockHelper.load("intent_request_airport_info.json");
     var testReq;
     beforeEach(function () {
-      testReq = mockRequest;
+      testReq = mockHelper.load("intent_request_airport_info.json");
     });
 
     afterEach(() => {

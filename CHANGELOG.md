@@ -3,7 +3,7 @@
 ### 4.2.2 (Next)
 
 * Your contribution here.
-* [#314](https://github.com/alexa-js/alexa-app/pull/314): Fix breaking logic in request.slot() - [@User1m](https://github.com/user1m)
+* [#314](https://github.com/alexa-js/alexa-app/pull/314): Fix breaking logic in request.slot(). - [@User1m](https://github.com/user1m)
 
 ### 4.2.1 (February 1, 2018)
 
