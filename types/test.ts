@@ -1,3 +1,4 @@
+// tslint:disable-next-line:no-implicit-dependencies
 import * as alexa from 'alexa-app';
 
 const app = new alexa.app('app-name');
