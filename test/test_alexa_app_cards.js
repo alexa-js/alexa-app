@@ -67,7 +67,7 @@ describe("Alexa", function() {
                 var cardResponse = subject.then(function(response) {
                   return response.response.card;
                 });
-                return expect(cardResponse).to.eventually.become({});
+                return expect(cardResponse).to.eventually.be.undefined;
               });
             });
           });

@@ -61,7 +61,7 @@ alexa.response = function(session) {
       };
     }
 
-    var requiredAttrs = [],
+    var requiredAttrs = ['type'],
       clenseAttrs = [];
 
     switch (oCard.type) {
@@ -85,7 +85,7 @@ alexa.response = function(session) {
     }
 
     var hasAllReq = requiredAttrs.every(function(idx) {
-      if (!(idx in oCard)) {
+      if (!(idx in oCard) || typeof oCard[idx] === 'undefined') {
         console.error('Card object is missing required attr "' + idx + '"');
         return false;
       }

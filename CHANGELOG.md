@@ -2,6 +2,7 @@
 
 ### 4.2.2 (Next)
 
+* [#315](https://github.com/alexa-js/alexa-app/pull/315): Fix card tests and required card type - [@kobim](https://github.com/kobim).
 * Your contribution here.
 
 ### 4.2.1 (February 1, 2018)
