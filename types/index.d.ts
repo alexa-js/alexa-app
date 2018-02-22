@@ -1,4 +1,4 @@
-// TypeScript Version: 2.4
+// TypeScript Version: 2.5
 
 import * as alexa from "./alexa";
 
