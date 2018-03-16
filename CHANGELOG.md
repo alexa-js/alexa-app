@@ -4,7 +4,7 @@
 
 * [#315](https://github.com/alexa-js/alexa-app/pull/315): Fix card tests and required card type - [@kobim](https://github.com/kobim).
 * [#314](https://github.com/alexa-js/alexa-app/pull/314): Fix handling of `undefined` slot values - [@User1m](https://github.com/user1m).
-* [#319](https://github.com/alexa-js/alexa-app/pull/319): Included Skill Builder example in example.ejs - [@funkydan2](https://github.com/funkydan2)
+* Included Skill Builder example in example.ejs - [@funkydan2](https://github.com/funkydan2)
 * Your contribution here.
 
 ### 4.2.1 (February 1, 2018)
