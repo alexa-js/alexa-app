@@ -61,7 +61,7 @@ alexa.response = function(session) {
       };
     }
 
-    var requiredAttrs = [],
+    var requiredAttrs = ['type'],
       clenseAttrs = [];
 
     switch (oCard.type) {
@@ -85,7 +85,7 @@ alexa.response = function(session) {
     }
 
     var hasAllReq = requiredAttrs.every(function(idx) {
-      if (!(idx in oCard)) {
+      if (!(idx in oCard) || typeof oCard[idx] === 'undefined') {
         console.error('Card object is missing required attr "' + idx + '"');
         return false;
       }
@@ -208,7 +208,7 @@ alexa.request = function(json) {
     }
   }
   this.slot = function(slotName, defaultValue) {
-    if (this.slots && 'undefined' != typeof this.slots[slotName]) {
+    if (this.slots && 'undefined' != typeof this.slots[slotName] && 'undefined' != typeof this.slots[slotName].value) {
       return this.slots[slotName].value;
     } else {
       return defaultValue;
