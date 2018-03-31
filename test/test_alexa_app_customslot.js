@@ -44,7 +44,12 @@ describe("Alexa", function() {
     context("#customslot", function() {
       var slotValue = {
         value: "dog",
-        synonyms: ["pupper, doggo"],
+        synonyms: ["doggo", "pup{per|}"],
+        id: "dog"
+      };
+      var slotValueExpanded = {
+        value: "dog",
+        synonyms: ["doggo", "pupper", "pup"],
         id: "dog"
       };
 
@@ -54,7 +59,7 @@ describe("Alexa", function() {
         });
 
         it("adds the slot value", function() {
-          expect(testApp.customSlots["animals"]).to.eql([slotValue]);
+          expect(testApp.customSlots["animals"]).to.eql([slotValueExpanded]);
         });
       });
 
@@ -98,7 +103,7 @@ describe("Alexa", function() {
             value: "dog",
             synonyms: [],
             id: null
-          }, slotValue]);
+          }, slotValueExpanded]);
         });
       });
     });

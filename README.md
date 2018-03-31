@@ -662,7 +662,7 @@ Note that the "CustomSlotType" type values must be specified in the Skill Interf
 
 #### custom slot type values
 
-If you have custom slot types, you can define your custom slot type values as well. Custom values can either be simple strings, or more full-fledged objects if you want to take advantage of Skill Builder features like synonyms.
+If you have custom slot types, you can define your custom slot type values as well. Custom values can either be simple strings, or more full-fledged objects if you want to take advantage of Skill Builder features like synonyms. If using synonyms, you can also take advantage of utterance expansion from alexa-utterances (including dictionary), as described below.
 
 ```javascript
 testApp.customSlot("animal", ["cat", "dog"]);
@@ -674,7 +674,7 @@ OR
 testApp.customSlot("animal", [{
   value: "dog",
   id: "canine",
-  synonyms: ["doggo", "pupper", "woofmeister"]
+  synonyms: ["doggo", "pup{per|}", "woofmeister"]
 }]);
 ```
 

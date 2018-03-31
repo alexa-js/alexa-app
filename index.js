@@ -480,13 +480,22 @@ alexa.app = function(name) {
           synonyms: []
         };
       } else {
-        if (!value.id) {
-          value.id = null;
+        valueObj = {
+          value: value.value,
+          id: value.id || null,
+          synonyms: []
+        };
+        if (value.synonyms) {
+          value.synonyms.forEach(function(sample) {
+            var list = AlexaUtterances(sample,
+              null,
+              self.dictionary,
+              self.exhaustiveUtterances);
+            list.forEach(function(utterance) {
+              valueObj.synonyms.push(utterance);
+            });
+          });
         }
-        if (!value.synonyms) {
-          value.synonyms = [];
-        }
-        valueObj = value;
       }
       self.customSlots[slotName].push(valueObj);
     });
