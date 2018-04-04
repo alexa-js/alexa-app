@@ -80,7 +80,7 @@ export class app {
 
   requestHandlers: {[name: string]: RequestHandler};
   on: (handlerName: string, handler: RequestHandler) => void;
-  
+
   /** TODO: Figure out what the promise actually contains */
   request: (requestJSON: alexa.Request) => Promise<alexa.ResponseBody>;
 
