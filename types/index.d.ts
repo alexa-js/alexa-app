@@ -78,7 +78,7 @@ export class app {
   playbackControllerEventHandlers: {[name: string]: PlaybackController};
   playbackController: (eventName: string, func: RequestHandler) => void;
 
-  requestHandlers: {[name: string]: handler};
+  requestHandlers: {[name: string]: RequestHandler};
   on: (handlerName: string, handler: RequestHandler) => void;
   
   /** TODO: Figure out what the promise actually contains */
