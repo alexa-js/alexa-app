@@ -6,6 +6,7 @@
 * [#314](https://github.com/alexa-js/alexa-app/pull/314): Fix handling of `undefined` slot values - [@User1m](https://github.com/user1m).
 * [#322](https://github.com/alexa-js/alexa-app/pull/322): Included Skill Builder example in example.ejs - [@funkydan2](https://github.com/funkydan2).
 * [#329](https://github.com/alexa-js/alexa-app/pull/329): Run dtslint only on the latest node version - [@kobim](https://github.com/kobim).
+* [#330](https://github.com/alexa-js/alexa-app/pull/330): Making coveralls work again - [@kobim](https://github.com/kobim).
 * Your contribution here.
 
 ### 4.2.1 (February 1, 2018)
