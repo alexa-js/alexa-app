@@ -87,6 +87,18 @@ describe("Alexa", function() {
           .get('/testApp')
           .expect(404);
       });
+
+      it("fails with server error on bad request", function() {
+        testApp.pre = function () {
+          throw "SOME ERROR";
+        };
+        return request(testServer)
+          .post('/testApp')
+          .send()
+          .expect(500).then(function (response) {
+            return expect(response.error.text).to.eq("Server Error");
+          });
+      });
     });
 
     context("#express with debug set to true", function() {
