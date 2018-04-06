@@ -60,7 +60,9 @@ describe("Alexa", function() {
             describe("of an unknown type", function() {
               it("adds no card response", function() {
                 testApp.intent("airportInfoIntent", {}, function(req, res) {
-                  res.say("sweet!").card({type: undefined});
+                  res.say("sweet!").card({
+                    type: undefined
+                  });
                 });
 
                 var subject = testApp.request(mockRequest);

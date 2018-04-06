@@ -15,15 +15,19 @@
     "type": "GameEngine.InputHandlerEvent",
     "requestId": "amzn1.echo-api.request.9cdaa4db-f20e-4c58-8d01-c75322d6c423",
     "timestamp": "2015-05-13T12:34:56Z",
-    "events": [{
-      "name": "myEventName",
-      "inputEvents": [{
-        "gadgetId": "someGadgetId1",
-        "timestamp": "2015-05-13T12:34:56Z",
-        "action": "down",
-        "color": "FF0000"
-      }]
-    }]
+    "events": [
+      {
+        "name": "myEventName",
+        "inputEvents": [
+          {
+            "gadgetId": "someGadgetId1",
+            "timestamp": "2015-05-13T12:34:56Z",
+            "action": "down",
+            "color": "FF0000"
+          }
+        ]
+      }
+    ]
   },
   "context": {
     "System": {

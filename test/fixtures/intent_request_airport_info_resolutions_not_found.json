@@ -23,7 +23,7 @@
       "slots": {
         "AirportCode": {
           "name": "AirportCode",
-          "value" : "my home airport",
+          "value": "my home airport",
           "resolutions": {
             "resolutionsPerAuthority": [
               {
