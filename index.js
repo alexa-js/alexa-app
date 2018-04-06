@@ -112,7 +112,12 @@ alexa.response = function(session) {
     return this;
   };
   this.shouldEndSession = function(bool, reprompt) {
-    this.response.response.shouldEndSession = bool;
+    if (bool===null || typeof bool=="undefined") {
+      delete this.response.response.shouldEndSession;
+    }
+    else {
+      this.response.response.shouldEndSession = bool;
+    }
     if (reprompt) {
       this.reprompt(reprompt);
     }
@@ -457,7 +462,12 @@ alexa.app = function(name) {
     }
     self.intents[intentName] = new alexa.intent(intentName, schema, func);
   };
-
+  // handle custom/future request types
+  this.requestHandlers = {};
+  this.on = function(handlerName, handler) {
+    self.requestHandlers[handlerName] = handler;
+  };
+  
   this.customSlots = {};
   this.customSlot = function(slotName, values) {
     self.customSlots[slotName] = [];
@@ -598,6 +608,8 @@ alexa.app = function(name) {
           } else {
             throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
           }
+        } else if (typeof self.requestHandlers[requestType] === "function") {
+          return Promise.resolve(self.requestHandlers[requestType](request, response, request_json));
         } else {
           throw "INVALID_REQUEST_TYPE";
         }
