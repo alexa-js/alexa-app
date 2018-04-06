@@ -92,6 +92,8 @@ Go to https://github.com/alexa-js/alexa-app and select your feature branch. Clic
 
 Add more commits or amend your previous commit with any changes.
 
+Once you have a pull request number add a commit to record your change in the CHANGELOG.md, don't worry if you forget, Travis-CI will remind you :)
+
 ```
 git commit --amend
 git push origin my-feature-branch -f
