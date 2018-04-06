@@ -23,7 +23,7 @@
       "slots": {
         "AirportCode": {
           "name": "AirportCode",
-          "value" : "JFK",
+          "value": "JFK",
           "confirmationStatus": "NONE"
         }
       }

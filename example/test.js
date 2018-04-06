@@ -12,7 +12,10 @@ app.launch(function(request, response) {
 });
 
 app.intent("sampleIntent", {
-    "slots": { "NAME": "LITERAL", "AGE": "NUMBER" },
+    "slots": {
+      "NAME": "LITERAL",
+      "AGE": "NUMBER"
+    },
     "utterances": ["my {name is|name's} {names|NAME} and {I am|I'm} {1-100|AGE}{ years old|}"]
   },
   function(request, response) {

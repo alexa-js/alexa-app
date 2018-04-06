@@ -26,9 +26,9 @@ describe("Alexa", function() {
         var context = {};
 
         var callback = function(error, response) {
-            expect(error).to.be.null;
-            expect(response.version).to.equal("1.0");
-            done();
+          expect(error).to.be.null;
+          expect(response.version).to.equal("1.0");
+          done();
         };
 
         testApp.handler(mockRequest, context, callback);
@@ -38,9 +38,9 @@ describe("Alexa", function() {
         var context = {};
 
         var callback = function(error) {
-            // TypeError: context.succeed is not a function
-            expect(error).to.be.an.instanceof(Error);
-            done();
+          // TypeError: context.succeed is not a function
+          expect(error).to.be.an.instanceof(Error);
+          done();
         };
 
         testApp.handler({}, context, callback);

@@ -22,25 +22,31 @@ describe("Alexa", function() {
         });
 
         it("invokes a globally defined error function that throws an error", function() {
-          testApp.error =  function(
-              /** @type {string} */ e,
-              /** @type {Alexa.request} */ request,
-              /** @type {Alexa.response} */ response) {
+          testApp.error = function(
+            /** @type {string} */
+            e,
+            /** @type {Alexa.request} */
+            request,
+            /** @type {Alexa.response} */
+            response) {
             throw "foobar";
           };
 
           var subject = testApp.request(mockRequest).then(function(response) {
-              return response.response;
+            return response.response;
           });
           return expect(subject).to.eventually.be.rejectedWith("foobar");
         });
 
         it("swallows uncaught errors without a message in the globally defined error function", function() {
 
-          testApp.error =  function(
-            /** @type {string} */ e,
-            /** @type {Alexa.request} */ request,
-            /** @type {Alexa.response} */ response) {
+          testApp.error = function(
+            /** @type {string} */
+            e,
+            /** @type {Alexa.request} */
+            request,
+            /** @type {Alexa.response} */
+            response) {
             // don't handle
           };
 
@@ -55,9 +61,12 @@ describe("Alexa", function() {
 
         it("responds with a spoken message for uncaught errors in the globally defined error function", function() {
           testApp.error = function(
-              /** @type {string} */ e,
-              /** @type {Alexa.request} */ request,
-              /** @type {Alexa.response} */ response) {
+            /** @type {string} */
+            e,
+            /** @type {Alexa.request} */
+            request,
+            /** @type {Alexa.response} */
+            response) {
             response.say("Sorry, something bad happened");
           };
 
@@ -72,9 +81,12 @@ describe("Alexa", function() {
 
         it("responds with a spoken message for uncaught errors in the globally defined error function and resolves", function() {
           testApp.error = function(
-              /** @type {string} */ e,
-              /** @type {Alexa.request} */ request,
-              /** @type {Alexa.response} */ response) {
+            /** @type {string} */
+            e,
+            /** @type {Alexa.request} */
+            request,
+            /** @type {Alexa.response} */
+            response) {
             response.say("Sorry, something bad happened");
             return response.send();
           };
@@ -90,9 +102,12 @@ describe("Alexa", function() {
 
         it("responds with a spoken message for uncaught errors in the globally defined error function and fails", function() {
           testApp.error = function(
-              /** @type {string} */ e,
-              /** @type {Alexa.request} */ request,
-              /** @type {Alexa.response} */ response) {
+            /** @type {string} */
+            e,
+            /** @type {Alexa.request} */
+            request,
+            /** @type {Alexa.response} */
+            response) {
             response.say("Sorry, something bad happened");
             return response.fail(e);
           };

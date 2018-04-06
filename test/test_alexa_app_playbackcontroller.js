@@ -9,8 +9,8 @@ chai.config.includeStack = true;
 
 import * as Alexa from "..";
 
-describe("Alexa", function () {
-  describe("app", function () {
+describe("Alexa", function() {
+  describe("app", function() {
     var testApp = new Alexa.app("testApp");
     var playbackHandlerWasCalled = false;
 
@@ -23,7 +23,7 @@ describe("Alexa", function () {
       testApp = new Alexa.app("testApp");
     });
 
-    describe("request", function () {
+    describe("request", function() {
 
       context("with a playback controller command", function() {
         var mockRequest = mockHelper.load("playback_controller_play_command.json");
