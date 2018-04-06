@@ -78,6 +78,9 @@ export class app {
   playbackControllerEventHandlers: {[name: string]: PlaybackController};
   playbackController: (eventName: string, func: RequestHandler) => void;
 
+  requestHandlers: {[name: string]: RequestHandler};
+  on: (handlerName: string, handler: RequestHandler) => void;
+
   /** TODO: Figure out what the promise actually contains */
   request: (requestJSON: alexa.Request) => Promise<alexa.ResponseBody>;
 

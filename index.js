@@ -112,7 +112,11 @@ alexa.response = function(session) {
     return this;
   };
   this.shouldEndSession = function(bool, reprompt) {
-    this.response.response.shouldEndSession = bool;
+    if (bool === null || typeof bool == "undefined") {
+      delete this.response.response.shouldEndSession;
+    } else {
+      this.response.response.shouldEndSession = bool;
+    }
     if (reprompt) {
       this.reprompt(reprompt);
     }
@@ -319,7 +323,7 @@ alexa.slot = function(slot) {
   this.value = slot.value;
   this.confirmationStatus = slot.confirmationStatus;
   if (slot.resolutions && slot.resolutions.resolutionsPerAuthority && slot.resolutions.resolutionsPerAuthority.length > 0) {
-    this.resolutions = slot.resolutions.resolutionsPerAuthority.map(function (resolution) {
+    this.resolutions = slot.resolutions.resolutionsPerAuthority.map(function(resolution) {
       return new alexa.slotResolution(resolution);
     });
   } else {
@@ -329,7 +333,7 @@ alexa.slot = function(slot) {
   this.isConfirmed = function() {
     return 'CONFIRMED' === this.confirmationStatus;
   };
-  this.resolution = function (idx) {
+  this.resolution = function(idx) {
     idx = idx && idx < this.resolutions.length ? idx : 0;
     return this.resolutions[idx];
   };
@@ -337,7 +341,7 @@ alexa.slot = function(slot) {
 
 alexa.slotResolution = function(resolution) {
   this.status = resolution.status.code;
-  this.values = (resolution.values || []).map(function (elem) {
+  this.values = (resolution.values || []).map(function(elem) {
     return new alexa.resolutionValue(elem.value);
   });
 
@@ -349,7 +353,7 @@ alexa.slotResolution = function(resolution) {
   };
 };
 
-alexa.resolutionValue = function (value) {
+alexa.resolutionValue = function(value) {
   this.name = value.name;
   this.id = value.id;
 };
@@ -457,6 +461,11 @@ alexa.app = function(name) {
     }
     self.intents[intentName] = new alexa.intent(intentName, schema, func);
   };
+  // handle custom/future request types
+  this.requestHandlers = {};
+  this.on = function(handlerName, handler) {
+    self.requestHandlers[handlerName] = handler;
+  };
 
   this.customSlots = {};
   this.customSlot = function(slotName, values) {
@@ -557,102 +566,104 @@ alexa.app = function(name) {
       });
     };
 
-    return promiseChain.then(function () {
-      // Call to `.pre` can also throw, so we wrap it in a promise here to
-      // propagate errors to the error handler
-      var prePromise = Promise.resolve();
-      if (typeof self.pre == "function") {
-        prePromise = Promise.resolve(self.pre(request, response, requestType));
-      }
-      return prePromise;
-    }).then(function () {
-      requestType = request.type();
-      if (!response.resolved) {
-        if ("IntentRequest" === requestType) {
-          var intent = request_json.request.intent.name;
-          if (typeof self.intents[intent] !== "undefined" && typeof self.intents[intent].handler === "function") {
-            if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
-              return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
-            } else {
-              return Promise.resolve(self.intents[intent].handler(request, response));
-            }
-          } else {
-            throw "NO_INTENT_FOUND";
-          }
-        } else if ("LaunchRequest" === requestType) {
-          if (typeof self.launchFunc == "function") {
-            return Promise.resolve(self.launchFunc(request, response));
-          } else {
-            throw "NO_LAUNCH_FUNCTION";
-          }
-        } else if ("SessionEndedRequest" === requestType) {
-          if (typeof self.sessionEndedFunc == "function") {
-            return Promise.resolve(self.sessionEndedFunc(request, response));
-          }
-        } else if (request.isAudioPlayer()) {
-          var event = requestType.slice(12);
-          var eventHandlerObject = self.audioPlayerEventHandlers[event];
-          if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
-            return Promise.resolve(eventHandlerObject["function"](request, response));
-          }
-        } else if (request.isPlaybackController()) {
-          var playbackControllerEvent = requestType.slice(19);
-          var playbackEventHandlerObject = self.playbackControllerEventHandlers[playbackControllerEvent];
-          if (typeof playbackEventHandlerObject != "undefined" && typeof playbackEventHandlerObject["function"] == "function") {
-            return Promise.resolve(playbackEventHandlerObject["function"](request, response));
-          }
-        } else if ("Display.ElementSelected" === requestType) {
-          if (typeof self.displayElementSelectedFunc === "function") {
-            return Promise.resolve(self.displayElementSelectedFunc(request, response));
-          } else {
-            throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
-          }
-        } else {
-          throw "INVALID_REQUEST_TYPE";
+    return promiseChain.then(function() {
+        // Call to `.pre` can also throw, so we wrap it in a promise here to
+        // propagate errors to the error handler
+        var prePromise = Promise.resolve();
+        if (typeof self.pre == "function") {
+          prePromise = Promise.resolve(self.pre(request, response, requestType));
         }
-      }
-    })
-    .then(function () {
-      return response.send();
-    })
-    .catch(function(e) {
-      if (typeof self.error == "function") {
-        // Default behavior of any error handler is to send a response
-        return Promise.resolve(self.error(e, request, response)).then(function() {
+        return prePromise;
+      }).then(function() {
+        requestType = request.type();
+        if (!response.resolved) {
+          if ("IntentRequest" === requestType) {
+            var intent = request_json.request.intent.name;
+            if (typeof self.intents[intent] !== "undefined" && typeof self.intents[intent].handler === "function") {
+              if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
+                return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
+              } else {
+                return Promise.resolve(self.intents[intent].handler(request, response));
+              }
+            } else {
+              throw "NO_INTENT_FOUND";
+            }
+          } else if ("LaunchRequest" === requestType) {
+            if (typeof self.launchFunc == "function") {
+              return Promise.resolve(self.launchFunc(request, response));
+            } else {
+              throw "NO_LAUNCH_FUNCTION";
+            }
+          } else if ("SessionEndedRequest" === requestType) {
+            if (typeof self.sessionEndedFunc == "function") {
+              return Promise.resolve(self.sessionEndedFunc(request, response));
+            }
+          } else if (request.isAudioPlayer()) {
+            var event = requestType.slice(12);
+            var eventHandlerObject = self.audioPlayerEventHandlers[event];
+            if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
+              return Promise.resolve(eventHandlerObject["function"](request, response));
+            }
+          } else if (request.isPlaybackController()) {
+            var playbackControllerEvent = requestType.slice(19);
+            var playbackEventHandlerObject = self.playbackControllerEventHandlers[playbackControllerEvent];
+            if (typeof playbackEventHandlerObject != "undefined" && typeof playbackEventHandlerObject["function"] == "function") {
+              return Promise.resolve(playbackEventHandlerObject["function"](request, response));
+            }
+          } else if ("Display.ElementSelected" === requestType) {
+            if (typeof self.displayElementSelectedFunc === "function") {
+              return Promise.resolve(self.displayElementSelectedFunc(request, response));
+            } else {
+              throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
+            }
+          } else if (typeof self.requestHandlers[requestType] === "function") {
+            return Promise.resolve(self.requestHandlers[requestType](request, response, request_json));
+          } else {
+            throw "INVALID_REQUEST_TYPE";
+          }
+        }
+      })
+      .then(function() {
+        return response.send();
+      })
+      .catch(function(e) {
+        if (typeof self.error == "function") {
+          // Default behavior of any error handler is to send a response
+          return Promise.resolve(self.error(e, request, response)).then(function() {
             if (!response.resolved) {
-                response.resolved = true;
-                return response.send();
+              response.resolved = true;
+              return response.send();
             }
             // propagate successful response if it's already been resolved
             return response.response;
-        });
-      } else if (typeof e == "string" && self.messages[e]) {
-        if (!request.isAudioPlayer()) {
-          response.say(self.messages[e]);
-          return response.send(e);
-        } else {
-          return response.fail(self.messages[e]);
+          });
+        } else if (typeof e == "string" && self.messages[e]) {
+          if (!request.isAudioPlayer()) {
+            response.say(self.messages[e]);
+            return response.send(e);
+          } else {
+            return response.fail(self.messages[e]);
+          }
         }
-      }
-      if (!response.resolved) {
-        if (e.message) {
-          return response.fail("Unhandled exception: " + e.message + ".", e);
-        } else if (typeof e == "string") {
-          return response.fail("Unhandled exception: " + e + ".", e);
-        } else {
-          return response.fail("Unhandled exception.", e);
+        if (!response.resolved) {
+          if (e.message) {
+            return response.fail("Unhandled exception: " + e.message + ".", e);
+          } else if (typeof e == "string") {
+            return response.fail("Unhandled exception: " + e + ".", e);
+          } else {
+            return response.fail("Unhandled exception.", e);
+          }
         }
-      }
-      throw e;
-    });
+        throw e;
+      });
   };
 
   var skillBuilderSchema = function() {
     var schema = {
-      "intents": [],
-      "types": []
-    },
-    intentName, intent, key;
+        "intents": [],
+        "types": []
+      },
+      intentName, intent, key;
     for (intentName in self.intents) {
       intent = self.intents[intentName];
       var intentSchema = {
@@ -808,7 +819,11 @@ alexa.app = function(name) {
       throw new Error("You must specify an express app or an express router to attach to.");
     }
 
-    var defaultOptions = { endpoint: "/" + self.name, checkCert: true, debug: false };
+    var defaultOptions = {
+      endpoint: "/" + self.name,
+      checkCert: true,
+      debug: false
+    };
 
     options = defaults(options, defaultOptions);
 
