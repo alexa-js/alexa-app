@@ -11,10 +11,10 @@ import * as Alexa from '..';
 
 describe("Alexa", function() {
 
-  context("#alexa.request.slot", function () {
+  context("#alexa.request.slot", function() {
     var testReq = mockHelper.load("intent_request_airport_info.json");
-    
-    beforeEach(function () {
+
+    beforeEach(function() {
       testReq = mockHelper.load("intent_request_airport_info.json");
     });
 
@@ -22,18 +22,18 @@ describe("Alexa", function() {
       testReq = null;
     });
 
-    it("get slot value if correct", function () {
+    it("get slot value if correct", function() {
       var req = new Alexa.request(testReq);
       expect(req.slot("AirportCode", "SEA")).to.eql("JFK");
     });
 
-    it("gets defaultValue if slot value is undefined", function () {
+    it("gets defaultValue if slot value is undefined", function() {
       testReq.request.intent.slots.AirportCode.value = undefined;
       var req = new Alexa.request(testReq);
       expect(req.slot("AirportCode", "SEA")).to.eql("SEA");
     });
   });
-  
+
   describe("app", function() {
     var testApp = new Alexa.app("testApp");
 
@@ -60,7 +60,9 @@ describe("Alexa", function() {
 
       context("with an incomplete slot value object", function() {
         beforeEach(function() {
-          testApp.customSlot("animals", [{value: "dog"}]);
+          testApp.customSlot("animals", [{
+            value: "dog"
+          }]);
         });
 
         it("adds the slot value with default params", function() {

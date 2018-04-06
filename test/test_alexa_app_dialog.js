@@ -40,7 +40,7 @@ describe("Alexa", function() {
 
         describe("#dialogState", function() {
           beforeEach(function() {
-            setupHandlerAndSubject("started", function (req, res) {
+            setupHandlerAndSubject("started", function(req, res) {
               res.say(req.getDialog().dialogState);
               return true;
             });
@@ -57,8 +57,8 @@ describe("Alexa", function() {
         describe("#isStarted", function() {
           context("when an intent's dialogState is STARTED", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("started", function (req, res) {
-                res.say(req.getDialog().isStarted()  ? "yes" : "no");
+              setupHandlerAndSubject("started", function(req, res) {
+                res.say(req.getDialog().isStarted() ? "yes" : "no");
                 return true;
               });
             });
@@ -73,8 +73,8 @@ describe("Alexa", function() {
 
           context("when an intent's dialogState is not STARTED", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialog().isStarted()  ? "yes" : "no");
+              setupHandlerAndSubject("completed", function(req, res) {
+                res.say(req.getDialog().isStarted() ? "yes" : "no");
                 return true;
               });
             });
@@ -91,8 +91,8 @@ describe("Alexa", function() {
         describe("#isInProgress", function() {
           context("when an intent's dialogState is IN_PROGRESS", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("in_progress", function (req, res) {
-                res.say(req.getDialog().isInProgress()  ? "yes" : "no");
+              setupHandlerAndSubject("in_progress", function(req, res) {
+                res.say(req.getDialog().isInProgress() ? "yes" : "no");
                 return true;
               });
             });
@@ -107,8 +107,8 @@ describe("Alexa", function() {
 
           context("when an intent's dialogState is not IN_PROGRESS", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialog().isInProgress()  ? "yes" : "no");
+              setupHandlerAndSubject("completed", function(req, res) {
+                res.say(req.getDialog().isInProgress() ? "yes" : "no");
                 return true;
               });
             });
@@ -125,8 +125,8 @@ describe("Alexa", function() {
         describe("#isCompleted", function() {
           context("when an intent's dialogState is COMPLETED", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("completed", function (req, res) {
-                res.say(req.getDialog().isCompleted()  ? "yes" : "no");
+              setupHandlerAndSubject("completed", function(req, res) {
+                res.say(req.getDialog().isCompleted() ? "yes" : "no");
                 return true;
               });
             });
@@ -141,8 +141,8 @@ describe("Alexa", function() {
 
           context("when an intent's dialogState is not COMPLETED", function() {
             beforeEach(function() {
-              setupHandlerAndSubject("started", function (req, res) {
-                res.say(req.getDialog().isCompleted()  ? "yes" : "no");
+              setupHandlerAndSubject("started", function(req, res) {
+                res.say(req.getDialog().isCompleted() ? "yes" : "no");
                 return true;
               });
             });
@@ -158,33 +158,33 @@ describe("Alexa", function() {
       });
 
       describe("dialog response", function() {
-        context("request's intent has a dialogState of STARTED", function () {
+        context("request's intent has a dialogState of STARTED", function() {
           var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_started.json");
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
 
-          context("intent configured to delegate dialog to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function() {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
                 "dialog": {
                   type: "delegate"
                 }
-              }, function (req, res) {
+              }, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains directive property with Dialog.Delegate directive object", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains directive property with Dialog.Delegate directive object", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.contain(dialogDirective);
             });
 
-            it("does not utilize intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("does not utilize intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.not.eventually.become({
@@ -194,23 +194,23 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialog", function () {
+          context("intent is manually handling the dialog", function() {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, function (req, res) {
+              app.intent("deliveryCreationRequest", {}, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains no directive properties", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains no directive properties", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.be.empty;
             });
 
-            it("utilizes intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("utilizes intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.eventually.become({
@@ -221,33 +221,33 @@ describe("Alexa", function() {
           });
         });
 
-        context("request's intent has a dialogState of IN_PROGRESS", function () {
+        context("request's intent has a dialogState of IN_PROGRESS", function() {
           var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_in_progress.json");
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
 
-          context("intent configured to delegate dialog to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function() {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
                 "dialog": {
                   type: "delegate"
                 }
-              }, function (req, res) {
+              }, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains directive property with Dialog.Delegate directive object", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains directive property with Dialog.Delegate directive object", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.contain(dialogDirective);
             });
 
-            it("does not utilize intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("does not utilize intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.not.eventually.become({
@@ -257,23 +257,23 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialog", function () {
+          context("intent is manually handling the dialog", function() {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, function (req, res) {
+              app.intent("deliveryCreationRequest", {}, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains no directive properties", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains no directive properties", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.be.empty;
             });
 
-            it("utilizes intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("utilizes intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.eventually.become({
@@ -284,33 +284,33 @@ describe("Alexa", function() {
           });
         });
 
-        context("request's intent has a dialogState of COMPLETED", function () {
+        context("request's intent has a dialogState of COMPLETED", function() {
           var mockRequest = mockHelper.load("intent_request_food_delivery_dialog_completed.json");
           var dialogDirective = {
             type: 'Dialog.Delegate'
           };
 
-          context("intent configured to delegate dialog to Alexa", function () {
+          context("intent configured to delegate dialog to Alexa", function() {
             beforeEach(function() {
               app.intent("deliveryCreationRequest", {
                 "dialog": {
                   type: "delegate"
                 }
-              }, function (req, res) {
+              }, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains no directive properties", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains no directive properties", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.be.empty;
             });
 
-            it("utilizes intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("utilizes intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.eventually.become({
@@ -320,23 +320,23 @@ describe("Alexa", function() {
             });
           });
 
-          context("intent is manually handling the dialog", function () {
+          context("intent is manually handling the dialog", function() {
             beforeEach(function() {
-              app.intent("deliveryCreationRequest", {}, function (req, res) {
+              app.intent("deliveryCreationRequest", {}, function(req, res) {
                 res.say("I'm starting your delivery").send();
                 return true;
               });
             });
 
-            it("contains no directive properties", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("contains no directive properties", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
               return expect(subject).to.eventually.be.empty;
             });
 
-            it("utilizes intent's intentHandler", function () {
-              var subject = app.request(mockRequest).then(function (response) {
+            it("utilizes intent's intentHandler", function() {
+              var subject = app.request(mockRequest).then(function(response) {
                 return response.response.outputSpeech;
               });
               return expect(subject).to.eventually.become({
