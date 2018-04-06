@@ -47,19 +47,25 @@ describe("Alexa", function() {
     });
 
     context("#express warns when redundant param is passed", function() {
-        it("warns on given both params 'expressApp' and 'router'", function() {
-          var bkp = console.warn.bind();
-          console.warn = sinon.spy();
-          testApp.express({expressApp: app, router: express.Router()});
-          var warning = "Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
-          expect(console.warn).to.have.been.calledWithExactly(warning);
-          console.warn = bkp;
+      it("warns on given both params 'expressApp' and 'router'", function() {
+        var bkp = console.warn.bind();
+        console.warn = sinon.spy();
+        testApp.express({
+          expressApp: app,
+          router: express.Router()
         });
+        var warning = "Usage deprecated: Both 'expressApp' and 'router' are specified.\nMore details on https://github.com/alexa-js/alexa-app/blob/master/UPGRADING.md";
+        expect(console.warn).to.have.been.calledWithExactly(warning);
+        console.warn = bkp;
+      });
     });
 
     context("#express with default options", function() {
       beforeEach(function() {
-        testApp.express({ expressApp: app, checkCert: false });
+        testApp.express({
+          expressApp: app,
+          checkCert: false
+        });
       });
 
       it("returns a response for a valid request", function() {
@@ -76,7 +82,9 @@ describe("Alexa", function() {
       it("speaks an invalid request", function() {
         return request(testServer)
           .post('/testApp')
-          .send({ x: 1 })
+          .send({
+            x: 1
+          })
           .expect(200).then(function(response) {
             return expect(response.body.response.outputSpeech.ssml).to.eq("<speak>Error: not a valid request</speak>")
           });
@@ -89,13 +97,13 @@ describe("Alexa", function() {
       });
 
       it("fails with server error on bad request", function() {
-        testApp.pre = function () {
+        testApp.pre = function() {
           throw "SOME ERROR";
         };
         return request(testServer)
           .post('/testApp')
           .send()
-          .expect(500).then(function (response) {
+          .expect(500).then(function(response) {
             return expect(response.error.text).to.eq("Server Error");
           });
       });
@@ -169,7 +177,11 @@ describe("Alexa", function() {
     context("#express with debug set to false", function() {
       beforeEach(function() {
         var router = express.Router();
-        testApp.express({ router: router, checkCert: false, debug: false });
+        testApp.express({
+          router: router,
+          checkCert: false,
+          debug: false
+        });
         app.use(router);
       });
 

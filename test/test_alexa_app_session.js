@@ -88,13 +88,17 @@ describe("Alexa", function() {
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", {qaz: "woah"});
+            session.set("bar", {
+              qaz: "woah"
+            });
           };
 
           testApp.intent("airportInfoIntent", {}, function(req, res) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", {qaz: "woah"});
+            session.set("bar", {
+              qaz: "woah"
+            });
 
             res.say("message").shouldEndSession(false);
             var session = req.getSession();
@@ -126,7 +130,9 @@ describe("Alexa", function() {
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", {qaz: "woah"});
+            session.set("bar", {
+              qaz: "woah"
+            });
           };
 
           testApp.intent("airportInfoIntent", {}, function(req, res) {
@@ -159,7 +165,9 @@ describe("Alexa", function() {
           testApp.pre = function(req, res, type) {
             var session = req.getSession();
             session.set("foo", true);
-            session.set("bar", {qaz: "woah"});
+            session.set("bar", {
+              qaz: "woah"
+            });
           };
 
           testApp.intent("airportInfoIntent", {}, function(req, res) {
@@ -233,7 +241,9 @@ describe("Alexa", function() {
           });
 
           return Promise.all([
-            expect(subject).to.eventually.become({ "foo": true })
+            expect(subject).to.eventually.become({
+              "foo": true
+            })
           ]);
         });
 
@@ -368,7 +378,7 @@ describe("Alexa", function() {
         it("session.get(key) should not throw if attribute is not present", function() {
           var returnedAttributeValue = "overridden";
 
-           /**
+          /**
            * @param {Alexa.request} req
            * @param {Alexa.response} res
            * @param {string} type
@@ -377,7 +387,9 @@ describe("Alexa", function() {
             returnedAttributeValue = req.getSession().get("AttributeWhichDoesNotExist");
           };
 
-          return testApp.request(mockRequest).then(function() { expect(returnedAttributeValue).to.be.undefined; });
+          return testApp.request(mockRequest).then(function() {
+            expect(returnedAttributeValue).to.be.undefined;
+          });
         });
       });
     });

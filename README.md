@@ -550,9 +550,9 @@ Note that some device interactions don't always produce PlaybackController event
 
 ### Other Event Request
 
-Handle any new requests that don't have an explicit handler type available (such as new or pre-release features) using the general on() and passing the event type.
+Handle any new requests that don't have an explicit handler type available (such as new or pre-release features) using the general `on()` and passing the event type.
 
-The following example will handle an imaginary request of type `DeviceEngine.InputHandler` if was added to the Alexa API.
+The following example will handle an imaginary request of type `DeviceEngine.InputHandler` as if it were added to the Alexa API.
 
 ```javascript
 app.on('DeviceEngine.InputHandler', (request, response, request_json) => {

@@ -11,7 +11,7 @@ import * as Alexa from '..';
 
 describe("Alexa", function() {
   describe("app", function() {
-    var testApp =  new Alexa.app("testApp");
+    var testApp = new Alexa.app("testApp");
 
     beforeEach(function() {
       testApp = new Alexa.app("testApp");

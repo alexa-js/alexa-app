@@ -350,8 +350,7 @@ describe("Alexa", function() {
       describe("with a custom slot", function() {
         beforeEach(function() {
           testApp.customSlot("animal", [
-            "cat",
-            {
+            "cat", {
               value: "dog",
               id: "canine",
               synonyms: ["doggo", "pupper", "woofmeister"]
@@ -363,34 +362,28 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.skillBuilder());
           expect(subject).to.eql({
             "intents": [],
-            "types": [
-              {
-                "name": "animal",
-                "values": [
-                  {
-                    "id": null,
-                    "name": {
-                      "value": "cat",
-                      "synonyms": []
-                    }
-                  },
-                  {
-                    "id": "canine",
-                    "name": {
-                      "value": "dog",
-                      "synonyms": ["doggo", "pupper", "woofmeister"]
-                    }
-                  }
-                ]
-              }
-            ]
+            "types": [{
+              "name": "animal",
+              "values": [{
+                "id": null,
+                "name": {
+                  "value": "cat",
+                  "synonyms": []
+                }
+              }, {
+                "id": "canine",
+                "name": {
+                  "value": "dog",
+                  "synonyms": ["doggo", "pupper", "woofmeister"]
+                }
+              }]
+            }]
           });
         });
         describe("with multiple custom slots", function() {
           beforeEach(function() {
             testApp.customSlot("animal", [
-              "cat",
-              {
+              "cat", {
                 value: "dog",
                 id: "canine",
                 synonyms: ["doggo", "pupper", "woofmeister"]
@@ -404,46 +397,37 @@ describe("Alexa", function() {
             var subject = JSON.parse(testApp.schemas.skillBuilder());
             expect(subject).to.eql({
               "intents": [],
-              "types": [
-                {
-                  "name": "animal",
-                  "values": [
-                    {
-                      "id": null,
-                      "name": {
-                        "value": "cat",
-                        "synonyms": []
-                      }
-                    },
-                    {
-                      "id": "canine",
-                      "name": {
-                        "value": "dog",
-                        "synonyms": ["doggo", "pupper", "woofmeister"]
-                      }
-                    }
-                  ]
-                },
-                {
-                  "name": "vegetable",
-                  "values": [
-                    {
-                      "id": null,
-                      "name": {
-                        "value": "carrot",
-                        "synonyms": []
-                      }
-                    },
-                    {
-                      "id": null,
-                      "name": {
-                        "value": "cucumber",
-                        "synonyms": []
-                      }
-                    }
-                  ]
-                }
-              ]
+              "types": [{
+                "name": "animal",
+                "values": [{
+                  "id": null,
+                  "name": {
+                    "value": "cat",
+                    "synonyms": []
+                  }
+                }, {
+                  "id": "canine",
+                  "name": {
+                    "value": "dog",
+                    "synonyms": ["doggo", "pupper", "woofmeister"]
+                  }
+                }]
+              }, {
+                "name": "vegetable",
+                "values": [{
+                  "id": null,
+                  "name": {
+                    "value": "carrot",
+                    "synonyms": []
+                  }
+                }, {
+                  "id": null,
+                  "name": {
+                    "value": "cucumber",
+                    "synonyms": []
+                  }
+                }]
+              }]
             });
           });
         });
@@ -683,8 +667,7 @@ describe("Alexa", function() {
       describe("with a custom slot", function() {
         beforeEach(function() {
           testApp.customSlot("animal", [
-            "cat",
-            {
+            "cat", {
               value: "dog",
               id: "canine",
               synonyms: ["doggo", "pupper", "woofmeister"]
@@ -699,27 +682,22 @@ describe("Alexa", function() {
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [],
-                "types": [
-                  {
-                    "name": "animal",
-                    "values": [
-                      {
-                        "id": null,
-                        "name": {
-                          "value": "cat",
-                          "synonyms": []
-                        }
-                      },
-                      {
-                        "id": "canine",
-                        "name": {
-                          "value": "dog",
-                          "synonyms": ["doggo", "pupper", "woofmeister"]
-                        }
-                      }
-                    ]
-                  }
-                ]
+                "types": [{
+                  "name": "animal",
+                  "values": [{
+                    "id": null,
+                    "name": {
+                      "value": "cat",
+                      "synonyms": []
+                    }
+                  }, {
+                    "id": "canine",
+                    "name": {
+                      "value": "dog",
+                      "synonyms": ["doggo", "pupper", "woofmeister"]
+                    }
+                  }]
+                }]
               }
             }
           });
@@ -727,8 +705,7 @@ describe("Alexa", function() {
         describe("with multiple custom slots", function() {
           beforeEach(function() {
             testApp.customSlot("animal", [
-              "cat",
-              {
+              "cat", {
                 value: "dog",
                 id: "canine",
                 synonyms: ["doggo", "pupper", "woofmeister"]
@@ -745,46 +722,37 @@ describe("Alexa", function() {
                 "languageModel": {
                   "invocationName": "testApp",
                   "intents": [],
-                  "types": [
-                    {
-                      "name": "animal",
-                      "values": [
-                        {
-                          "id": null,
-                          "name": {
-                            "value": "cat",
-                            "synonyms": []
-                          }
-                        },
-                        {
-                          "id": "canine",
-                          "name": {
-                            "value": "dog",
-                            "synonyms": ["doggo", "pupper", "woofmeister"]
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "name": "vegetable",
-                      "values": [
-                        {
-                          "id": null,
-                          "name": {
-                            "value": "carrot",
-                            "synonyms": []
-                          }
-                        },
-                        {
-                          "id": null,
-                          "name": {
-                            "value": "cucumber",
-                            "synonyms": []
-                          }
-                        }
-                      ]
-                    }
-                  ]
+                  "types": [{
+                    "name": "animal",
+                    "values": [{
+                      "id": null,
+                      "name": {
+                        "value": "cat",
+                        "synonyms": []
+                      }
+                    }, {
+                      "id": "canine",
+                      "name": {
+                        "value": "dog",
+                        "synonyms": ["doggo", "pupper", "woofmeister"]
+                      }
+                    }]
+                  }, {
+                    "name": "vegetable",
+                    "values": [{
+                      "id": null,
+                      "name": {
+                        "value": "carrot",
+                        "synonyms": []
+                      }
+                    }, {
+                      "id": null,
+                      "name": {
+                        "value": "cucumber",
+                        "synonyms": []
+                      }
+                    }]
+                  }]
                 }
               }
             });

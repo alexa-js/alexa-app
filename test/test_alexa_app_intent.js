@@ -13,7 +13,7 @@ describe("Alexa", function() {
 
   describe("app", function() {
     var testApp = new Alexa.app("testApp");
-    
+
     beforeEach(function() {
       testApp = new Alexa.app("testApp");
     });
@@ -34,9 +34,13 @@ describe("Alexa", function() {
           expect(testApp.intents["airportInfoIntent"].name).to.equal("airportInfoIntent");
         });
 
-        context("dialog", function(){
-          var dialog = { type: "delegate" };
-          schema = { dialog: dialog }
+        context("dialog", function() {
+          var dialog = {
+            type: "delegate"
+          };
+          schema = {
+            dialog: dialog
+          }
 
           it("assigns dialog", function() {
             expect(testApp.intents["airportInfoIntent"].dialog).to.equal(dialog);
