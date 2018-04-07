@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.2.2 (Next)
+### 4.2.2 (April 7, 2018)
 
 * [#315](https://github.com/alexa-js/alexa-app/pull/315): Fix card tests and required card type - [@kobim](https://github.com/kobim).
 * [#314](https://github.com/alexa-js/alexa-app/pull/314): Fix handling of `undefined` slot values - [@User1m](https://github.com/user1m).
@@ -9,7 +9,6 @@
 * [#329](https://github.com/alexa-js/alexa-app/pull/329): Run dtslint only on the latest node version - [@kobim](https://github.com/kobim).
 * [#313](https://github.com/alexa-js/alexa-app/pull/313): Add general support for upcoming request types - [@matt-kruse](https://github.com/matt-kruse).
 * [#330](https://github.com/alexa-js/alexa-app/pull/330): Making coveralls work again - [@kobim](https://github.com/kobim).
-* Your contribution here.
 
 ### 4.2.1 (February 1, 2018)
 
