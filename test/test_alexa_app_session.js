@@ -550,5 +550,27 @@ describe("Alexa", function() {
         });
       });
     });
+
+    describe("intent request with malformed session", function() {
+      var mockRequest = mockHelper.load("intent_request_malformed_session.json");
+
+      it("responds a valid session object", function() {
+        testApp.pre = function(req, res, type) {
+          if (req.hasSession()) {
+            req.getSession().set("foo", "bar");
+          }
+        };
+
+        var subject = testApp.request(mockRequest).then(function(response) {
+          return response.sessionAttributes;
+        });
+
+        return Promise.all([
+          expect(subject).to.eventually.become({
+            "foo": "bar"
+          })
+        ]);
+      });
+    });
   });
 });
