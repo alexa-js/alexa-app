@@ -334,7 +334,7 @@ alexa.slot = function(slot) {
     return 'CONFIRMED' === this.confirmationStatus;
   };
   this.resolution = function(idx) {
-    idx = idx && idx < this.resolutions.length ? idx : 0;
+    idx = ( typeof idx === 'number' && idx >= 0 && idx < this.resolutions.length ) ? idx : 0;
     return this.resolutions[idx];
   };
 };
