@@ -162,6 +162,15 @@ describe("Alexa", function() {
               expect(response.text).to.eq(testApp.schemas.skillBuilder());
             });
         });
+
+        it("returns empty schema for invalid schema type", function() {
+          return request(testServer)
+            .get('/testApp?schema&schemaType=invalid')
+            .expect(200).then(function(response) {
+              expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+              expect(response.text).to.eq('');
+            });
+        });
       })
 
       it("returns debug utterances", function() {
