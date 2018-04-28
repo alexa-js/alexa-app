@@ -183,6 +183,27 @@ describe("Alexa", function() {
       });
     });
 
+    context("#express with debug set to true and has empty intents", function() {
+      beforeEach(function() {
+        testApp.intent("emptyIntent");
+
+        testApp.express({
+          expressApp: app,
+          checkCert: false,
+          debug: true
+        });
+      });
+
+      it("returns no utterances", function() {
+        return request(testServer)
+          .get('/testApp?utterances')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.eq('');
+          });
+      });
+    });
+
     context("#express with debug set to false", function() {
       beforeEach(function() {
         var router = express.Router();
