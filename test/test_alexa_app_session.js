@@ -219,6 +219,27 @@ describe("Alexa", function() {
           ]);
         });
       });
+
+      context("intent handler without shouldEndSession", function() {
+        it("responds without shouldEndSession", function() {
+          testApp.intent("airportInfoIntent", {}, function(req, res) {
+            res.say("hi").shouldEndSession();
+            res.session("foo", true);
+            res.session("bar", {
+              qaz: "woah"
+            });
+            res.clearSession();
+            return true;
+          });
+
+          var subject = testApp.request(mockRequest).then(function(response) {
+            return response.sessionAttributes;
+          });
+          return Promise.all([
+            expect(subject).to.eventually.become({})
+          ]);
+        });
+      });
     });
 
     describe("#response", function() {
