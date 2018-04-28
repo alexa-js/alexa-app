@@ -68,6 +68,7 @@ describe("Alexa", function() {
             var expectedMessage = "tubular!";
 
             beforeEach(function() {
+              testApp.pre = undefined;
               testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage);
                 return true;
