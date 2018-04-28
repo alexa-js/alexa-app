@@ -37,4 +37,17 @@ describe("Alexa", function() {
       });
     });
   });
+
+  describe("app without a name", function() {
+    var testApp;
+
+    beforeEach(function() {
+      Alexa.apps = [];
+      testApp = new Alexa.app();
+    })
+
+    it("doesn't add the app to alexa.apps", function() {
+      return expect(Object.keys(Alexa.apps).length).to.eq(0);
+    });
+  });
 });
