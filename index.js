@@ -708,7 +708,7 @@ alexa.app = function(name) {
           "id": value.id,
           "name": {
             "value": value.value,
-            "synonyms": value.synonyms || []
+            "synonyms": value.synonyms
           }
         };
         slotSchema.values.push(valueSchema);
