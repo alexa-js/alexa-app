@@ -10,7 +10,7 @@ export type ErrorHandler = (e: any, request: request, response: response) => voi
 export let apps: {[name: string]: app};
 
 export class app {
-  constructor(name: string);
+  constructor(name?: string);
 
   /**
    * Executed before any event handlers. This is useful to setup new sessions,
