@@ -235,7 +235,7 @@ export class response {
    * Tells Alexa whether the user's session is over; sessions end by default.
    * You can optionally pass a reprompt message.
    */
-  shouldEndSession: (end: boolean, reprompt?: string) => response;
+  shouldEndSession: (end?: boolean, reprompt?: string) => response;
 
   /**
    * Sends the response to the Alexa device (success) immediately.
