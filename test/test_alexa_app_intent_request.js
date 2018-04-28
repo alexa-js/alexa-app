@@ -134,6 +134,35 @@ describe("Alexa", function() {
                     type: "SSML"
                   });
                 });
+
+                it("allows pre function to resolve wihout going through the intent handler", function() {
+                  var preMessage = "resolved!!";
+
+                  /**
+                   * @param {Alexa.request} req
+                   * @param {Alexa.response} res
+                   * @param {string} type
+                   */
+                  testApp.pre = function(req, res, type) {
+                    res.say(preMessage);
+                    res.resolved = true;
+                  };
+
+                  testApp.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.say("foobar");
+                      return true;
+                    });
+
+                  var subject = testApp.request(mockRequest).then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>" + preMessage + "</speak>",
+                    type: "SSML"
+                  });
+                })
               });
 
               it("clears output when clear is called", function() {
