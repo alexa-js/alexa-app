@@ -69,6 +69,7 @@ describe("Alexa", function() {
 
             beforeEach(function() {
               testApp.pre = undefined;
+              testApp.post = undefined;
               testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage);
                 return true;
@@ -540,8 +541,7 @@ describe("Alexa", function() {
                       return res.fail("whoops");
                     });
 
-                  var subject = testApp.request(mockRequest);
-                  return expect(subject).to.be.rejectedWith("whoops");
+                  return testApp.request(mockRequest).should.be.rejectedWith("whoops");
                 });
 
                 it("can clear failure in post", function() {
