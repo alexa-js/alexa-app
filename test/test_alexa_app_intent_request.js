@@ -414,7 +414,24 @@ describe("Alexa", function() {
 
                 it("has an id for the resolution value", function() {
                   testApp.intent("airportInfoIntent", {}, function(req, res) {
-                    res.say(req.slots['AirportCode'].resolution().first().id);
+                    res.say(req.slots['AirportCode'].resolution(0).first().id);
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>200</speak>",
+                    type: "SSML"
+                  });
+                });
+
+                it("fallbacks to first resolution if index doesn't exist", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.slots['AirportCode'].resolution(200).first().id);
                     return true;
                   });
 
