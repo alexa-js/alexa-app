@@ -11,8 +11,6 @@ matrix:
         - npm run-script test-with-coverage
         - npm install dtslint@^0.2
         - npm run dtslint
-      after_script:
-        - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 node_js:
   - 1
@@ -30,6 +28,9 @@ cache:
 
 before_install:
   - npm config set spin false
+
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 notifications:
   email: false

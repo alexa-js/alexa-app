@@ -37,4 +37,18 @@ describe("Alexa", function() {
       });
     });
   });
+
+  describe("app without a name", function() {
+    const CleanAlexaApp = require('../');
+    var testApp;
+
+    beforeEach(function() {
+      CleanAlexaApp.apps = {};
+      testApp = new CleanAlexaApp.app();
+    })
+
+    it("doesn't add the app to alexa.apps", function() {
+      return expect(Object.keys(CleanAlexaApp.apps).length).to.eq(0);
+    });
+  });
 });

@@ -68,6 +68,8 @@ describe("Alexa", function() {
             var expectedMessage = "tubular!";
 
             beforeEach(function() {
+              testApp.pre = undefined;
+              testApp.post = undefined;
               testApp.intent("airportInfoIntent", {}, function(req, res) {
                 res.say(expectedMessage);
                 return true;
@@ -133,6 +135,35 @@ describe("Alexa", function() {
                     type: "SSML"
                   });
                 });
+
+                it("allows pre function to resolve wihout going through the intent handler", function() {
+                  var preMessage = "resolved!!";
+
+                  /**
+                   * @param {Alexa.request} req
+                   * @param {Alexa.response} res
+                   * @param {string} type
+                   */
+                  testApp.pre = function(req, res, type) {
+                    res.say(preMessage);
+                    res.resolved = true;
+                  };
+
+                  testApp.intent("airportInfoIntent", {},
+                    function(req, res) {
+                      res.say("foobar");
+                      return true;
+                    });
+
+                  var subject = testApp.request(mockRequest).then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>" + preMessage + "</speak>",
+                    type: "SSML"
+                  });
+                })
               });
 
               it("clears output when clear is called", function() {
@@ -414,7 +445,24 @@ describe("Alexa", function() {
 
                 it("has an id for the resolution value", function() {
                   testApp.intent("airportInfoIntent", {}, function(req, res) {
-                    res.say(req.slots['AirportCode'].resolution().first().id);
+                    res.say(req.slots['AirportCode'].resolution(0).first().id);
+                    return true;
+                  });
+
+                  var request = testApp.request(mockRequest);
+                  var subject = request.then(function(response) {
+                    return response.response.outputSpeech;
+                  });
+
+                  return expect(subject).to.eventually.become({
+                    ssml: "<speak>200</speak>",
+                    type: "SSML"
+                  });
+                });
+
+                it("fallbacks to first resolution if index doesn't exist", function() {
+                  testApp.intent("airportInfoIntent", {}, function(req, res) {
+                    res.say(req.slots['AirportCode'].resolution(200).first().id);
                     return true;
                   });
 
@@ -493,8 +541,7 @@ describe("Alexa", function() {
                       return res.fail("whoops");
                     });
 
-                  var subject = testApp.request(mockRequest);
-                  return expect(subject).to.be.rejectedWith("whoops");
+                  return testApp.request(mockRequest).should.be.rejectedWith("whoops");
                 });
 
                 it("can clear failure in post", function() {

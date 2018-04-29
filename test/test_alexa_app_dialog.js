@@ -73,6 +73,22 @@ describe("Alexa", function() {
 
           context("when an intent's dialogState is not STARTED", function() {
             beforeEach(function() {
+              setupHandlerAndSubject(undefined, function(req, res) {
+                res.say(req.getDialog().isStarted() ? "yes" : "no");
+                return true;
+              });
+            });
+
+            it("reports dialogState is not STARTED", function() {
+              return expect(subject).to.eventually.become({
+                ssml: "<speak>no</speak>",
+                type: "SSML"
+              });
+            });
+          });
+
+          context("when an intent's dialogState is undefined", function() {
+            beforeEach(function() {
               setupHandlerAndSubject("completed", function(req, res) {
                 res.say(req.getDialog().isStarted() ? "yes" : "no");
                 return true;
