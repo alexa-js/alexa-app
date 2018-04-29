@@ -334,7 +334,7 @@ alexa.slot = function(slot) {
     return 'CONFIRMED' === this.confirmationStatus;
   };
   this.resolution = function(idx) {
-    idx = idx && idx < this.resolutions.length ? idx : 0;
+    idx = ( typeof idx === 'number' && idx >= 0 && idx < this.resolutions.length ) ? idx : 0;
     return this.resolutions[idx];
   };
 };
@@ -708,7 +708,7 @@ alexa.app = function(name) {
           "id": value.id,
           "name": {
             "value": value.value,
-            "synonyms": value.synonyms || []
+            "synonyms": value.synonyms
           }
         };
         slotSchema.values.push(valueSchema);

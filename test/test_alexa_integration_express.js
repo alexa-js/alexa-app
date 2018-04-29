@@ -162,6 +162,15 @@ describe("Alexa", function() {
               expect(response.text).to.eq(testApp.schemas.skillBuilder());
             });
         });
+
+        it("returns empty schema for invalid schema type", function() {
+          return request(testServer)
+            .get('/testApp?schema&schemaType=invalid')
+            .expect(200).then(function(response) {
+              expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+              expect(response.text).to.eq('');
+            });
+        });
       })
 
       it("returns debug utterances", function() {
@@ -170,6 +179,27 @@ describe("Alexa", function() {
           .expect(200).then(function(response) {
             expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
             expect(response.text).to.eq(testApp.utterances());
+          });
+      });
+    });
+
+    context("#express with debug set to true and has empty intents", function() {
+      beforeEach(function() {
+        testApp.intent("emptyIntent");
+
+        testApp.express({
+          expressApp: app,
+          checkCert: false,
+          debug: true
+        });
+      });
+
+      it("returns no utterances", function() {
+        return request(testServer)
+          .get('/testApp?utterances')
+          .expect(200).then(function(response) {
+            expect(response.headers['content-type']).to.equal('text/plain; charset=utf-8');
+            expect(response.text).to.eq('');
           });
       });
     });

@@ -10,7 +10,7 @@ export type ErrorHandler = (e: any, request: request, response: response) => voi
 export let apps: {[name: string]: app};
 
 export class app {
-  constructor(name: string);
+  constructor(name?: string);
 
   /**
    * Executed before any event handlers. This is useful to setup new sessions,
@@ -235,7 +235,7 @@ export class response {
    * Tells Alexa whether the user's session is over; sessions end by default.
    * You can optionally pass a reprompt message.
    */
-  shouldEndSession: (end: boolean, reprompt?: string) => response;
+  shouldEndSession: (end?: boolean, reprompt?: string) => response;
 
   /**
    * Sends the response to the Alexa device (success) immediately.
