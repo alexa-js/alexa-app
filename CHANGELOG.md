@@ -3,6 +3,7 @@
 ### 4.2.3 (Next)
 
 * [#344](https://github.com/alexa-js/alexa-app/pull/344): Add coveralls as a check for pull requests - [@kobim](https://github.com/kobim).
+* [#352](https://github.com/alexa-js/alexa-app/pull/352): Allow utterance expansion in custom slot type synonyms - [@daanzu](https://github.com/daanzu).
 * Your contribution here.
 
 ### 4.2.2 (April 7, 2018)
