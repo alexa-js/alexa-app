@@ -906,7 +906,7 @@ app.intent("sampleIntent", {
 Dialog request.getDialog()
 
 // return the intent's dialogState
-String request.dialogState
+String dialog.dialogState
 
 // check if the intent's dialog is STARTED
 Boolean dialog.isStarted()
