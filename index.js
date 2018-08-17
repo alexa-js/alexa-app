@@ -48,7 +48,7 @@ alexa.response = function(session) {
       };
     } else {
       // append str to the current outputSpeech, stripping the out speak tag
-      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.text);
+      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.ssml);
     }
     return this;
   };
