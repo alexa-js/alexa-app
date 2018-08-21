@@ -312,6 +312,7 @@ alexa.intent = function(name, schema, handler) {
   this.dialog = (schema && typeof schema.dialog !== "undefined") ? schema.dialog : {};
   this.slots = (schema && typeof schema["slots"] !== "undefined") ? schema["slots"] : null;
   this.utterances = (schema && typeof schema["utterances"] !== "undefined") ? schema["utterances"] : null;
+  this.prompts = schema && typeof schema["prompts"] !== "undefined" ? schema["prompts"] : null;
 
   this.isDelegatedDialog = function() {
     return this.dialog.type === "delegate";
@@ -684,12 +685,13 @@ alexa.app = function(name) {
       if (intent.slots && Object.keys(intent.slots).length > 0) {
         intentSchema["slots"] = [];
         for (key in intent.slots) {
-          //  It's unclear whether `samples` is actually used for slots,
-          // but the interaction model will not build without an (empty) array
+          const slot = intent.slots[key];
+          const type = slot.type ? slot.type : slot;
+          const samples = slot.type ? slot.samples : [];
           intentSchema.slots.push({
-            "name": key,
-            "type": intent.slots[key],
-            "samples": []
+            name: key,
+            type,
+            samples
           });
         }
       }
@@ -733,9 +735,13 @@ alexa.app = function(name) {
         if (intent.slots && Object.keys(intent.slots).length > 0) {
           intentSchema["slots"] = [];
           for (key in intent.slots) {
+            const slot = intent.slots[key];
+            const type = slot.type ? slot.type : slot;
+            const samples = slot.type ? slot.samples : [];
             intentSchema.slots.push({
               "name": key,
-              "type": intent.slots[key]
+              "type": type,
+              "samples": samples
             });
           }
         }
@@ -750,14 +756,90 @@ alexa.app = function(name) {
     },
     askcli: function(invocationName) {
       var model = skillBuilderSchema();
+      var { prompts, dialog } = skillBuilderDialog();
       model.invocationName = invocationName || self.invocationName || self.name;
       var schema = {
         interactionModel: {
-          languageModel: model
+          languageModel: model,
+          dialog,
+          prompts
         }
       };
       return JSON.stringify(schema, null, 3);
     }
+  };
+
+  var skillBuilderDialog = function() {
+    var schema = {
+        dialog: {
+          intents: []
+        },
+        prompts: []
+      },
+      intentName,
+      intent,
+      key;
+
+    var creatPrompt = function(promptId, variations) {
+      return {
+        id: promptId,
+        variations: variations.map(prompt => ({
+          type: "SSML",
+          value: "<speak>" + prompt + "</speak>"
+        }))
+      };
+    };
+
+    for (intentName in self.intents) {
+      intent = self.intents[intentName];
+      var intentSchema = {
+        name: intent.name,
+        confirmationRequired: false,
+        prompts: {},
+        slots: []
+      };
+      
+      if (intent.prompts) {
+        var intentConfirmPromptId = "Confirm.Intent." + schema.prompts.length;
+        schema.prompts.push(creatPrompt(intentConfirmPromptId, intent.prompts));
+        intentSchema.prompts.confirmation = intentConfirmPromptId;
+        intentSchema.confirmationRequired = true;
+      }
+
+      if (intent.slots && Object.keys(intent.slots).length > 0) {
+        for (key in intent.slots) {
+          var slot = intent.slots[key];
+          var dialogIntentSlot = {
+            name: key,
+            type: slot.type || slot,
+            prompts: {},
+            elicitationRequired: false,
+            confirmationRequired: false
+          };
+          if (slot.elicitationPrompts) {
+            var elicitPromptId = "Elicit.Slot." + schema.prompts.length;
+            schema.prompts.push(
+              creatPrompt(elicitPromptId, slot.elicitationPrompts)
+            );
+            dialogIntentSlot.elicitationRequired = true;
+            dialogIntentSlot.prompts.elicitation = elicitPromptId;
+            }
+          if (slot.confirmationPrompts) {
+            var confirmPromptId = "Confirm.Slot." + schema.prompts.length;
+            schema.prompts.push(
+              creatPrompt(confirmPromptId, slot.confirmationPrompts)
+            );
+            dialogIntentSlot.confirmationRequired = true;
+            dialogIntentSlot.prompts.confirmation = confirmPromptId;
+          }
+
+          intentSchema.slots.push(dialogIntentSlot);
+        }
+      }
+      schema.dialog.intents.push(intentSchema);
+    }
+
+    return schema;
   };
 
   // extract the schema and generate a schema JSON object
