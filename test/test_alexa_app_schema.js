@@ -687,17 +687,28 @@ describe("Alexa", function() {
           testApp.intent("testIntentTwo", {
             "slots": {
               "MyCustomSlotType": "CUSTOMTYPE",
-              "Tubular": "AMAZON.LITERAL",
-              "Radical": "AMAZON.US_STATE"
+              "Tubular": {
+                "type":"AMAZON.LITERAL",
+                "samples":["{Tubular}"],
+                "elicitationPrompts": ["which tubular do you use ?"],
+                "confirmationPrompts": ["{Tubular} are you sure ?"]
+              },
+              "Radical": "AMAZON.US_STATE",
             },
           });
 
           testApp.intent("testIntent", {
             "slots": {
               "AirportCode": "FAACODES",
-              "Awesome": "AMAZON.DATE",
+              "Awesome": {
+                "type":"AMAZON.DATE",
+                "samples":["I like to do awesome things on {Awesome}", "{Awesome}"],
+                "elicitationPrompts": ["When do you do awesome things ?"],
+                "confirmationPrompts": ["I never though you could do awesome things that date of :{Awesome} ! Are you sure ?"]
+              },
               "Tubular": "AMAZON.LITERAL"
             },
+            prompts: ['are you sure about {AirportCode} and {Tubular} ?']
           });
         });
 
@@ -726,11 +737,15 @@ describe("Alexa", function() {
                         "type": "CUSTOMTYPE",
                       },
                       {
-                        "confirmationRequired": false,
-                        "elicitationRequired": false,
+                        "confirmationRequired": true,
+                        "elicitationRequired": true,
                         "name": "Tubular",
-                        "prompts": {},
+                        "prompts": {
+                          "confirmation": "Confirm.Slot.1",
+                          "elicitation": "Elicit.Slot.0",
+                        },
                         "type": "AMAZON.LITERAL",
+
                       },
                       {
                         "confirmationRequired": false,
@@ -742,9 +757,9 @@ describe("Alexa", function() {
                     ]
                   },
                   {
-                    "confirmationRequired": false,
+                    "confirmationRequired": true,
                     "name": "testIntent",
-                    "prompts": {},
+                    "prompts": { "confirmation": "Confirm.Intent.2" },
                     "slots": [
                       {
                         "confirmationRequired": false,
@@ -754,10 +769,13 @@ describe("Alexa", function() {
                         "type": "FAACODES",
                       },
                       {
-                        "confirmationRequired": false,
-                        "elicitationRequired": false,
+                        "confirmationRequired": true,
+                        "elicitationRequired": true,
                         "name": "Awesome",
-                        "prompts": {},
+                        "prompts": {
+                          "confirmation": "Confirm.Slot.4",
+                          "elicitation": "Elicit.Slot.3",
+                        },
                         "type": "AMAZON.DATE",
                       },
                       {
@@ -786,7 +804,9 @@ describe("Alexa", function() {
                   }, {
                     "name": "Tubular",
                     "type": "AMAZON.LITERAL",
-                    "samples": []
+                    "samples": [
+                      "{Tubular}"
+                    ],
                   }, {
                     "name": "Radical",
                     "type": "AMAZON.US_STATE",
@@ -802,7 +822,10 @@ describe("Alexa", function() {
                   }, {
                     "name": "Awesome",
                     "type": "AMAZON.DATE",
-                    "samples": []
+                    "samples": [
+                      "I like to do awesome things on {Awesome}",
+                      "{Awesome}",
+                    ],
                   }, {
                     "name": "Tubular",
                     "type": "AMAZON.LITERAL",
@@ -811,7 +834,55 @@ describe("Alexa", function() {
                 }],
                 "types": []
               },
-              "prompts": []
+              "prompts": [
+                {
+                  "id": "Elicit.Slot.0",
+                  "variations": [
+                    {
+                      "type": "SSML",
+                      "value": "<speak>which tubular do you use ?</speak>",
+                    }
+                  ]
+                },
+                {
+                  "id": "Confirm.Slot.1",
+                  "variations": [
+                    {
+                      "type": "SSML",
+                      "value": "<speak>{Tubular} are you sure ?</speak>",
+                    }
+                  ]
+                },
+                {
+                  "id": "Confirm.Intent.2",
+                  "variations": [
+                    {
+                      "type": "SSML",
+                      "value": "<speak>are you sure about {AirportCode} and {Tubular} ?</speak>"
+                    }
+                  ]
+                },
+                {
+                  "id": "Elicit.Slot.3",
+                  "variations": [
+                    {
+                      "type": "SSML",
+                      "value": "<speak>When do you do awesome things ?</speak>",
+                    }
+                  ]
+                },
+                {
+                  "id": "Confirm.Slot.4",
+                  "variations": [
+                    {
+                      "type": "SSML",
+                      "value": "<speak>I never though you could do awesome things that date of :{Awesome} ! Are you sure ?</speak>",
+                    }
+                  ]
+                }
+              ]
+
+
             }
           });
         });
