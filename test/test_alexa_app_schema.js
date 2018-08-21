@@ -46,24 +46,30 @@ describe("Alexa", function() {
             "intent": "testIntentTwo",
             "slots": [{
               "name": "MyCustomSlotType",
+              "samples": [],
               "type": "CUSTOMTYPE"
             }, {
               "name": "Tubular",
+              "samples": [],
               "type": "AMAZON.LITERAL"
             }, {
               "name": "Radical",
+              "samples": [],
               "type": "AMAZON.US_STATE"
             }]
           }, {
             "intent": "testIntent",
             "slots": [{
               "name": "AirportCode",
+              "samples": [],
               "type": "FAACODES"
             }, {
               "name": "Awesome",
+              "samples": [],
               "type": "AMAZON.DATE"
             }, {
               "name": "Tubular",
+              "samples": [],
               "type": "AMAZON.LITERAL"
             }]
           }]
@@ -122,12 +128,15 @@ describe("Alexa", function() {
               "intent": "testIntent",
               "slots": [{
                 "name": "MyCustomSlotType",
+                "samples": [],
                 "type": "CUSTOMTYPE"
               }, {
                 "name": "Tubular",
+                "samples": [],
                 "type": "AMAZON.LITERAL"
               }, {
                 "name": "Radical",
+                "samples": [],
                 "type": "AMAZON.US_STATE"
               }]
             }]
@@ -165,24 +174,30 @@ describe("Alexa", function() {
               "intent": "testIntentTwo",
               "slots": [{
                 "name": "MyCustomSlotType",
+                "samples": [],
                 "type": "CUSTOMTYPE"
               }, {
                 "name": "Tubular",
+                "samples": [],
                 "type": "AMAZON.LITERAL"
               }, {
                 "name": "Radical",
+                "samples": [],
                 "type": "AMAZON.US_STATE"
               }]
             }, {
               "intent": "testIntent",
               "slots": [{
                 "name": "AirportCode",
+                "samples": [],
                 "type": "FAACODES"
               }, {
                 "name": "Awesome",
+                "samples": [],
                 "type": "AMAZON.DATE"
               }, {
                 "name": "Tubular",
+                "samples": [],
                 "type": "AMAZON.LITERAL"
               }]
             }]
@@ -441,11 +456,15 @@ describe("Alexa", function() {
             var subject = JSON.parse(testApp.schemas.askcli());
             expect(subject).to.eql({
               "interactionModel": {
+                "dialog": {
+                  "intents": []
+                },
                 "languageModel": {
                   "invocationName": "testApp",
                   "intents": [],
                   "types": []
-                }
+                },
+                "prompts": []
               }
             });
           })
@@ -460,11 +479,15 @@ describe("Alexa", function() {
             var subject = JSON.parse(testApp.schemas.askcli());
             expect(subject).to.eql({
               "interactionModel": {
+                "dialog": {
+                  "intents": []
+                },
                 "languageModel": {
                   "invocationName": "my cool skill",
                   "intents": [],
                   "types": []
-                }
+                },
+                "prompts": []
               }
             });
           })
@@ -474,11 +497,15 @@ describe("Alexa", function() {
               var subject = JSON.parse(testApp.schemas.askcli("my okay skill"));
               expect(subject).to.eql({
                 "interactionModel": {
+                  "dialog": {
+                    "intents": []
+                  },
                   "languageModel": {
                     "invocationName": "my okay skill",
                     "intents": [],
                     "types": []
-                  }
+                  },
+                  "prompts": []
                 }
               });
             })
@@ -494,6 +521,16 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                "intents": [
+                  {
+                    "confirmationRequired": false,
+                    "name": "AMAZON.PauseIntent",
+                    "prompts": {},
+                    "slots": [],
+                  }
+                ]
+              },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [{
@@ -501,7 +538,8 @@ describe("Alexa", function() {
                   "samples": []
                 }],
                 "types": []
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -518,6 +556,16 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                 "intents": [
+                   {
+                     "confirmationRequired": false,
+                     "name": "AMAZON.PauseIntent",
+                     "prompts": {},
+                     "slots": []
+                   }
+                 ]
+               },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [{
@@ -525,7 +573,8 @@ describe("Alexa", function() {
                   "samples": []
                 }],
                 "types": []
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -545,6 +594,31 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                "intents": [
+                   {
+                    "confirmationRequired": false,
+                    "name": "testIntent",
+                    "prompts": {},
+                    "slots": [
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Tubular",
+                        "prompts": {},
+                        "type": "AMAZON.LITERAL"
+                      },
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Radical",
+                        "prompts": {},
+                        "type": "AMAZON.US_STATE"
+                      }
+                    ]
+                  }
+                ]
+              },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [{
@@ -561,7 +635,8 @@ describe("Alexa", function() {
                   }]
                 }],
                 "types": []
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -578,6 +653,16 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                "intents": [
+                  {
+                    "confirmationRequired": false,
+                    "name": "testIntent",
+                    "prompts": {},
+                    "slots": []
+                  }
+                ]
+              },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [{
@@ -588,7 +673,8 @@ describe("Alexa", function() {
                   ]
                 }],
                 "types": []
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -619,6 +705,72 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                "intents": [
+                  {
+                    "confirmationRequired": false,
+                    "name": "AMAZON.PauseIntent",
+                    "prompts": {},
+                    "slots": [],
+                  },
+                  {
+                    "confirmationRequired": false,
+                    "name": "testIntentTwo",
+                    "prompts": {},
+                    "slots": [
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "MyCustomSlotType",
+                        "prompts": {},
+                        "type": "CUSTOMTYPE",
+                      },
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Tubular",
+                        "prompts": {},
+                        "type": "AMAZON.LITERAL",
+                      },
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Radical",
+                        "prompts": {},
+                        "type": "AMAZON.US_STATE",
+                      }
+                    ]
+                  },
+                  {
+                    "confirmationRequired": false,
+                    "name": "testIntent",
+                    "prompts": {},
+                    "slots": [
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "AirportCode",
+                        "prompts": {},
+                        "type": "FAACODES",
+                      },
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Awesome",
+                        "prompts": {},
+                        "type": "AMAZON.DATE",
+                      },
+                      {
+                        "confirmationRequired": false,
+                        "elicitationRequired": false,
+                        "name": "Tubular",
+                        "prompts": {},
+                        "type": "AMAZON.LITERAL",
+                      }
+                    ]
+                  }
+                ]
+              },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [{
@@ -658,7 +810,8 @@ describe("Alexa", function() {
                   }]
                 }],
                 "types": []
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -679,6 +832,9 @@ describe("Alexa", function() {
           var subject = JSON.parse(testApp.schemas.askcli());
           expect(subject).to.eql({
             "interactionModel": {
+              "dialog": {
+                "intents": []
+              },
               "languageModel": {
                 "invocationName": "testApp",
                 "intents": [],
@@ -698,7 +854,8 @@ describe("Alexa", function() {
                     }
                   }]
                 }]
-              }
+              },
+              "prompts": []
             }
           });
         });
@@ -719,6 +876,9 @@ describe("Alexa", function() {
             var subject = JSON.parse(testApp.schemas.askcli());
             expect(subject).to.eql({
               "interactionModel": {
+                "dialog": {
+                  "intents": []
+                },
                 "languageModel": {
                   "invocationName": "testApp",
                   "intents": [],
@@ -753,7 +913,8 @@ describe("Alexa", function() {
                       }
                     }]
                   }]
-                }
+                },
+                "prompts": []
               }
             });
           });
