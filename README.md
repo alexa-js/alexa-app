@@ -622,16 +622,27 @@ The alexa-app module makes it easy to define your intent schema and generate man
 ### Schema Syntax
 
 Pass an object with two properties: slots and utterances.
+A third (optional) property : prompts. To confirm intent on alexa side with dialog delegate.
+slot prompts and intents prompts are working only with askcli command.
 
 ```javascript
 app.intent("sampleIntent", {
     "slots": {
       "NAME": "AMAZON.US_FIRST_NAME",
-      "AGE": "AMAZON.NUMBER"
+      "AGE": "AMAZON.NUMBER",
+      "CITY": {
+         "type": "AMAZON.US_CITY",
+         "samples": ['I live in {CITY}', '{CITY}'],
+         "elicitationPrompts": [
+          "Oh I forgot to ask you, in which city do you live ?",
+         ],
+         "confirmationPrompts": ['Ok so you live in {CITY} right ?'],
+      }
     },
     "utterances": [
       "my {name is|name's} {NAME} and {I am|I'm} {-|AGE}{ years old|}"
-    ]
+    ],
+    "prompts": ['Ok do you confirm your name is {NAME}, your age is {AGE} and that you live in {CITY} ?'],
   },
   function(request, response) { ... }
 );
@@ -747,7 +758,7 @@ WhatsMyColorIntent tell me what my favorite color is
 
 #### Skill Builder Syntax
 
-If you are using the Skill Builder Beta, the `schemas.skillBuilder()` function will generate a single schema JSON string
+If you are using the Skill Builder Beta, the `schemas.skillBuilder()` function will generate a single schema JSON string
 that includes your intents with all of their utterances
 
 ```javascript
