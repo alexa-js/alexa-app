@@ -688,8 +688,8 @@ describe("Alexa", function() {
             "slots": {
               "MyCustomSlotType": "CUSTOMTYPE",
               "Tubular": {
-                "type":"AMAZON.LITERAL",
-                "samples":["{Tubular}"],
+                "type": "AMAZON.LITERAL",
+                "samples": ["{-|Tubular}"],
                 "elicitationPrompts": ["which tubular do you use ?"],
                 "confirmationPrompts": ["{Tubular} are you sure ?"]
               },
@@ -702,7 +702,7 @@ describe("Alexa", function() {
               "AirportCode": "FAACODES",
               "Awesome": {
                 "type":"AMAZON.DATE",
-                "samples":["I like to do awesome things on {Awesome}", "{Awesome}"],
+                "samples":["I {like to|} do awesome {things|stuff} on {-|Awesome}", "{-|Awesome}"],
                 "elicitationPrompts": ["When do you do awesome things ?"],
                 "confirmationPrompts": ["I never though you could do awesome things that date of :{Awesome} ! Are you sure ?"]
               },
@@ -824,6 +824,9 @@ describe("Alexa", function() {
                     "type": "AMAZON.DATE",
                     "samples": [
                       "I like to do awesome things on {Awesome}",
+                      "I  do awesome things on {Awesome}",
+                      "I like to do awesome stuff on {Awesome}",
+                      "I  do awesome stuff on {Awesome}",
                       "{Awesome}",
                     ],
                   }, {
