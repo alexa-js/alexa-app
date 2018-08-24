@@ -632,10 +632,10 @@ app.intent("sampleIntent", {
       "AGE": "AMAZON.NUMBER",
       "CITY": {
          "type": "AMAZON.US_CITY",
-         "samples": ['I live in {CITY}', '{CITY}'],
          "elicitationPrompts": [
           "Oh I forgot to ask you, in which city do you live ?",
          ],
+         "samples": ['I live in {-|CITY}', '{in|at|near|} {-|CITY}'],
          "confirmationPrompts": ['Ok so you live in {CITY} right ?'],
       }
     },
