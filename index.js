@@ -598,6 +598,8 @@ alexa.app = function(name) {
             if (typeof self.sessionEndedFunc == "function") {
               return Promise.resolve(self.sessionEndedFunc(request, response));
             }
+          } else if (requestType && requestType.indexOf('Connections') > -1) {
+            return Promise.resolve(request, response);
           } else if (request.isAudioPlayer()) {
             var event = requestType.slice(12);
             var eventHandlerObject = self.audioPlayerEventHandlers[event];

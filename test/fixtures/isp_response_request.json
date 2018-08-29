@@ -1,0 +1,47 @@
+{
+    "version": "1.0",
+    "session": {
+        "new": true,
+        "sessionId": "amzn1.echo-api.session.24906e7a",
+        "application": {
+            "applicationId": "amzn1.echo-sdk-ams.app"
+        },
+        "user": {
+            "userId": "amzn1.account.NT9g5kxVQ3mD"
+        },
+        "userId": "amzn1.ask.account.AEDTMWV52B65G2UOMKM",
+        "accessToken": null
+    },
+    "context": {
+        "System": {
+            "application": {
+                "applicationId": "amzn1.echo-sdk-ams.app"
+            },
+            "user": {
+                "userId": "amzn1.account.NT9g5kxVQ3mD"
+            },
+            "device": {
+                "deviceId": "amzn1.ask.device.AHA27DPVSDUO",
+                "supportedInterfaces": {}
+            },
+            "apiEndpoint": "https://api.amazonalexa.com",
+            "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOi"
+        }
+    },
+    "request": {
+        "type": "Connections.Response",
+        "requestId": "amzn1.echo-api.request.da076865-b43a",
+        "timestamp": "2018-08-03T23:43:11Z",
+        "locale": "en-US",
+        "status": {
+            "code": "200",
+            "message": "OK"
+        },
+        "name": "Upsell",
+        "payload": {
+            "purchaseResult": "ACCEPTED",
+            "productId": "amzn1.adg.product.cbc70d06"
+        },
+        "token": "NOT_USED"
+    }
+}
