@@ -225,6 +225,10 @@ alexa.request = function(json) {
     }
     return this.data.request.type;
   };
+  this.isInSkillPurchase = function() {
+    var requestType = this.type();
+    return (requestType && 0 === requestType.indexOf("Connections."));
+  };
   this.isAudioPlayer = function() {
     var requestType = this.type();
     return (requestType && 0 === requestType.indexOf("AudioPlayer."));
@@ -598,6 +602,8 @@ alexa.app = function(name) {
             if (typeof self.sessionEndedFunc == "function") {
               return Promise.resolve(self.sessionEndedFunc(request, response));
             }
+          } else if (request.isInSkillPurchase()) {
+            return Promise.resolve(request, response);
           } else if (request.isAudioPlayer()) {
             var event = requestType.slice(12);
             var eventHandlerObject = self.audioPlayerEventHandlers[event];
