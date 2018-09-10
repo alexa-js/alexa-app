@@ -201,7 +201,7 @@ export class response {
 
   /**
    * Tells Alexa to re-prompt the user for a response, if it didn't hear anything valid.
-   * Multiple calls to say() will be appended to each other.
+   * Multiple calls to reprompt() will be appended to each other.
    */
   reprompt: (phrase: string) => response;
 
