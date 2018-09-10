@@ -297,6 +297,13 @@ var speechOutput = speech.ssml();
 response.say(speechOutput);
 ```
 
+Example using multiple reprompts. The reprompts are spoken to the user if they do not respond to the main prompt or say something that does not map to a defined intent:
+```javascript
+response.say('What is your request?')
+  .reprompt('Sorry, I didn\'t catch that.')
+  .reprompt('What is your request?');
+```
+
 ### session
 ```javascript
 // check if you can use session (read or write)

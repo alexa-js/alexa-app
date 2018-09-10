@@ -199,7 +199,10 @@ export class response {
   /** Empties the response text */
   clear: () => response;
 
-  /** Tells Alexa to re-prompt the user for a response, if it didn't hear anything valid */
+  /**
+   * Tells Alexa to re-prompt the user for a response, if it didn't hear anything valid.
+   * Multiple calls to reprompt() will be appended to each other.
+   */
   reprompt: (phrase: string) => response;
 
   /**
