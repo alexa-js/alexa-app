@@ -13,6 +13,7 @@
 * [#371](https://github.com/alexa-js/alexa-app/pull/371): Call response.prepare() after post() - [@fremail](https://github.com/fremail).
 * [#373](https://github.com/alexa-js/alexa-app/pull/373): Keep multiple newlines in card output - [@kielni](https://github.com/kielni) and [@fremail](https://github.com/fremail).
 * [#374](https://github.com/alexa-js/alexa-app/pull/374): Added Router - [@fremail](https://github.com/fremail).
+* Fixed security vulnerabilities indicated by "npm audit" and "snyk test" - [@marcelobern](https://github.com/marcelobern).
 
 ### 4.2.2 (April 7, 2018)
 
