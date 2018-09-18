@@ -48,7 +48,7 @@ alexa.response = function(session) {
       };
     } else {
       // append str to the current outputSpeech, stripping the out speak tag
-      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.text);
+      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.ssml);
     }
     return this;
   };
@@ -403,7 +403,7 @@ alexa.slot = function(slot) {
     return 'CONFIRMED' === this.confirmationStatus;
   };
   this.resolution = function(idx) {
-    idx = idx && idx < this.resolutions.length ? idx : 0;
+    idx = ( typeof idx === 'number' && idx >= 0 && idx < this.resolutions.length ) ? idx : 0;
     return this.resolutions[idx];
   };
 };
@@ -549,13 +549,22 @@ alexa.app = function(name) {
           synonyms: []
         };
       } else {
-        if (!value.id) {
-          value.id = null;
+        valueObj = {
+          value: value.value,
+          id: value.id || null,
+          synonyms: []
+        };
+        if (value.synonyms) {
+          value.synonyms.forEach(function(sample) {
+            var list = AlexaUtterances(sample,
+              null,
+              self.dictionary,
+              self.exhaustiveUtterances);
+            list.forEach(function(utterance) {
+              valueObj.synonyms.push(utterance);
+            });
+          });
         }
-        if (!value.synonyms) {
-          value.synonyms = [];
-        }
-        valueObj = value;
       }
       self.customSlots[slotName].push(valueObj);
     });
@@ -782,7 +791,7 @@ alexa.app = function(name) {
           "id": value.id,
           "name": {
             "value": value.value,
-            "synonyms": value.synonyms || []
+            "synonyms": value.synonyms
           }
         };
         slotSchema.values.push(valueSchema);
