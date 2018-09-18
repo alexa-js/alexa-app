@@ -48,7 +48,7 @@ alexa.response = function(session) {
       };
     } else {
       // append str to the current outputSpeech, stripping the out speak tag
-      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.ssml);
+      this.response.response.reprompt.outputSpeech.ssml = SSML.fromStr(str, this.response.response.reprompt.outputSpeech.text);
     }
     return this;
   };
@@ -186,7 +186,65 @@ alexa.response = function(session) {
     this.sessionObject.clear(key);
     return this;
   };
+
+  this.canFulfillIntent= function(slots){
+    this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response, slots);
+  }
+
+  this.canFulfill = function(canFulfill){
+    if(!this.canFulfillIntent){
+      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    }
+    this.canFulfillIntent.canFulfill(canFulfill);
+  }
+
+  this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){ 
+    if(!this.canFulfillIntent){
+      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    }
+    this.canFulfillIntent.canFulfillSlot(slotName,canUnderstand, canFulfill);  
+  }
+
 };
+
+alexa.canFulfillIntent = function (response, slots) {
+  //load alexa slots information from CanFulfillIntentRequest
+  //create default response
+  this.canFulfillIntent = {
+    "canFulfill": "NO",
+    "slots": {}
+  };
+  response.canFulfillIntent = this.canFulfillIntent;
+  if (slots) {
+    for (let slotName in slots) {
+      let slotValue = {
+        "canUnderstand": "NO",
+        "canFulfill": "NO"
+      };
+      this.canFulfillIntent.slots[slotName] = slotValue;
+    }
+  }
+
+  this.canFulfill = function(canFulfill){    
+    this.canFulfillIntent.canFulfill = canFulfill;
+  }
+
+  this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){  
+    if(this.canFulfillIntent.slots[slotName]){
+      let canFulfillSlot = this.canFulfillIntent.slots[slotName];
+      canFulfillSlot.canUnderstand = canUnderstand;
+      canFulfillSlot.canFulfill = canFulfill;
+    }
+    else{      
+      this.canFulfillIntent.slots[slotName] = {
+        "canUnderstand": canUnderstand,
+        "canFulfill": canFulfill
+      } 
+    }
+    
+  }
+
+}
 
 alexa.directives = function(directives) {
   // load the alexa response directives information into details
@@ -196,10 +254,14 @@ alexa.directives = function(directives) {
     this.details.push(directive);
   };
 
+
+
   this.clear = function() {
     this.details.length = 0;
   };
 };
+
+
 
 alexa.request = function(json) {
   this.data = json;
@@ -283,6 +345,13 @@ alexa.request = function(json) {
   this.session = function(key) {
     return this.getSession().get(key);
   };
+
+  this.getCanFulfillIntent = function () {
+    if (!(this.data && this.data.request && this.data.request.intent)) {      
+      return;
+    }
+    return this.data.request.intent;
+  }
 };
 
 alexa.dialog = function(dialogState) {
@@ -334,7 +403,7 @@ alexa.slot = function(slot) {
     return 'CONFIRMED' === this.confirmationStatus;
   };
   this.resolution = function(idx) {
-    idx = ( typeof idx === 'number' && idx >= 0 && idx < this.resolutions.length ) ? idx : 0;
+    idx = idx && idx < this.resolutions.length ? idx : 0;
     return this.resolutions[idx];
   };
 };
@@ -480,22 +549,13 @@ alexa.app = function(name) {
           synonyms: []
         };
       } else {
-        valueObj = {
-          value: value.value,
-          id: value.id || null,
-          synonyms: []
-        };
-        if (value.synonyms) {
-          value.synonyms.forEach(function(sample) {
-            var list = AlexaUtterances(sample,
-              null,
-              self.dictionary,
-              self.exhaustiveUtterances);
-            list.forEach(function(utterance) {
-              valueObj.synonyms.push(utterance);
-            });
-          });
+        if (!value.id) {
+          value.id = null;
         }
+        if (!value.synonyms) {
+          value.synonyms = [];
+        }
+        valueObj = value;
       }
       self.customSlots[slotName].push(valueObj);
     });
@@ -526,6 +586,10 @@ alexa.app = function(name) {
   this.sessionEndedFunc = null;
   this.sessionEnded = function(func) {
     self.sessionEndedFunc = func;
+  };
+  this.canFulfillIntentFunc = null;
+  this.canFulfillIntent = function(func) {
+    self.canFulfillIntentFunc = func;
   };
   this.request = function(request_json) {
     var request = new alexa.request(request_json);
@@ -616,7 +680,17 @@ alexa.app = function(name) {
             } else {
               throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
             }
-          } else if (typeof self.requestHandlers[requestType] === "function") {
+          }  else if ("CanFulfillIntentRequest" === requestType) {
+            if (typeof self.canFulfillIntentFunc === "function") {
+              let reqIntent = request.getCanFulfillIntent();
+              if(reqIntent){
+                response.canFulfillIntent(reqIntent.slots);
+              }
+              return Promise.resolve(self.canFulfillIntentFunc(request, response));
+            } else {
+              throw "NO_CAN_FULFILL_FUNCTION";
+            }
+          }else if (typeof self.requestHandlers[requestType] === "function") {
             return Promise.resolve(self.requestHandlers[requestType](request, response, request_json));
           } else {
             throw "INVALID_REQUEST_TYPE";
@@ -708,7 +782,7 @@ alexa.app = function(name) {
           "id": value.id,
           "name": {
             "value": value.value,
-            "synonyms": value.synonyms
+            "synonyms": value.synonyms || []
           }
         };
         slotSchema.values.push(valueSchema);
