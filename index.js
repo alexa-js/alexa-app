@@ -313,7 +313,9 @@ alexa.request = function(json) {
   this.context = null;
 
   if (this.data.context) {
-    this.userId = this.data.context.System.user.userId;
+    if(this.data.context.System && this.data.context.System.user){
+      this.userId = this.data.context.System.user.userId;
+    }
     this.applicationId = this.data.context.System.application.applicationId;
     this.context = this.data.context;
   }
@@ -456,9 +458,13 @@ alexa.session = function(session) {
     // load the alexa session information into details
     this.details = session;
     // @deprecated
-    this.details.userId = this.details.user.userId || null;
-    // @deprecated
-    this.details.accessToken = this.details.user.accessToken || null;
+    this.details.userId = null;
+    this.details.accessToken = null
+    if(this.details.user){
+      this.details.userId = this.details.user.userId || null;
+      this.details.accessToken = this.details.user.accessToken || null;
+    }
+  
 
     // persist all the session attributes across requests
     // the Alexa API doesn't think session variables should persist for the entire
