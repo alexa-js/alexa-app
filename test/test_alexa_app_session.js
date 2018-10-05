@@ -572,5 +572,31 @@ describe("Alexa", function() {
         ]);
       });
     });
+
+    describe("update session in post()", function() {
+      var mockRequest = mockHelper.load("intent_request_malformed_session.json");
+
+      it("responds with updated session object", function() {
+        testApp.pre = function(req) {
+          if (req.hasSession()) {
+            req.getSession().set("foo", "bar");
+          }
+        };
+        testApp.post = function(req) {
+          if (req.hasSession()) {
+            req.getSession().set("foo", "big_bar");
+          }
+        };
+        var subject = testApp.request(mockRequest).then(function(response) {
+          return response.sessionAttributes;
+        });
+
+        return Promise.all([
+          expect(subject).to.eventually.become({
+            "foo": "big_bar"
+          })
+        ]);
+      });
+    });
   });
 });
