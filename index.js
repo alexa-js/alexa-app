@@ -543,6 +543,7 @@ alexa.app = function(name) {
         postPromise = Promise.resolve(self.post(request, response, requestType, exception));
       }
       return postPromise.then(function() {
+        response.prepare();
         if (!response.resolved) {
           response.resolved = true;
         }
@@ -557,6 +558,7 @@ alexa.app = function(name) {
         postPromise = Promise.resolve(self.post(request, response, requestType, exception));
       }
       return postPromise.then(function() {
+        response.prepare();
         if (!response.resolved) {
           response.resolved = true;
           throw msg;
