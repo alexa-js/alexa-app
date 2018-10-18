@@ -469,6 +469,19 @@ app.displayElementSelected(function(request, response) {
 })
 ```
 
+### canFulfillIntent
+
+Define the handler for canFulfillIntent used for skill discovery
+(https://developer.amazon.com/docs/custom-skills/implement-canfulfillintentrequest-for-name-free-interaction.html).
+
+```javascript
+app.displayElementSelected(function(request, response) {
+  // The request object will return CanFulfillIntent object 
+  handleRequestForCanFulfillIntent(request.getCanFulfillIntent());
+})
+
+```
+
 ### SessionEndRequest
 
 ```javascript
