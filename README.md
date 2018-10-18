@@ -22,7 +22,7 @@
     * [Display.ElementSelected](#display-element-selected)
     * [AudioPlayer Event Request](#audioplayer-event-request)
     * [PlaybackController Event Request](#playbackcontroller-event-request)
-    * [CanFulfillIntent Request](#CanFulfillIntent)
+    * [CanFulfillIntent Request](#canfulfillintent)
     * [Other Event Request](#other-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
     * [pre()](#pre)
