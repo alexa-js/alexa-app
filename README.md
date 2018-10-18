@@ -471,7 +471,7 @@ app.displayElementSelected(function(request, response) {
 
 ### canFulfillIntent
 
-Define the handler for canFulfillIntent used for skill discovery
+Define the handler for canFulfillIntent used for skill discovery [Implementation instructions]
 (https://developer.amazon.com/docs/custom-skills/implement-canfulfillintentrequest-for-name-free-interaction.html).
 
 ```javascript
