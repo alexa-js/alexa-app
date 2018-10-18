@@ -72,6 +72,9 @@ export class app {
   sessionEndedFunc?: RequestHandler;
   sessionEnded: (func: RequestHandler) => void;
 
+  canFulfillIntentFunc?: RequestHandler;
+  canFulfillIntent: (func: RequestHandler) => void;
+
   displayElementSelectedFunc?: RequestHandler;
   displayElementSelected: (func: RequestHandler) => void;
 
@@ -183,6 +186,11 @@ export class request {
 
   /** @deprecated */
   session: (key: string) => any;
+
+  /** Returns the request CanFulfillIntent */
+  getCanFulfillIntent: () => object;
+  
+ 
 }
 
 export class response {
@@ -272,6 +280,12 @@ export class response {
 
   /** @deprecated */
   clearSession: (key?: string) => response;
+
+  canFulfillIntent: (slots?: any) => response;
+
+  canFulfill: (canFulfill: string) => response;
+
+  canFulfillSlot: (slotName: string,canUnderstand: string, canFulfill: string) => response;
 }
 
 // TODO: This is an Amazon-provided interface, but is more of a cluster of a half-dozen different interfaces with no documented parent interface. These are the methods/properties we're actually using.
@@ -413,4 +427,11 @@ export interface CustomSlot {
 export interface PlaybackController {
   name: string;
   function: RequestHandler;
+}
+
+export class canFulfillIntent {
+  canFulfillIntent: object;
+
+  canFulfill: (canFulfill: string) => void;
+  canFulfillSlot: (slotName: string ,canUnderstand: string , canFulfill: string) => void;
 }
