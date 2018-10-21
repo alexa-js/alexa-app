@@ -186,6 +186,65 @@ alexa.response = function(session) {
     this.sessionObject.clear(key);
     return this;
   };
+
+  this.canFulfillIntent= function(slots){
+    this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response, slots);
+    return this;
+  };
+
+  this.canFulfill = function(canFulfill){
+    if(!this.canFulfillIntent){
+      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    }
+    this.canFulfillIntent.canFulfill(canFulfill);
+    return this;
+  };
+
+  this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){ 
+    if(!this.canFulfillIntent){
+      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    }
+    this.canFulfillIntent.canFulfillSlot(slotName,canUnderstand, canFulfill); 
+    return this; 
+  };
+};
+
+alexa.canFulfillIntent = function (response, slots) {
+  //load alexa slots information from CanFulfillIntentRequest
+  //create default response
+  this.canFulfillIntent = {
+    "canFulfill": "NO",
+    "slots": {}
+  };
+
+  response.canFulfillIntent = this.canFulfillIntent;
+  if (slots) {
+    for (let slotName in slots) {
+      let slotValue = {
+        "canUnderstand": "NO",
+        "canFulfill": "NO"
+      };
+      this.canFulfillIntent.slots[slotName] = slotValue;
+    }
+  }
+
+  this.canFulfill = function(canFulfill){    
+    this.canFulfillIntent.canFulfill = canFulfill;
+  };
+
+  this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){  
+    if(this.canFulfillIntent.slots[slotName]){
+      let canFulfillSlot = this.canFulfillIntent.slots[slotName];
+      canFulfillSlot.canUnderstand = canUnderstand;
+      canFulfillSlot.canFulfill = canFulfill;
+    }
+    else{      
+      this.canFulfillIntent.slots[slotName] = {
+        "canUnderstand": canUnderstand,
+        "canFulfill": canFulfill
+      }; 
+    }    
+  };
 };
 
 alexa.directives = function(directives) {
@@ -196,10 +255,14 @@ alexa.directives = function(directives) {
     this.details.push(directive);
   };
 
+
+
   this.clear = function() {
     this.details.length = 0;
   };
 };
+
+
 
 alexa.request = function(json) {
   this.data = json;
@@ -251,7 +314,9 @@ alexa.request = function(json) {
   this.context = null;
 
   if (this.data.context) {
-    this.userId = this.data.context.System.user.userId;
+    if(this.data.context.System && this.data.context.System.user){
+      this.userId = this.data.context.System.user.userId;
+    }
     this.applicationId = this.data.context.System.application.applicationId;
     this.context = this.data.context;
   }
@@ -282,6 +347,13 @@ alexa.request = function(json) {
   // @deprecated
   this.session = function(key) {
     return this.getSession().get(key);
+  };
+
+  this.getCanFulfillIntent = function () {
+    if (!(this.data && this.data.request && this.data.request.intent)) {      
+      return;
+    }
+    return this.data.request.intent;
   };
 };
 
@@ -387,9 +459,13 @@ alexa.session = function(session) {
     // load the alexa session information into details
     this.details = session;
     // @deprecated
-    this.details.userId = this.details.user.userId || null;
-    // @deprecated
-    this.details.accessToken = this.details.user.accessToken || null;
+    this.details.userId = null;
+    this.details.accessToken = null;
+    if(this.details.user){
+      this.details.userId = this.details.user.userId || null;
+      this.details.accessToken = this.details.user.accessToken || null;
+    }
+  
 
     // persist all the session attributes across requests
     // the Alexa API doesn't think session variables should persist for the entire
@@ -527,6 +603,10 @@ alexa.app = function(name) {
   this.sessionEnded = function(func) {
     self.sessionEndedFunc = func;
   };
+  this.canFulfillIntentFunc = null;
+  this.canFulfillIntent = function(func) {
+    self.canFulfillIntentFunc = func;
+  };
   this.request = function(request_json) {
     var request = new alexa.request(request_json);
     var response = new alexa.response(request.getSession());
@@ -543,7 +623,6 @@ alexa.app = function(name) {
         postPromise = Promise.resolve(self.post(request, response, requestType, exception));
       }
       return postPromise.then(function() {
-        response.prepare();
         if (!response.resolved) {
           response.resolved = true;
         }
@@ -558,7 +637,6 @@ alexa.app = function(name) {
         postPromise = Promise.resolve(self.post(request, response, requestType, exception));
       }
       return postPromise.then(function() {
-        response.prepare();
         if (!response.resolved) {
           response.resolved = true;
           throw msg;
@@ -618,7 +696,17 @@ alexa.app = function(name) {
             } else {
               throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
             }
-          } else if (typeof self.requestHandlers[requestType] === "function") {
+          }  else if ("CanFulfillIntentRequest" === requestType) {
+            if (typeof self.canFulfillIntentFunc === "function") {
+              let reqIntent = request.getCanFulfillIntent();
+              if(reqIntent){
+                response.canFulfillIntent(reqIntent.slots);
+              }
+              return Promise.resolve(self.canFulfillIntentFunc(request, response));
+            } else {
+              throw "NO_CAN_FULFILL_FUNCTION";
+            }
+          }else if (typeof self.requestHandlers[requestType] === "function") {
             return Promise.resolve(self.requestHandlers[requestType](request, response, request_json));
           } else {
             throw "INVALID_REQUEST_TYPE";
