@@ -2,6 +2,7 @@
 
 ### 4.2.3 (Next)
 
+* [#375](https://github.com/alexa-js/alexa-app/pull/375): Implement CanFulfillIntent requests - [@orlylev](https://github.com/orlylev).
 * [#344](https://github.com/alexa-js/alexa-app/pull/344): Add coveralls as a check for pull requests - [@kobim](https://github.com/kobim).
 * [#352](https://github.com/alexa-js/alexa-app/pull/352): Allow utterance expansion in custom slot type synonyms - [@daanzu](https://github.com/daanzu).
 * [#361](https://github.com/alexa-js/alexa-app/pull/361): Fix object reference for dialogState in in doc - [@Sephtenen](https://github.com/Sephtenen).
