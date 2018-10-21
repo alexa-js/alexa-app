@@ -190,7 +190,7 @@ alexa.response = function(session) {
   this.canFulfillIntent= function(slots){
     this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response, slots);
     return this;
-  }
+  };
 
   this.canFulfill = function(canFulfill){
     if(!this.canFulfillIntent){
@@ -198,7 +198,7 @@ alexa.response = function(session) {
     }
     this.canFulfillIntent.canFulfill(canFulfill);
     return this;
-  }
+  };
 
   this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){ 
     if(!this.canFulfillIntent){
@@ -206,8 +206,7 @@ alexa.response = function(session) {
     }
     this.canFulfillIntent.canFulfillSlot(slotName,canUnderstand, canFulfill); 
     return this; 
-  }
-
+  };
 };
 
 alexa.canFulfillIntent = function (response, slots) {
@@ -217,6 +216,7 @@ alexa.canFulfillIntent = function (response, slots) {
     "canFulfill": "NO",
     "slots": {}
   };
+
   response.canFulfillIntent = this.canFulfillIntent;
   if (slots) {
     for (let slotName in slots) {
@@ -226,11 +226,11 @@ alexa.canFulfillIntent = function (response, slots) {
       };
       this.canFulfillIntent.slots[slotName] = slotValue;
     }
-  }
+  };
 
   this.canFulfill = function(canFulfill){    
     this.canFulfillIntent.canFulfill = canFulfill;
-  }
+  };
 
   this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){  
     if(this.canFulfillIntent.slots[slotName]){
@@ -243,11 +243,9 @@ alexa.canFulfillIntent = function (response, slots) {
         "canUnderstand": canUnderstand,
         "canFulfill": canFulfill
       } 
-    }
-    
-  }
-
-}
+    }    
+  };
+};
 
 alexa.directives = function(directives) {
   // load the alexa response directives information into details
@@ -356,7 +354,7 @@ alexa.request = function(json) {
       return;
     }
     return this.data.request.intent;
-  }
+  };
 };
 
 alexa.dialog = function(dialogState) {
@@ -462,7 +460,7 @@ alexa.session = function(session) {
     this.details = session;
     // @deprecated
     this.details.userId = null;
-    this.details.accessToken = null
+    this.details.accessToken = null;
     if(this.details.user){
       this.details.userId = this.details.user.userId || null;
       this.details.accessToken = this.details.user.accessToken || null;
