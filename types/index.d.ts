@@ -189,8 +189,6 @@ export class request {
 
   /** Returns the request CanFulfillIntent */
   getCanFulfillIntent: () => object;
-  
- 
 }
 
 export class response {
@@ -285,7 +283,7 @@ export class response {
 
   canFulfill: (canFulfill: string) => response;
 
-  canFulfillSlot: (slotName: string,canUnderstand: string, canFulfill: string) => response;
+  canFulfillSlot: (slotName: string, canUnderstand: string, canFulfill: string) => response;
 }
 
 // TODO: This is an Amazon-provided interface, but is more of a cluster of a half-dozen different interfaces with no documented parent interface. These are the methods/properties we're actually using.
@@ -433,5 +431,5 @@ export class canFulfillIntent {
   canFulfillIntent: object;
 
   canFulfill: (canFulfill: string) => void;
-  canFulfillSlot: (slotName: string ,canUnderstand: string , canFulfill: string) => void;
+  canFulfillSlot: (slotName: string , canUnderstand: string , canFulfill: string) => void;
 }
