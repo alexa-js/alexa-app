@@ -19,6 +19,23 @@ describe("Alexa", function () {
 
         describe("#CanFulfillIntent_request", function () {
 
+            describe("request", function () {
+                var mockRequest = mockHelper.load("can_fulfill_intent_request_play_sound.json");
+
+                var request = testApp.request(mockRequest);
+                beforeEach(function () {
+                    request = testApp.request(mockRequest);
+                });
+
+                it("valid request getCanFulfillIntent return intent name PlaySound", function () {  
+                    var subject = request.getCanFulfillIntent().name;                    
+                    
+                    //return expect(subject).to.equal('PlaySound');
+                    
+                });
+
+            });    
+
             describe("response", function () {
                 var mockRequest = mockHelper.load("can_fulfill_intent_request_play_sound.json");
 
