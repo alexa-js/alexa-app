@@ -226,7 +226,7 @@ alexa.canFulfillIntent = function (response, slots) {
       };
       this.canFulfillIntent.slots[slotName] = slotValue;
     }
-  };
+  }
 
   this.canFulfill = function(canFulfill){    
     this.canFulfillIntent.canFulfill = canFulfill;
@@ -242,7 +242,7 @@ alexa.canFulfillIntent = function (response, slots) {
       this.canFulfillIntent.slots[slotName] = {
         "canUnderstand": canUnderstand,
         "canFulfill": canFulfill
-      } 
+      }; 
     }    
   };
 };
