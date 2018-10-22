@@ -119,7 +119,7 @@ describe("Alexa", function () {
                     return expect(subject).to.eventually.become('YES');
                 });
 
-                it("custom handler responds with default YES for slot Sound", function () {
+                it("custom handler responds with YES for slot Sound", function () {
                     testApp.pre = undefined;
                     testApp.post = undefined;
                     testApp.canFulfillIntent(function (req, res) {
@@ -133,6 +133,24 @@ describe("Alexa", function () {
                         "Sound": {
                             "canUnderstand": "YES",
                             "canFulfill": "YES"
+                        }
+                    });
+                });
+
+                it("custom handler responds with canUnderstand YES canFulfill No for slot Sound", function () {
+                    testApp.pre = undefined;
+                    testApp.post = undefined;
+                    testApp.canFulfillIntent(function (req, res) {
+                        res.canFulfillSlot("Sound","YES","NO");
+                    });
+
+                    var subject = request.then(function (response) {
+                        return response.response.canFulfillIntent.slots;
+                    });
+                    return expect(subject).to.eventually.become({
+                        "Sound": {
+                            "canUnderstand": "YES",
+                            "canFulfill": "NO"
                         }
                     });
                 });
