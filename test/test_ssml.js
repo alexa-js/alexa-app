@@ -161,6 +161,20 @@ describe('SSML', function() {
           return SSML.cleanse(input).should.equal(expectedOutput);
         });
 
+        it('should not truncate multiple line breaks', function() {
+          var input = 'First line\n\nSecond line';
+          var expectedOutput = 'First line\n\nSecond line';
+
+          return SSML.cleanse(input).should.equal(expectedOutput);
+        });
+
+        it('but should truncate whitespaces and tabs around line breaks', function() {
+          var input = 'First line \n\t \n Second line';
+          var expectedOutput = 'First line\n\nSecond line';
+
+          return SSML.cleanse(input).should.equal(expectedOutput);
+        });
+
       });
     });
   });
