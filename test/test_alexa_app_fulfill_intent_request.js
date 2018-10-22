@@ -43,6 +43,23 @@ describe("Alexa", function () {
                     
                 });
 
+                it("valid request getCanFulfillIntent return Sound slot", function () {  
+                    
+                    var handler = function (req, res){
+                        handler.result = req.getCanFulfillIntent().slots;
+                    };                   
+                    testApp.pre = undefined;
+                    testApp.post = undefined;
+                    testApp.canFulfillIntent(handler);
+
+                    var subject = request.then(function (response) {
+                        return handler.result.Sound;
+                    });
+                    return expect(subject).to.eventually.become({
+                        "name": "Sound",                        
+                        "value": "crickets"
+                    });                    
+                });
             });    
 
             describe("response", function () {
