@@ -28,9 +28,18 @@ describe("Alexa", function () {
                 });
 
                 it("valid request getCanFulfillIntent return intent name PlaySound", function () {  
-                    var subject = request.getCanFulfillIntent().name;                    
                     
-                    //return expect(subject).to.equal('PlaySound');
+                    var handler = function (req, res){
+                        handler.result = req.getCanFulfillIntent().name;
+                    };                   
+                    testApp.pre = undefined;
+                    testApp.post = undefined;
+                    testApp.canFulfillIntent(handler);
+
+                    var subject = request.then(function (response) {
+                        return handler.result;
+                    });
+                    return expect(subject).to.eventually.become('PlaySound');
                     
                 });
 
