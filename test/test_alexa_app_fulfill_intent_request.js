@@ -155,6 +155,46 @@ describe("Alexa", function () {
                     });
                 });
 
+                it("custom handler responds with canUnderstand No canFulfill Yes for slot Sound", function () {
+                    testApp.pre = undefined;
+                    testApp.post = undefined;
+                    testApp.canFulfillIntent(function (req, res) {
+                        res.canFulfillSlot("Sound","NO","YES");
+                    });
+
+                    var subject = request.then(function (response) {
+                        return response.response.canFulfillIntent.slots;
+                    });
+                    return expect(subject).to.eventually.become({
+                        "Sound": {
+                            "canUnderstand": "NO",
+                            "canFulfill": "YES"
+                        }
+                    });
+                });
+
+                it("custom handler responds with YES for new slot Play", function () {
+                    testApp.pre = undefined;
+                    testApp.post = undefined;
+                    testApp.canFulfillIntent(function (req, res) {
+                        res.canFulfillSlot("Play","YES","YES");
+                    });
+
+                    var subject = request.then(function (response) {
+                        return response.response.canFulfillIntent.slots;
+                    });
+                    return expect(subject).to.eventually.become({
+                        "Sound": {
+                            "canUnderstand": "NO",
+                            "canFulfill": "NO"
+                        },
+                        "Play": {
+                            "canUnderstand": "YES",
+                            "canFulfill": "YES"
+                        }
+                    });
+                });
+
             });
         });
     });
