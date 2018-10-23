@@ -491,6 +491,11 @@ You can define handlers for the following events:
 * PlaybackNearlyFinished
 * PlaybackFailed
 
+> Please note: 
+> * `PlaybackStarted` and `PlaybackFinished` accept only `Stop` or `ClearQueue` directive in response.
+> * `PlaybackStopped` does not accept any response.
+> * `PlaybackNearlyFinished` and `PlaybackFailed` accept any AudioPlayer directive in response.
+
 Read more about AudioPlayer request types in [AudioPlayer Interface Doc](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-audioplayer-interface-reference#audioplayer-requests).
 
 The following example will return `play` directive with a next audio on `AudioPlayer.PlaybackNearlyFinished` request.
