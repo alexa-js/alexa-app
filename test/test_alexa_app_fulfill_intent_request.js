@@ -17,6 +17,27 @@ describe("Alexa", function () {
             testApp = new Alexa.app("testApp");
         });
 
+        describe("#CanFulfillIntent_regular_intent_request", function () {
+            var mockRequest = mockHelper.load("intent_request_airport_info.json");
+            var request = testApp.request(mockRequest);
+
+            it("valid regular intent request getCanFulfillIntent return undefined", function () {
+
+                var handler = function (req, res) {
+                    handler.result = req.getCanFulfillIntent();
+                };
+                testApp.pre = undefined;
+                testApp.post = undefined;
+                testApp.canFulfillIntent(handler);
+
+                var subject = request.then(function (response) {
+                    return handler.result;
+                });
+                return expect(subject).to.eventually.become(undefined);
+            });
+
+        });
+
         describe("#CanFulfillIntent_request", function () {
 
             describe("request", function () {
