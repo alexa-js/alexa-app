@@ -6,6 +6,8 @@
 * [#352](https://github.com/alexa-js/alexa-app/pull/352): Allow utterance expansion in custom slot type synonyms - [@daanzu](https://github.com/daanzu).
 * [#361](https://github.com/alexa-js/alexa-app/pull/361): Fix object reference for dialogState in in doc - [@Sephtenen](https://github.com/Sephtenen).
 * [#364](https://github.com/alexa-js/alexa-app/pull/364): Fix reprompt() to concatenate multiple SSML prompts - [@andrewjhunt](https://github.com/andrewjhunt).
+* [#371](https://github.com/alexa-js/alexa-app/pull/371): Call response.prepare() after post() - [@fremail](https://github.com/fremail).
+* [#373](https://github.com/alexa-js/alexa-app/pull/373): Keep multiple newlines in card output - [@kielni](https://github.com/kielni) and [@fremail](https://github.com/fremail).
 * [#378](https://github.com/alexa-js/alexa-app/pull/375): Implement CanFulfillIntent requests - [@orlylev](https://github.com/orlylev).
 * Your contribution here.
 
