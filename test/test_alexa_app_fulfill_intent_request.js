@@ -17,11 +17,11 @@ describe("Alexa", function () {
             testApp = new Alexa.app("testApp");
         });
 
-        describe("#CanFulfillIntent_regular_intent_request", function () {
-            var mockRequest = mockHelper.load("intent_request_airport_info.json");
-            var request = testApp.request(mockRequest);
+        describe("#CanFulfillIntent_not_valid_request", function () {            
 
             it("valid regular intent request getCanFulfillIntent return undefined", function () {
+                var mockRequest = mockHelper.load("intent_request_airport_info.json");
+                var request = testApp.request(mockRequest);
 
                 var handler = function (req, res) {
                     handler.result = req.getCanFulfillIntent();
@@ -36,6 +36,23 @@ describe("Alexa", function () {
                 return expect(subject).to.eventually.become(undefined);
             });
 
+            it("valid request getCanFulfillIntent no intent return undefined", function () {                 
+                var mockRequest = mockHelper.load("can_fulfill_intent_request_no_intent.json");
+                var request = testApp.request(mockRequest);
+
+                var handler = function (req, res){
+                    handler.result = req.getCanFulfillIntent();
+                };                   
+                testApp.pre = undefined;
+                testApp.post = undefined;
+                testApp.canFulfillIntent(handler);
+
+                var subject = request.then(function (response) {
+                    return handler.result;
+                });
+                return expect(subject).to.eventually.become(undefined);                
+            });
+
         });
 
         describe("#CanFulfillIntent_request", function () {
@@ -46,7 +63,7 @@ describe("Alexa", function () {
                 var request = testApp.request(mockRequest);
                 beforeEach(function () {
                     request = testApp.request(mockRequest);
-                });
+                });                
 
                 it("valid request getCanFulfillIntent return intent name PlaySound", function () {  
                     
