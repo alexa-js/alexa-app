@@ -350,10 +350,9 @@ alexa.request = function(json) {
   };
 
   this.getCanFulfillIntent = function () {
-    if (!(this.data && this.data.request && this.data.request.intent)) {      
-      return;
-    }
-    return this.data.request.intent;
+    if (this.data && this.data.request && this.data.request.intent) {      
+      return this.data.request.intent;
+    }   
   };
 };
 
