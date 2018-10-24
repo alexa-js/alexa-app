@@ -188,23 +188,23 @@ alexa.response = function(session) {
   };
 
   this.canFulfillIntent= function(slots){
-    this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response, slots);
+    this.canFulfillIntentValue = new alexa.canFulfillIntent(self.response.response, slots);
     return this;
   };
 
   this.canFulfill = function(canFulfill){
-    if(!this.canFulfillIntent){
-      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    if(!this.canFulfillIntentValue){
+      this.canFulfillIntentValue = new alexa.canFulfillIntent(self.response.response);
     }
-    this.canFulfillIntent.canFulfill(canFulfill);
+    this.canFulfillIntentValue.canFulfill(canFulfill);
     return this;
   };
 
   this.canFulfillSlot = function(slotName,canUnderstand, canFulfill){ 
-    if(!this.canFulfillIntent){
-      this.canFulfillIntent = new alexa.canFulfillIntent(self.response.response);
+    if(!this.canFulfillIntentValue){
+      this.canFulfillIntentValue = new alexa.canFulfillIntent(self.response.response);
     }
-    this.canFulfillIntent.canFulfillSlot(slotName,canUnderstand, canFulfill); 
+    this.canFulfillIntentValue.canFulfillSlot(slotName,canUnderstand, canFulfill); 
     return this; 
   };
 };
