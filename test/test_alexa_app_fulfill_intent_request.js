@@ -36,7 +36,7 @@ describe("Alexa", function () {
                 return expect(subject).to.eventually.become(undefined);
             });
 
-            it("valid request getCanFulfillIntent no intent return undefined", function () {                 
+            it("valid regular request getCanFulfillIntent no intent return undefined", function () {                 
                 var mockRequest = mockHelper.load("can_fulfill_intent_request_no_intent.json");
                 var request = testApp.request(mockRequest);
 
@@ -51,6 +51,59 @@ describe("Alexa", function () {
                     return handler.result;
                 });
                 return expect(subject).to.eventually.become(undefined);                
+            });
+
+            it("valid regular request no intent response YES for canFulfill", function () {                 
+                var mockRequest = mockHelper.load("can_fulfill_intent_request_no_intent.json");
+                var request = testApp.request(mockRequest);
+
+                testApp.pre = undefined;
+                testApp.post = undefined;
+                testApp.canFulfillIntent(function (req, res) {
+                    res.canFulfill("YES");
+                });
+
+                var subject = request.then(function (response) {
+                    return response.response.canFulfillIntent.canFulfill;
+                });
+                return expect(subject).to.eventually.become('YES');            
+            });
+
+            it("valid regular request no intent response YES for canFulfill", function () {                 
+                var mockRequest = mockHelper.load("can_fulfill_intent_request_no_intent.json");
+                var request = testApp.request(mockRequest);
+
+                testApp.pre = undefined;
+                testApp.post = undefined;
+                testApp.canFulfillIntent(function (req, res) {
+                    res.canFulfill("YES");
+                });
+
+                var subject = request.then(function (response) {
+                    return response.response.canFulfillIntent.canFulfill;
+                });
+                return expect(subject).to.eventually.become('YES');            
+            });
+
+            it("valid regular request no intent response with YES for slot Sound", function () {
+                var mockRequest = mockHelper.load("can_fulfill_intent_request_no_intent.json");
+                var request = testApp.request(mockRequest);
+
+                testApp.pre = undefined;
+                testApp.post = undefined;
+                testApp.canFulfillIntent(function (req, res) {
+                    res.canFulfillSlot("Sound","YES","YES");
+                });
+
+                var subject = request.then(function (response) {
+                    return response.response.canFulfillIntent.slots;
+                });
+                return expect(subject).to.eventually.become({
+                    "Sound": {
+                        "canUnderstand": "YES",
+                        "canFulfill": "YES"
+                    }
+                });
             });
 
         });
@@ -97,7 +150,7 @@ describe("Alexa", function () {
                         "name": "Sound",                        
                         "value": "crickets"
                     });                    
-                });
+                });                
             });    
 
             describe("response", function () {
