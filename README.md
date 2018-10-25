@@ -22,6 +22,7 @@
     * [Display.ElementSelected](#display-element-selected)
     * [AudioPlayer Event Request](#audioplayer-event-request)
     * [PlaybackController Event Request](#playbackcontroller-event-request)
+    * [CanFulfillIntent Request](#canfulfillintent)
     * [Other Event Request](#other-event-request)
 * [Execute Code On Every Request](#execute-code-on-every-request)
     * [pre()](#pre)
@@ -468,7 +469,6 @@ app.displayElementSelected(function(request, response) {
   handleRequestForTouchEvent(request.selectedElementToken)
 })
 ```
-
 ### SessionEndRequest
 
 ```javascript
@@ -559,6 +559,28 @@ app.playbackController('NextCommandIssued', (request, response) => {
 ```
 
 Note that some device interactions don't always produce PlaybackController events. See the [PlaybackController Interface Introduction](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/custom-playbackcontroller-interface-reference#introduction) for more details.
+
+### CanFulfillIntent
+
+Define the handler for canFulfillIntent used for skill discovery.  For instance the [Implementation instructions](https://developer.amazon.com/docs/custom-skills/implement-canfulfillintentrequest-for-name-free-interaction.html).
+
+See detailed explanation on the Intent and Slot [logic](https://developer.amazon.com/docs/custom-skills/understand-name-free-interaction-for-custom-skills.html).
+
+
+```javascript
+app.displayElementSelected(function(request, response) {
+  // The request object will return CanFulfillIntent object 
+  let canFulfillIntent =  request.getCanFulfillIntent();
+  
+  //by default the response will include No for the intent and slots
+  //add your logic to determine if you can fulfill the intent and each slot
+
+  //in this example the response is Yes for the intent and for both slots 
+  response.canFulfill("YES");
+  response.canFulfillSlot("Sound","YES","YES");
+  response.canFulfillSlot("Another","YES","YES");
+});
+```
 
 ### Other Event Request
 

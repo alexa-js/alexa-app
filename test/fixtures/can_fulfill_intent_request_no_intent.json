@@ -1,0 +1,37 @@
+{
+    "version": "1.0",
+    "session": {
+      "new": false,
+      "sessionId": "amzn1.echo-api.session.abeee1a7-aee0-41e6-8192-e6faaed9f5ef",
+      "application": {
+        "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+      },
+      "attributes": {},
+      "user": {
+        "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+      }
+    },
+	"context": {
+		"System": {
+			"application": {
+				"applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+			},
+			"user": {
+				"userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2",
+				"accessToken": "ae312e92d87d7b4e7648b19a08f2966a831a59de"
+			},
+			"device": {
+				"deviceId": "amzn1.ask.device.123456789",
+				"supportedInterfaces": {}
+			},
+			"apiEndpoint": "https://api.amazonalexa.com",
+			"apiAccessToken": "123456789"
+		}
+	},	
+  "request": {
+    "type": "CanFulfillIntentRequest",
+    "requestId": "amzn1.echo-api.request.e510e005-c518-44c8-930d-746c84e787da",    
+    "locale": "en-US",
+    "timestamp": "2018-10-18T09:16:28Z"
+  }
+}
