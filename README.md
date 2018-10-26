@@ -15,6 +15,7 @@
     * [slot](#slot)
     * [slotResolution](#slotResolution)
     * [resolutionValue](#resolutionValue)
+    * [router](#router)
 * [Request Handlers](#request-handlers)
     * [LaunchRequest](#launchrequest)
     * [IntentRequest](#intentrequest)
@@ -186,6 +187,9 @@ Boolean request.hasSession()
 // return the session object
 Session request.getSession()
 
+// return the router object
+Router request.getRouter()
+
 // return the request context
 request.context
 
@@ -328,6 +332,34 @@ String session.get(String attributeName)
 session.details = { ... }
 ```
 
+### router
+```javascript
+// get router object
+// every method of the router returns a promise, so you can chain them or just return it back to alexa-app
+var router = request.getRouter()
+
+// route request to 'MySuperIntent' intent handler
+Promise router.intent('MySuperIntent')
+
+// route request to Launch handler
+Promise router.launch()
+
+// route request to session ended handler
+Promise router.sessionEnded()
+
+// route request to audio player handler
+Promise router.audioPlayer('PlaybackNearlyFinished')
+
+// route request to playback controller handler
+Promise router.playbackController('NextCommandIssued')
+
+// route request to display element selected handler
+Promise router.displayElementSelected()
+
+// route request to custom handler
+Promise router.custom('CrazyCustomEvent')
+```
+
 ### slot
 ```javascript
 // get the slot object
@@ -379,6 +411,8 @@ String resolutionValue.id
 ## Request Handlers
 
 Your app can define a single handler for the `Launch` event and the `SessionEnded` event, and multiple intent handlers.
+
+For switching intents, redirecting from one handler to other and other routing tasks you can use [router](#router).
 
 ### LaunchRequest
 

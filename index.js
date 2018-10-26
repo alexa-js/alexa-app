@@ -411,6 +411,58 @@ alexa.session = function(session) {
   };
 };
 
+alexa.router = function(app, request, response, request_json) {
+  this.intent = function(intent) {
+    if (typeof app.intents[intent] !== "undefined" && typeof app.intents[intent].handler === "function") {
+      if (app.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
+        return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
+      } else {
+        return Promise.resolve(app.intents[intent].handler(request, response));
+      }
+    } else {
+      throw "NO_INTENT_FOUND";
+    }
+  };
+  this.launch = function() {
+    if (typeof app.launchFunc === "function") {
+      return Promise.resolve(app.launchFunc(request, response));
+    } else {
+      throw "NO_LAUNCH_FUNCTION";
+    }
+  };
+  this.sessionEnded = function() {
+    if (typeof app.sessionEndedFunc === "function") {
+      return Promise.resolve(app.sessionEndedFunc(request, response));
+    }
+  };
+  this.audioPlayer = function(event) {
+    var eventHandlerObject = app.audioPlayerEventHandlers[event];
+    if (typeof eventHandlerObject !== "undefined" && typeof eventHandlerObject["function"] === "function") {
+      return Promise.resolve(eventHandlerObject["function"](request, response));
+    }
+  };
+  this.playbackController = function(event) {
+    var playbackEventHandlerObject = app.playbackControllerEventHandlers[event];
+    if (typeof playbackEventHandlerObject !== "undefined" && typeof playbackEventHandlerObject["function"] === "function") {
+      return Promise.resolve(playbackEventHandlerObject["function"](request, response));
+    }
+  };
+  this.displayElementSelected = function() {
+    if (typeof app.displayElementSelectedFunc === "function") {
+      return Promise.resolve(app.displayElementSelectedFunc(request, response));
+    } else {
+      throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
+    }
+  };
+  this.custom = function(requestType) {
+    if (typeof app.requestHandlers[requestType] === "function") {
+      return Promise.resolve(app.requestHandlers[requestType](request, response, request_json));
+    } else {
+      throw "NO_CUSTOM_REQUEST_HANDLER";
+    }
+  };
+};
+
 alexa.apps = {};
 
 alexa.app = function(name) {
@@ -429,6 +481,8 @@ alexa.app = function(name) {
     "NO_LAUNCH_FUNCTION": "Try telling the application what to do instead of opening it",
     // when a request type was not recognized
     "INVALID_REQUEST_TYPE": "Error: not a valid request",
+    // when a request was routed to custom handler, but no such handler was defined
+    "NO_CUSTOM_REQUEST_HANDLER": "Error: no custom request handler found",
     // when a request and response don't contain session object
     // https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/alexa-skills-kit-interface-reference#request-body-parameters
     "NO_SESSION": "This request doesn't support session attributes",
@@ -530,10 +584,14 @@ alexa.app = function(name) {
   this.request = function(request_json) {
     var request = new alexa.request(request_json);
     var response = new alexa.response(request.getSession());
+    var router = new alexa.router(self, request, response, request_json);
     var postExecuted = false;
     var requestType = request.type();
     var promiseChain = Promise.resolve();
 
+    request.getRouter = function() {
+      return router;
+    };
     // attach Promise resolve/reject functions to the response object
     response.send = function(exception) {
       response.prepare();
@@ -581,45 +639,21 @@ alexa.app = function(name) {
         if (!response.resolved) {
           if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
-            if (typeof self.intents[intent] !== "undefined" && typeof self.intents[intent].handler === "function") {
-              if (self.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
-                return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
-              } else {
-                return Promise.resolve(self.intents[intent].handler(request, response));
-              }
-            } else {
-              throw "NO_INTENT_FOUND";
-            }
+            return request.getRouter().intent(intent);
           } else if ("LaunchRequest" === requestType) {
-            if (typeof self.launchFunc == "function") {
-              return Promise.resolve(self.launchFunc(request, response));
-            } else {
-              throw "NO_LAUNCH_FUNCTION";
-            }
+            return request.getRouter().launch();
           } else if ("SessionEndedRequest" === requestType) {
-            if (typeof self.sessionEndedFunc == "function") {
-              return Promise.resolve(self.sessionEndedFunc(request, response));
-            }
+            return request.getRouter().sessionEnded();
           } else if (request.isAudioPlayer()) {
             var event = requestType.slice(12);
-            var eventHandlerObject = self.audioPlayerEventHandlers[event];
-            if (typeof eventHandlerObject != "undefined" && typeof eventHandlerObject["function"] == "function") {
-              return Promise.resolve(eventHandlerObject["function"](request, response));
-            }
+            return request.getRouter().audioPlayer(event);
           } else if (request.isPlaybackController()) {
             var playbackControllerEvent = requestType.slice(19);
-            var playbackEventHandlerObject = self.playbackControllerEventHandlers[playbackControllerEvent];
-            if (typeof playbackEventHandlerObject != "undefined" && typeof playbackEventHandlerObject["function"] == "function") {
-              return Promise.resolve(playbackEventHandlerObject["function"](request, response));
-            }
+            return request.getRouter().playbackController(playbackControllerEvent);
           } else if ("Display.ElementSelected" === requestType) {
-            if (typeof self.displayElementSelectedFunc === "function") {
-              return Promise.resolve(self.displayElementSelectedFunc(request, response));
-            } else {
-              throw "NO_DISPLAY_ELEMENT_SELECTED_FUNCTION";
-            }
+            return request.getRouter().displayElementSelected();
           } else if (typeof self.requestHandlers[requestType] === "function") {
-            return Promise.resolve(self.requestHandlers[requestType](request, response, request_json));
+            return request.getRouter().custom(requestType);
           } else {
             throw "INVALID_REQUEST_TYPE";
           }

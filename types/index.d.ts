@@ -183,6 +183,9 @@ export class request {
 
   /** @deprecated */
   session: (key: string) => any;
+
+  /** Returns router object to switch request to some intent, event handler, etc. */
+  getRouter: () => router;
 }
 
 export class response {
@@ -313,6 +316,18 @@ export class session {
   clear: (key?: string) => boolean;
 
   getAttributes: () => any;
+}
+
+export class router {
+  constructor(app: any, request: alexa.Request, response: alexa.Response, request_json: string)
+
+  intent: (intent: string) => Promise<response>;
+  launch: () => Promise<response>;
+  sessionEnded: () => Promise<response>;
+  audioPlayer: (event: string) => Promise<response>;
+  playbackController: (event: string) => Promise<response>;
+  displayElementSelected: () => Promise<response>;
+  custom: (requestType: string) => Promise<response>;
 }
 
 export class resolutionValue {
