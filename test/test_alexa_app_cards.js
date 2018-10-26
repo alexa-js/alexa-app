@@ -226,6 +226,29 @@ describe("Alexa", function() {
             });
 
           });
+
+          describe("intent handler with multi-line card", function() {
+            it("responds with a card keeping multi lines", function () {
+              var cardTitle = "Card title";
+              var cardContent = "This is my card!\n\nWith some content.";
+              testApp.intent("airportInfoIntent", {}, function (req, res) {
+                res.say(expectedMessage).card(cardTitle, cardContent);
+                return true;
+              });
+
+              var subject = testApp.request(mockRequest);
+              var cardResponse = subject.then(function (response) {
+                return response.response.card;
+              });
+              return Promise.all([
+                expect(cardResponse).to.eventually.become({
+                  "content": cardContent,
+                  "title": cardTitle,
+                  "type": "Simple",
+                }),
+              ]);
+            });
+          });
         });
       });
     });
