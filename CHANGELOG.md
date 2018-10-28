@@ -1,6 +1,6 @@
 ## Changelog
 
-### 4.2.3 (Next)
+### 4.2.3 (October 28, 2018)
 
 * [#344](https://github.com/alexa-js/alexa-app/pull/344): Add coveralls as a check for pull requests - [@kobim](https://github.com/kobim).
 * [#352](https://github.com/alexa-js/alexa-app/pull/352): Allow utterance expansion in custom slot type synonyms - [@daanzu](https://github.com/daanzu).
@@ -9,7 +9,6 @@
 * [#371](https://github.com/alexa-js/alexa-app/pull/371): Call response.prepare() after post() - [@fremail](https://github.com/fremail).
 * [#373](https://github.com/alexa-js/alexa-app/pull/373): Keep multiple newlines in card output - [@kielni](https://github.com/kielni) and [@fremail](https://github.com/fremail).
 * [#374](https://github.com/alexa-js/alexa-app/pull/374): Added Router - [@fremail](https://github.com/fremail).
-* Your contribution here.
 
 ### 4.2.2 (April 7, 2018)
 
