@@ -113,6 +113,20 @@ describe("Alexa", function() {
             })
           ]);
         });
+
+        it("appends a failure if no such custom request exists", function() {
+          testApp.intent("airportInfoIntent", {}, function (req, res) {
+            return req.getRouter().custom("sayHello");
+          });
+
+          var speech = testApp.request(mockRequest).then(function (response) {
+            return response.response.outputSpeech;
+          });
+          return expect(speech).to.eventually.become({
+            ssml: "<speak>" + testApp.messages.NO_CUSTOM_REQUEST_HANDLER + "</speak>",
+            type: "SSML"
+          });
+        });
       });
 
       context("route request to NextCommandIssued handler of playbackController through PlaybackNearlyFinished", function() {
