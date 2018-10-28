@@ -1,5 +1,9 @@
 ## Changelog
 
+### 4.3 (Next)
+
+* Your contribution here.
+
 ### 4.2.3 (October 28, 2018)
 
 * [#344](https://github.com/alexa-js/alexa-app/pull/344): Add coveralls as a check for pull requests - [@kobim](https://github.com/kobim).
