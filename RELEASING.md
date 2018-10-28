@@ -10,6 +10,7 @@ Run tests, check that all tests succeed locally.
 ```
 npm install
 npm test
+npm install dtslint@^0.2
 npm run dtslint
 ```
 
