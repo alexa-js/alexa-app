@@ -563,17 +563,24 @@ See detailed explanation on the Intent and Slot [logic](https://developer.amazon
 
 
 ```javascript
-app.displayElementSelected(function(request, response) {
+app.canFulfillHandler(function(request, response) {
   // The request object will return CanFulfillIntent object 
+  //by default the response will include "No" for the intent and slots
   let canFulfillIntent =  request.getCanFulfillIntent();
   
-  //by default the response will include No for the intent and slots
   //add your logic to determine if you can fulfill the intent and each slot
+  if(canFulfillIntent.name == 'HowTo' 
+    || canFulfillIntent.name == 'Information' || canFulfillIntent.name == 'Instructions')
+    { 
+      //we response YES for these intents that we can fulfill
+      response.canFulfill("YES");
+    }
+    else if(canFulfillIntent.name == 'GetPrice'){
+      //In this information we check if we can answer GetPrice intent with the slots values and decide to answer YES
 
-  //in this example the response is Yes for the intent and for both slots 
-  response.canFulfill("YES");
-  response.canFulfillSlot("Sound","YES","YES");
-  response.canFulfillSlot("Another","YES","YES");
+      //Do the logic ...      
+      response.canFulfillSlot("MyProduct","YES","YES");
+    } 
 });
 ```
 
