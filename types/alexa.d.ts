@@ -145,7 +145,7 @@ export interface ResolutionValue {
 export interface AuthorityResolution {
   authority: string;
   status: {
-    code: "ER_SUCCESS_MATCH|ER_SUCCESS_NO_MATCH|ER_ERROR_TIMEOUT|ER_ERROR_EXCEPTION";
+    code: "ER_SUCCESS_MATCH"|"ER_SUCCESS_NO_MATCH"|"ER_ERROR_TIMEOUT"|"ER_ERROR_EXCEPTION";
   };
   values: ResolutionValue[];
 }
