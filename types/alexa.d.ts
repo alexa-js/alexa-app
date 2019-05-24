@@ -2,7 +2,7 @@ export type DialogState = "STARTED"|"IN_PROGRESS"|"COMPLETED";
 export type ClearBehavior = "CLEAR_ENQUEUED"|"CLEAR_ALL";
 export type CardType = any; /* "Simple"|"Standard"|"LinkAccount" */
 
-// TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+// TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Display.RenderTemplate request, etc)
 export type Request = any; /* LaunchRequest|IntentRequest|SessionEndedRequest| */
 
 /**
