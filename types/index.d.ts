@@ -168,6 +168,9 @@ export class request {
   /** Returns the request context */
   context: alexa.Context;
 
+  /** Returns the matched intent name */
+  intent: string;
+
   /** The raw request JSON object from Amazon */
   data: alexa.RequestBody;
 
