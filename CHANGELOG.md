@@ -3,6 +3,7 @@
 ### 4.3.0 (Next)
 
 * [#388](https://github.com/alexa-js/alexa-app/pull/388): Updating typings for values of AuthorityResolution - [@camerongraybill](https://github.com/camerongraybill).
+* [#393](https://github.com/alexa-js/alexa-app/pull/393): Add support for default/fallback handler for all intents - [@pariola](https://github.com/pariola).
 
 ### 4.2.3 (October 28, 2018)
 
