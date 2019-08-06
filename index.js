@@ -420,7 +420,8 @@ alexa.router = function(app, request, response, request_json) {
         return Promise.resolve(app.intents[intent].handler(request, response));
       }
     } else {
-      throw "NO_INTENT_FOUND";
+      if (!app.intents["__fallback__"]) throw "NO_INTENT_FOUND";
+      return Promise.resolve(app.intents["__fallback__"].handler(request, response));
     }
   };
   this.launch = function() {
