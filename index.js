@@ -413,7 +413,6 @@ alexa.session = function(session) {
 
 alexa.router = function(app, request, response, request_json) {
   this.intent = function(intent) {
-    request.intent = intent;
     if (typeof app.intents[intent] !== "undefined" && typeof app.intents[intent].handler === "function") {
       if (app.intents[intent].isDelegatedDialog() && !request.getDialog().isCompleted()) {
         return Promise.resolve(request.getDialog().handleDialogDelegation(request, response));
