@@ -60,5 +60,10 @@
     "sinon-chai": "^2.8.0",
     "supertest": "^2.0.1",
     "typescript": "^2.5"
-  }
+  },
+  "files": [
+    "lib",
+    "types/index.d.ts",
+    "types/alexa.d.ts"
+  ]
 }
