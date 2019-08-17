@@ -1,38 +1,26 @@
-language: node_js
-
 sudo: false
-
-matrix:
-  include:
-    - node_js: node
-      script:
-        - npm run-script danger
-        - npm run-script lint
-        - npm run-script test-with-coverage
-        - npm install dtslint@^0.2
-        - npm run dtslint
+language: node_js
+cache: yarn
 
 node_js:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
   - 10
-
-cache:
-  directories:
-    - node_modules
+  - 11
+  - 12
 
 before_install:
-  - npm config set spin false
+  - yarn config set spin false
+
+install:
+  - yarn
+
+script:
+  - yarn danger
+  - yarn lint
+  - yarn test-with-coverage
+  - yarn dtslint
 
 after_success:
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - cat ./coverage/lcov.info | yarn coveralls
 
 notifications:
   email: false

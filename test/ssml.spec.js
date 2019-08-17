@@ -14,7 +14,7 @@ var PlainStrings = [
     '<say-as interpret-as="cardinal">12345</say-as>.',
     'Here is a word spelled out: <say-as interpret-as="spell-out">hello</say-as>.',
     'You say, <phoneme alphabet="ipa" ph="pɪˈkɑːn">pecan</phoneme>. I say, <phoneme alphabet="ipa" ph="ˈpi.kæn">pecan</phoneme>.',
-    "<s>This is a sentence</s>\n<s>There should be a short pause before this second sentence</s>\nThis sentence ends with a period and should have the same pause."
+    '<s>This is a sentence</s>\n<s>There should be a short pause before this second sentence</s>\nThis sentence ends with a period and should have the same pause.'
   ];
 
 describe('SSML', function() {
@@ -53,7 +53,7 @@ describe('SSML', function() {
           }
 
           return outputSpeech.should.equal('<speak>' + PlainStrings.join(' ') + '</speak>');
-        })
+        });
       });
 
       describe('SSML strings without embedded SSML tags appended to current SSML string', function() {
@@ -64,7 +64,7 @@ describe('SSML', function() {
           }
 
           return outputSpeech.should.equal('<speak>' + PlainStrings.join(' ') + '</speak>');
-        })
+        });
       });
 
       describe('SSML strings with embedded SSML tags appended to current SSML string', function() {
@@ -75,7 +75,7 @@ describe('SSML', function() {
           }
 
           return outputSpeech.should.equal('<speak>' + EmbeddedSSMLStrings.join(' ') + '</speak>');
-        })
+        });
       });
     });
   });
@@ -127,8 +127,8 @@ describe('SSML', function() {
         });
 
         it('should remove <speak> and embedded <s> SSML tags', function() {
-          var input = "<speak><s>This is a sentence</s>\n<s>There should be a short pause before this second sentence</s>\nThis sentence ends with a period and should have the same pause.</speak>";
-          var expectedOutput = "This is a sentence\nThere should be a short pause before this second sentence\nThis sentence ends with a period and should have the same pause.";
+          var input = '<speak><s>This is a sentence</s>\n<s>There should be a short pause before this second sentence</s>\nThis sentence ends with a period and should have the same pause.</speak>';
+          var expectedOutput = 'This is a sentence\nThere should be a short pause before this second sentence\nThis sentence ends with a period and should have the same pause.';
 
           return SSML.cleanse(input).should.equal(expectedOutput);
         });

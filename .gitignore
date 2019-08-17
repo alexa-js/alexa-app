@@ -49,5 +49,5 @@ Temporary Items
 .vscode
 
 # NPM
-npm-debug.log
-yarn.lock
+**/*.log
+package-lock.json

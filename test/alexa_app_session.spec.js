@@ -38,11 +38,7 @@ describe("Alexa", function() {
 
         it("reponds with expected context applicationId", function() {
           return testApp.request(mockRequest).then(function(response) {
-            expect(reqObject.context).to
-              .have.deep.property(
-                "System.application.applicationId",
-                "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
-              );
+            expect(reqObject.context.System.application.applicationId).to.equal('amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe');
           });
         });
 

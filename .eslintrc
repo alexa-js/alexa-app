@@ -1,0 +1,30 @@
+{
+  "extends": "eslint:recommended",
+  "parser": "esprima",
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "globals": {
+    "require": false,
+    "module": false,
+    "describe": true,
+    "context": true,
+    "beforeEach": true,
+    "it": true
+  },
+  "rules": {
+    "semi": "error",
+    "no-console": "off",
+    "key-spacing": [
+      "error",
+      {
+        "afterColon": true
+      }
+    ],
+    "quotes": ["error", "single"],
+    "indent": ["error", 2]
+  }
+}
