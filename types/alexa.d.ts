@@ -1,6 +1,8 @@
+// TypeScript Version: 3.5
+
 export type DialogState = "STARTED" | "IN_PROGRESS" | "COMPLETED";
 export type ClearBehavior = "CLEAR_ENQUEUED" | "CLEAR_ALL";
-export type CardType = 'Simple' | 'Standard' | 'LinkAccount';
+export type CardType = 'Simple' | 'Standard' | 'LinkAccount' | string;
 
 // TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
 export type Request = LaunchRequest | IntentRequest | SessionEndedRequest | any;
