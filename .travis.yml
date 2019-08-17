@@ -14,7 +14,7 @@ install:
   - yarn
 
 script:
-  - yarn danger
+  - yarn danger ci
   - yarn lint
   - yarn test-with-coverage
   - yarn dtslint
