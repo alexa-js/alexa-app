@@ -1,5 +1,9 @@
 # Upgrading Alexa-app
 
+### Upgrading to >= 5.0.0
+
+* Drop support for all NodeJS versions lower than 10
+
 ### Upgrading to >= 4.0.1
 
 #### Changes session details syntax
