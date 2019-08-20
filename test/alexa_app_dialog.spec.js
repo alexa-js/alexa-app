@@ -196,7 +196,7 @@ describe("Alexa", function() {
               var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
-              return expect(subject).to.eventually.contain(dialogDirective);
+              return expect(subject).to.eventually.deep.include(dialogDirective);
             });
 
             it("does not utilize intent's intentHandler", function() {
@@ -259,7 +259,7 @@ describe("Alexa", function() {
               var subject = app.request(mockRequest).then(function(response) {
                 return response.response.directives;
               });
-              return expect(subject).to.eventually.contain(dialogDirective);
+              return expect(subject).to.eventually.deep.include(dialogDirective);
             });
 
             it("does not utilize intent's intentHandler", function() {

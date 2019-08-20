@@ -1,9 +1,11 @@
-export type DialogState = "STARTED"|"IN_PROGRESS"|"COMPLETED";
-export type ClearBehavior = "CLEAR_ENQUEUED"|"CLEAR_ALL";
-export type CardType = any; /* "Simple"|"Standard"|"LinkAccount" */
+// TypeScript Version: 3.5
 
-// TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Display.RenderTemplate request, etc)
-export type Request = any; /* LaunchRequest|IntentRequest|SessionEndedRequest| */
+export type DialogState = "STARTED" | "IN_PROGRESS" | "COMPLETED";
+export type ClearBehavior = "CLEAR_ENQUEUED" | "CLEAR_ALL";
+export type CardType = 'Simple' | 'Standard' | 'LinkAccount' | string;
+
+// TODO: A request can also be a few other things we don't handle (e.g. AudioPlayer request, Dispay.RenderTemplate request, etc)
+export type Request = LaunchRequest | IntentRequest | SessionEndedRequest | any;
 
 /**
  * Returned when the skill requests the full address with the address consent
@@ -26,7 +28,7 @@ export interface AudioItem {
 export interface AudioPlayer {
   token: string;
   offsetInMilliseconds: number;
-  playerActivity: "IDLE"|"PAUSED"|"PLAYING"|"BUFFER_UNDERRUN"|"FINISHED"|"STOPPED";
+  playerActivity: "IDLE" | "PAUSED" | "PLAYING" | "BUFFER_UNDERRUN" | "FINISHED" | "STOPPED";
 }
 
 export interface Card {
@@ -57,8 +59,8 @@ export interface CountryAndPostalCode {
 
 export interface Intent {
   name: string;
-  confirmationStatus: "NONE"|"CONFIRMED"|"DENIED";
-  slots: {[name: string]: Slot};
+  confirmationStatus: "NONE" | "CONFIRMED" | "DENIED";
+  slots: { [name: string]: Slot };
 }
 
 export interface IntentRequest {
@@ -78,7 +80,7 @@ export interface LaunchRequest {
 }
 
 export interface OutputSpeech {
-  type: "PlainText"|"SSML";
+  type: "PlainText" | "SSML";
   text?: string;
   ssml?: string;
 }
@@ -106,7 +108,7 @@ export interface Response {
 
 export interface ResponseBody {
   version: string;
-  sessionAttributes: {[key: string]: object};
+  sessionAttributes: { [key: string]: object };
   response: Response;
 }
 
@@ -120,17 +122,17 @@ export interface Session {
   };
   user: User;
   userId?: string;
-  accessToken?: string|null;
+  accessToken?: string | null;
 }
 
 export interface SessionEndedRequest {
   type: "SessionEndedRequest";
   requestId: string;
   timestamp: string; // ISO-8601;
-  reason: "USER_INITIATED"|"ERROR"|"EXCEEDED_MAX_REPROMPTS";
+  reason: "USER_INITIATED" | "ERROR" | "EXCEEDED_MAX_REPROMPTS";
   locale: string;
   error: {
-    type: "INVALID_RESPONSE"|"DEVICE_COMMUNICATION_ERROR"|"INTERNAL_ERROR";
+    type: "INVALID_RESPONSE" | "DEVICE_COMMUNICATION_ERROR" | "INTERNAL_ERROR";
     message: string;
   };
 }
@@ -145,7 +147,7 @@ export interface ResolutionValue {
 export interface AuthorityResolution {
   authority: string;
   status: {
-    code: "ER_SUCCESS_MATCH"|"ER_SUCCESS_NO_MATCH"|"ER_ERROR_TIMEOUT"|"ER_ERROR_EXCEPTION";
+    code: "ER_SUCCESS_MATCH|ER_SUCCESS_NO_MATCH|ER_ERROR_TIMEOUT|ER_ERROR_EXCEPTION";
   };
   values: ResolutionValue[];
 }
@@ -158,7 +160,7 @@ export interface Resolutions {
 export interface Slot {
   name: string;
   value: string;
-  confirmationStatus: "NONE"|"CONFIRMED"|"DENIED";
+  confirmationStatus: "NONE" | "CONFIRMED" | "DENIED";
   resolutions?: Resolutions;
 }
 
@@ -185,9 +187,9 @@ export interface System {
 }
 
 export interface User {
-    userId: string;
-    accessToken?: string;
-    permissions?: Permissions;
+  userId: string;
+  accessToken?: string;
+  permissions?: Permissions;
 }
 
 // TODO: This needs more fleshing out.

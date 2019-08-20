@@ -1,5 +1,9 @@
 # Upgrading Alexa-app
 
+### Upgrading to >= 5.0.0
+
+* Node.js 10 or later is now required.
+
 ### Upgrading to >= 4.0.1
 
 #### Changes session details syntax

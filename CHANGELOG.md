@@ -1,7 +1,8 @@
 ## Changelog
 
-### 4.3.0 (Next)
+### 5.0.0 (Next)
 
+* [#394](https://github.com/alexa-js/alexa-app/pull/394): Upgrade development environment - [@favna](https://github.com/favna).
 * [#388](https://github.com/alexa-js/alexa-app/pull/388): Updating typings for values of AuthorityResolution - [@camerongraybill](https://github.com/camerongraybill).
 
 ### 4.2.3 (October 28, 2018)

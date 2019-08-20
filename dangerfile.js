@@ -1,7 +1,7 @@
-import { danger, warn } from "danger"
+const { danger, warn } = require('danger');
 
 // did you forget to update changelog?
-const hasChangelog = danger.git.modified_files.includes("CHANGELOG.md");
+const hasChangelog = danger.git.modified_files.includes('CHANGELOG.md');
 if (!hasChangelog) {
-  warn("Did you forget to update CHANGELOG.md?");
+  warn('Did you forget to update CHANGELOG.md?');
 }

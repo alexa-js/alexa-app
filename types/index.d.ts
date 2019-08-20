@@ -1,4 +1,4 @@
-// TypeScript Version: 2.5
+// TypeScript Version: 3.5
 
 import * as alexa from "./alexa";
 
@@ -7,7 +7,7 @@ export * from "./alexa";
 export type RequestHandler = (request: request, response: response) => void;
 export type ErrorHandler = (e: any, request: request, response: response) => void;
 
-export let apps: {[name: string]: app};
+export let apps: { [name: string]: app };
 
 export class app {
   constructor(name?: string);
@@ -56,11 +56,11 @@ export class app {
    */
   dictionary: any;
 
-  intents: {[name: string]: intent};
+  intents: { [name: string]: intent };
   intent: (intentName: string, schema?: IntentSchema | RequestHandler, handler?: RequestHandler) => void;
 
-  customSlots: {[name: string]: CustomSlot};
-  customSlot: (name: string, values: Array<CustomSlot|string>) => void;
+  customSlots: { [name: string]: CustomSlot };
+  customSlot: (name: string, values: Array<CustomSlot | string>) => void;
 
   // TODO
   audioPlayerEventHandlers: any;
@@ -75,10 +75,10 @@ export class app {
   displayElementSelectedFunc?: RequestHandler;
   displayElementSelected: (func: RequestHandler) => void;
 
-  playbackControllerEventHandlers: {[name: string]: PlaybackController};
+  playbackControllerEventHandlers: { [name: string]: PlaybackController };
   playbackController: (eventName: string, func: RequestHandler) => void;
 
-  requestHandlers: {[name: string]: RequestHandler};
+  requestHandlers: { [name: string]: RequestHandler };
   on: (handlerName: string, handler: RequestHandler) => void;
 
   /** TODO: Figure out what the promise actually contains */
@@ -142,13 +142,13 @@ export class request {
   constructor(json: alexa.RequestBody)
 
   /** Returns the type of request received (LaunchRequest, IntentRequest, or SessionEndedRequest) */
-  type: () => "LaunchRequest"|"IntentRequest"|"SessionEndedRequest";
+  type: () => "LaunchRequest" | "IntentRequest" | "SessionEndedRequest";
 
   /** Returns the value passed in for a given slot name. */
-  slot: (slotName: string, defaultValue?: string) => string;
+  slot: <S extends {}>(slotName: S extends {} ? keyof S : string, defaultValue?: string) => string;
 
   /** slots['slotname'] returns the slot object */
-  slots: {[name: string]: slot};
+  slots: { [name: string]: slot };
 
   /** The intent's confirmationStatus */
   confirmationStatus: string;
@@ -212,7 +212,7 @@ export class response {
    * Returns a card to the user's Alexa app.
    * Supports card(String title, String content) for backwards compat of type "Simple"
    */
-  card: (title: string|alexa.Card, content?: string) => response;
+  card: (title: alexa.Card | string, content?: string) => response;
 
   /**
    * Return a card instructing the user how to link their account to the skill.
@@ -407,10 +407,10 @@ export interface ExpressOptions {
   debug?: boolean;
 
   /** Function to execute before every POST. May return altered request JSON, or undefined, or a Promise */
-  preRequest?(json: alexa.RequestBody, req: any, res: any): Promise<alexa.RequestBody>|alexa.RequestBody|undefined|void;
+  preRequest?(json: alexa.RequestBody, req: any, res: any): Promise<alexa.RequestBody> | alexa.RequestBody | undefined | void;
 
   /** Function to execute after every POST. May return altered request JSON, or undefined, or a Promise */
-  postRequest?(json: alexa.ResponseBody, req: any, res: any): Promise<alexa.ResponseBody>|alexa.ResponseBody|undefined|void;
+  postRequest?(json: alexa.ResponseBody, req: any, res: any): Promise<alexa.ResponseBody> | alexa.ResponseBody | undefined | void;
 }
 
 export interface IntentSchema {
@@ -422,7 +422,7 @@ export interface IntentSchema {
 export interface CustomSlot {
   value: string;
   synonyms?: string[];
-  id?: string|null;
+  id?: string | null;
 }
 
 export interface PlaybackController {
