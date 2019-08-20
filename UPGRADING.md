@@ -2,7 +2,7 @@
 
 ### Upgrading to >= 5.0.0
 
-* Drop support for all NodeJS versions lower than 10
+* Node.js 10 or later is now required.
 
 ### Upgrading to >= 4.0.1
 
